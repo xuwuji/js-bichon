@@ -1,0 +1,75 @@
+一、JS类型
+
+1.基本类型：所有的基本类型都是不可变的
+
+a.number
+b.string
+c.boolean
+d.Null
+e.Undefined
+f.Symbol（es6才有的）
+
+
+举例：
+  var data='a';
+  data='b';
+这里并不代表a被改变了，而是对系统来说创建了两个基本类型的string数据，分别是'a'和'b'，而data只是从'a'换成指向'b'而已
+
+2.对象
+
+a.array
+b.date
+c.regexp
+d.map and weakmap
+e.set and weakset
+
+对于基本类型number、string、boolean都有对应的包装类Number、String、Boolean
+
+对象用大括号进行表示： var o={}; 
+通过中括号对某一个property进行赋值，property的key是string： o['test']='啊、';
+console.log(o.test); //a
+
+也可以直接在定义的时候将每一个property进行设置
+const sam1 = { name: 'Sam',age: 4, };
+
+property的value也可以是一个对象
+const sam3 = { 
+    name: 'Sam',
+    classification: {
+        kingdom: 'Anamalia',
+        phylum: 'Chordata',
+        class: 'Mamalia',
+        order: 'Carnivoria',
+        family: 'Felidae',
+        subfaimily: 'Felinae',
+        genus: 'Felis',
+        species: 'catus',
+    }, 
+};
+
+数组用中括号进行定义，数组没有定长
+var array=[1,2,3];
+console.log(array[0]); //1
+console.log(array.length) //3
+
+const a2 = [1, 'two', 3, null]; 
+
+consta3=[
+    "What the hammer?  What the chain?",
+    "In what furnace was thy brain?",
+    "What the anvil?  What dread grasp",
+    "Dare its deadly terrors clasp?",
+]; 
+
+consta4=[
+    { name: "Ruby", hardness: 9 },
+    { name: "Diamond", hardness: 10 },
+    { name: "Topaz", hardness: 8 },
+]; 
+
+consta5=[
+[1, 3, 5],
+[2, 4, 6], ];
+
+
+
