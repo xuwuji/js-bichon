@@ -1,0 +1,63 @@
+/*
+id用＃
+*/
+
+#id {
+    color: red;
+}
+
+#id a {
+    color: black;
+}
+
+
+/*
+class 用.
+*/
+
+.class1 {
+    color: green;
+}
+
+
+/*
+相同的class，可以元素不同进行限定
+*/
+
+p.class1 {
+    color: yellowgreen;
+}
+
+
+/*
+元素选择器
+*/
+
+div {
+    color: black;
+}
+
+
+/*
+群组，就是把不同类型的合在一起写*/
+
+span,
+em,
+.class2 {
+    color: peru;
+}
+
+
+/*
+后代选择器*/
+
+ul li a {
+    color: aqua;
+}
+
+
+/*通配符选择器*/
+
+* {
+    color: black;
+}

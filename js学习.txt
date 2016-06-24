@@ -1,4 +1,4 @@
-一、JS类型
+一、JS数据类型
 
 1.基本类型：所有的基本类型都是不可变的
 
@@ -14,6 +14,8 @@ f.Symbol（es6才有的）
   var data='a';
   data='b';
 这里并不代表a被改变了，而是对系统来说创建了两个基本类型的string数据，分别是'a'和'b'，而data只是从'a'换成指向'b'而已
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
 
 2.对象
 
@@ -46,6 +48,30 @@ const sam3 = {
         species: 'catus',
     }, 
 };
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+Json:遵循对象的格式
+
+var data={
+    'url':['1','2','3'],
+    'text':['a','b','c']
+};
+
+下面这两种的写法是一样的
+data.url[1] //'2'
+
+data['url'][1] //'2'
+
+
+for(var key in data){
+    console.log(key+":"+data[key]); 
+}
+
+url:1,2,3
+text:a,b,c
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+数组
 
 数组用中括号进行定义，数组没有定长
 var array=[1,2,3];
@@ -62,14 +88,195 @@ consta3=[
 ]; 
 
 consta4=[
-    { name: "Ruby", hardness: 9 },
-    { name: "Diamond", hardness: 10 },
-    { name: "Topaz", hardness: 8 },
+    {'name': "Ruby", hardness: 9 },
+    {'name': "Diamond", hardness: 10 },
+    {'name: "Topaz", hardness: 8 },
 ]; 
+
+consta4[0].name  //"Ruby"
+
 
 consta5=[
 [1, 3, 5],
 [2, 4, 6], ];
 
 
+for(var v in a2){
+    console.log(v);
+}
 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+二、表达式
+
+比较
+（1）strict equality：＝＝＝和！＝＝，只有当都指向同一个对象或者它们是同一个类型且值相同的情况下才相等
+（2）abstract (or loose) equality：＝＝，当指向同一个对象或值想等的情况下相等，比如3和'3'在此种情况下就认为相等
+（3）relational
+
+三、函数
+
+在Javascript定义一个函数一般有如下三种方式： 
+
+1.函数关键字(function)语句： 
+function fnMethodName(x){
+    alert(x);
+    } 
+
+2.函数字面量(Function Literals)： 
+var fnMethodName = function(x){
+    alert(x);
+    } 
+
+3.Function()构造函数： 
+var fnMethodName = new Function('x','alert(x);')
+
+上面三种方法定义了同一个方法函数fnMethodName，
+ 
+四、范围
+
+变量的作用域无非就是两种：全局变量和局部变量。
+
+1.全局变量：全局有效
+
+2.块变量：只在大括号内部的这个块有效
+
+3.函数内的变量
+
+Javascript语言的特殊之处，就在于函数内部可以直接读取全局变量。
+var n=999;
+function f1(){
+    alert(n);
+    }
+f1(); // 999
+
+
+另一方面，在函数外部自然无法读取函数内的局部变量。
+function f1(){
+    var n=999;
+　　}
+alert(n); // error
+  
+这里有一个地方需要注意，函数内部声明变量的时候，一定要使用var命令。如果不用的话，你实际上声明了一个全局变量！
+function f1(){
+    n=999;
+　　}
+f1();
+alert(n); // 999
+
+五、闭包
+
+闭包：我们有时候需要得到函数内的局部变量，正常情况下，这是办不到的，只有通过变通方法才能实现，那就是在函数的内部，再定义一个函数。
+function f1(){
+    var n=999;
+    function f2(){
+　　　　alert(n); // 999
+　　　　}
+    }
+在上面的代码中，函数f2就被包括在函数f1内部，这时f1内部的所有局部变量，对f2都是可见的。但是反过来就不行，f2内部的局部变量，对f1就是不可见的。这就是Javascript语言特有的"链式作用域"结构（chain scope），子对象会一级一级地向上寻找所有父对象的变量。所以，父对象的所有变量，对子对象都是可见的，反之则不成立。
+
+既然f2可以读取f1中的局部变量，那么只要把f2作为返回值，我们不就可以在f1外部读取它的内部变量了吗！    
+
+function f1(){
+　　　　var n=999;
+　　　　function f2(){
+　　　　　　alert(n); 
+　　　　}
+　　　　return f2;
+　　}
+var result=f1();
+result(); // 999
+
+各种专业文献上的"闭包"（closure）定义非常抽象，很难看懂。我的理解是，闭包就是能够读取其他函数内部变量的函数。
+由于在Javascript语言中，只有函数内部的子函数才能读取局部变量，因此可以把闭包简单理解成"定义在一个函数内部的函数"。
+所以，在本质上，闭包就是将函数内部和函数外部连接起来的一座桥梁。
+
+闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。
+
+1）由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。
+2）闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。
+
+六、prototype
+
+1.prototype对象是实现面向对象的一个重要机制。每个函数也是一个对象，它们对应的类就是function，每个函数对象都具有一个子对象prototype。Prototype 表示了该函数的原型，
+prototype表示了一个类的属性的集合。当通过new来生成一个类的对象时，prototype对象的属性就会成为实例化对象的属性。
+
+prototype是一个对象，因此，你能够给它添加属性。你添加给prototype的属性将会成为使用这个构造函数创建的对象的通用属性。
+
+例如，我下面有一个数据类型Fish，我想让所有的鱼都有这些属性：livesIn="water"和price=20；为了实现这个，我可以给构造函数Fish的prototype添加那些属性。
+function Fish(name, color)
+{
+this.name=name;
+this.color=color;
+}
+Fish.prototype.livesIn="water";
+Fish.prototype.price=20;
+
+接下来让我们作几条鱼：
+var fish1=new Fish("mackarel", "gray");
+var fish2=new Fish("goldfish", "orange");
+var fish3=new Fish("salmon", "white");
+
+再来看看鱼都有哪些属性：
+for (int i=1; i<=3; i++)
+{
+var fish=eval_r("fish"+i);   // 我只是取得指向这条鱼的指针
+alert(fish.name+","+fish.color+","+fish.livesIn+","+fish.price);
+}
+输出应该是：
+"mackarel, gray, water, 20"
+"goldfish, orange, water, 20"
+"salmon, white water, 20"
+你看到所有的鱼都有属性livesIn和price,我们甚至都没有为每一条不同的鱼特别声明这些属性。这时因为当一个对象被创建时，这个构造函数 将会把它的属性prototype赋给新对象的内部属性__proto__。这个__proto__被这个对象用来查找它的属性。
+
+你也可以通过prototype来给所有对象添加共用的函数。这有一个好处：你不需要每次在构造一个对象的时候创建并初始化这个函数。为了解释这一点，让我们重新来看Example DT9并使用prototype来重写它：
+用prototype给对象添加函数
+function Employee(name, salary)
+{
+this.name=name;               
+this.salary=salary;
+}
+
+Employee.prototype.getSalary=function getSalaryFunction()
+{
+return this.salary;
+}
+
+Employee.prototype.addSalary=function addSalaryFunction(addition)
+{
+this.salary=this.salary+addition;
+}
+ 
+我们可以象通常那样创建对象：
+var boss1=new Employee("Joan", 200000);
+var boss2=new Employee("Kim", 100000);
+var boss3=new Employee("Sam", 150000);
+
+并验证它：
+alert(boss1.getSalary());   // 输出 200000
+alert(boss2.getSalary());   // 输出 100000
+alert(boss3.getSalary());   // 输出 150000
+
+这个对象的每一个实例(boss1, boss2, boss3)都有一个内部属性叫做__proto__，这个属性指向了它的构造器(Employee)的属性prototype。当你执行 getSalary或者addSalary的时候，这个对象会在它的__proto__找到并执行这个代码。
+
+2、利用prototype实现继承
+function HelloClass(){
+//构造方法
+}
+function HelloSubClass(){
+//构造方法
+}
+
+HelloSubClass.prototype=HelloClass.prototype;
+HelloSubClass.prototype.Propertys="name";
+HelloSubClass.prototype.subMethods=function(){
+
+//方法实现代码
+alert("in Methods");
+}
+var obj=new HelloSubClass();
+obj.subMethods();
+
+在以上的代码中，首先是HelloSubClass具有了和HelloClass一样的prototype，如果不考虑构造方法，则两个类是等价的。随后，又通过prototype给HelloSubClass赋予了额外的属性和方法所以HelloSubClass是在HelloClass的基础上增加了新的属性和方法，从而实现了类的继承。
+
+七、循环
