@@ -7,6 +7,8 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css" />
+    <script src="js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 
@@ -19,8 +21,6 @@
         <div class="nav_page_name">
             Product Health
         </div>
-
-
 
         <!--nav tab-->
         <div class="nav_tab_div">
@@ -40,37 +40,68 @@
 
             <div class="row">
                 <!--site-->
-                <div id="site_selector" class="col-md-2 col-lg-2">
+                <div id="" class="col-md-2 col-lg-2">
                     Site
-                    <div class="dropdown dropdown_selector">
-                        <button href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            Photo
-                            <b class="caret"></b>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">jmeter</a></li>
-                            <li><a href="#">EJB</a></li>
-                            <li><a href="#">Jasper Report</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">分离的链接</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">另一个分离的链接</a></li>
-                        </ul>
+                    <div class="form-group" style="margin-top:10px">
+                        <select id="site_selector" class=" selectpicker form-control" multiple data-actions-box="true" data-live-search="true">
+
+                        </select>
                     </div>
                 </div>
 
+                <!--device-->
+                <div class="col-md-2 col-lg-2">
+                    Device
+                    <div class="form-group" style="margin-top:10px">
+                        <select id="device_selector" class="selectpicker form-control" multiple data-actions-box="true" data-live-search="true">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div id="apply_btn" class="col-md-2 col-lg-2">
+                    <button class="btn btn-primary ">Apply</button>
+                </div>
             </div>
 
         </div>
 
+        <div class="nav_label_name">
+
+            <div class="one_column_chart col-lg-3">
+                <div class="vertical">
+
+                    Engagement
+                    <div class="high_chart col-lg-3">
+
+                    </div>
+                </div>
+            </div>
 
 
+            <div class="one_column_chart col-lg-9">
+                Engagement
+            </div>
 
+        </div>
     </div>
 
-
-
-
 </body>
+
+<script type="text/javascript">
+    $(document).ready(
+        initSelector()
+    );
+
+    function initSelector() {
+        $('#site_selector').append('<option>Relish</option>');
+        $('.selectpicker').selectpicker('selectAll');
+    }
+
+    function collectSeletorData() {
+        var site = $('#site_selector').val();
+    }
+</script>
 
 </html>
