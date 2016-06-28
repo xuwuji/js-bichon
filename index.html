@@ -11,12 +11,16 @@
 
 <body>
 
+
+
+
     <div id="id">
-        id
-        <br>
-        <a href='#'> link</a>
+        <span class="loading" style="display:none"> loading......</span> id
+        <br> link
     </div>
 
+
+    <br>
     <div class="class1">
         class1
     </div>
@@ -30,8 +34,6 @@
         class2
     </div>
 
-
-
     <div>
         <ul>
             <li><a href="#">l1</a></li>
@@ -39,9 +41,210 @@
         </ul>
     </div>
 
+    <div>
+        <ul>
+            <li>
+                1
+            </li>
+            <li>
+                2
+            </li>
+            <li class='green'>
+                3
+            </li>
+        </ul>
+    </div>
+
+
+    <div>
+        <ul>
+            <li>
+                1
+            </li>
+            <li class='green'>
+                2
+            </li>
+            <li>
+                3
+            </li>
+        </ul>
+    </div>
+
+    <Button id="testButton">test button</Button>
+
+    <div id='test'>
+    </div>
+
+    <input type="text" />
+    <div>
+        <Button onclick="show()">display</Button>
+        <Button onclick="hide()">hide</Button>
+        <Button onclick="toggle()">toggle</Button>
+        <Button onclick="selfhide()">自调用隐藏</Button>
+        <Button onclick="selfshow()">自调用显示</Button>
+        <Button onclick="selftoggle()">自调用toggle</Button>
+    </div>
+    <div id="displaybox"> --------!!!!!!!!!</div>
+    <div id='selfTest'>
+        <div class='self'>1</div>
+        <div class='self'>2</div>
+        <div class='self'>3</div>
+        <div class='self'>4</div>
+    </div>
+    <div>
+        <Button onclick="up()">up</Button>
+        <Button onclick="down()">down</Button>
+        <div style="background:red;height:200px" id='updownbox'>
+        </div>
+    </div>
+
+    <div>
+        <Button onclick="fadein()">fade in</Button>
+        <Button onclick="fadeout()">fade out</Button>
+        <div style="background:blue;height:200px" id='fadebox'>
+        </div>
+    </div>
+
+
+    <div>
+        <Button onclick="ani()">动画</Button>
+        <div style="background:blue;height:200px;left:0px" id='ani'>
+        </div>
+    </div>
+
+    <div>
+        <form id='ajaxForm'>
+            <input type='text' value="username" name="username" />
+            <input type='password' value='password' name="password" />
+            <input type='button' value='submit' />
+        </form>
+    </div>
+
+
 </body>
 <script type="text/javascript">
+    $(document).ready(function() {
 
+        $('ul:eq(1) li:not(.green)').css('color', 'blue');
+        $('ul:eq(2) li:last').css('color', 'green');
+        $('div:contains("link")').css('color', 'blue');
+        $('div').has('.class1').css('backgroud', '#ccc').css('height', '20px');
+
+        $('#test').text('test');
+        $('#test').html($('#test').html() + '<li>test</li>');
+        //$('input').val('test');
+
+        console.log($('input').attr('type'));
+        var box = $('<div id="box">节点</div>');
+
+        $('body').append(box);
+
+        box.html('<input type="text" value="test"/>');
+
+        $('span').appendTo($('#box'));
+
+        //$('div').wrap('<strong></strong>');
+
+        function getInfo(e) {
+            console.log(e.type);
+            console.log(e.target);
+            console.log(e.data);
+            console.log(e.currentTarget);
+            console.log(e.relatedTarget);
+            console.log(e.timeStamp);
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/backend",
+            data: {},
+            beforeSend: function(xhr, settings) {
+                alert('请求之前' + ' - ' + xhr.readyState + ' - ' + settings.url);
+            }
+        }).done(function(data) {
+            //console.log(data);
+        });
+
+        $('form input[type=button]').click(function() {
+            console.log($('#ajaxForm').serialize());
+        });
+
+
+
+        //$('#id').load('http://localhost:8080/backend');
+    });
+
+    $(document).ajaxStart(function() {
+        //alert('begin');
+        $('.loading').show();
+    }).ajaxStop(function() {
+        //alert('end');
+        //$('.loading').hide();
+    });
+
+    function hide() {
+        $('#displaybox').hide(1000);
+    }
+
+    function show() {
+        $('#displaybox').show(1000, function() {
+            alert('show');
+        });
+    }
+
+
+    function toggle() {
+        $('#displaybox').toggle(1000, function() {
+            alert('toggle');
+        });
+    }
+
+    function selfhide() {
+        $('.self').last().hide('fast', function() {
+            $(this).prev().hide(1000, arguments.callee);
+        });
+    }
+
+    function selfshow() {
+        $('.self').first().show('fast', function() {
+            $(this).next().show(1000, arguments.callee);
+        });
+    }
+
+    function selftoggle() {
+        $('.self').first().toggle('fast', function() {
+            $(this).next().toggle(1000, arguments.callee);
+        });
+    }
+
+    function up() {
+        $('#updownbox').slideUp();
+    }
+
+    function down() {
+        $('#updownbox').slideDown();
+    }
+
+
+    function fadein() {
+        $('#fadebox').fadeIn();
+    }
+
+    function fadeout() {
+        $('#fadebox').fadeOut();
+    }
+
+    function ani() {
+        $('#ani').animate({
+            'width': '300px',
+            'height': '200px',
+            'fontSize': '50px',
+            'opacity': 0.5,
+            'left': '+=100px',
+        }, 1000, function() {
+            alert('complete');
+        });
+    }
 
 </script>
 

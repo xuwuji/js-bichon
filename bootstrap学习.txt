@@ -1,0 +1,248 @@
+布局
+
+<div class="container">  让包含的内容居中
+
+<div class="row">  让包含的内容在一排
+
+
+Bootstrap默认的栅格系统为12列，宽度为940px，比标准的960栅格系统少20像素，这是因为它少了一个外边距，一个外边距默认为20像素。因此，虽然宽度仅为940像素，但是网页实际宽度与960栅格系统相同。
+
+Bootstrap的栅格系统有两种，一种是固定式的（Fix），一种是流式的（Fluid），也就是可适应宽度的。固定式栅格系统每列的宽度及列与列间的间距都是固定的，列宽为60px，列间距为20px
+
+
+<div class="span4"> bootstrap将页面分成12个网格，让包含的内容占多大，就将网格数字进行调整
+
+在Bootstrap中，为栅格系统定义了2类样式。容器为.row，可在容器中加入合适数量的.span*列。在设计页面网格系统时，如果确定宽度为940像素，则应确保各列之和等于12
+
+响应式网格系统随着屏幕或视口（viewport）尺寸的增加，系统会自动分为最多12列。
+
+1	1	1	1     	1	1	1	1	   1	1	1	1
+        4	              4	                  4
+        4	                         8
+                6	             6
+                          12
+行必须放置在 .container class 内，以便获得适当的对齐（alignment）和内边距（padding）
+
+网格系统可以进行嵌套，在一个网格中可以继续进行划分
+
+如果想根据窗口大小不同进行不同的分割，采取fluid，container-fluid的width是100％，而container的width是用媒体查询获得的动态尺寸
+
+
+span与col-*-* 两个是bootstrap不一样版本的列写法（前者为bootstrap2,后者为bootstrap3），其实已经甚少人用span了，因为实际上span是没有响应式一说的，只是可以做网格分布控制而已
+
+xs：extra small 特别窄屏幕，默认指浏览器像素宽度小于768px
+sm：small 窄屏幕，默认指浏览器像素宽度大于等于768px
+md：middle 中等宽度屏幕，默认值指浏览器像素宽度大于等于992px
+lg：large 大屏幕，默认值指浏览器像素宽度大于等于1200px
+
+xs：col-xs-1 ~ col-xs-12，多列始终在一行内。
+sm：col-sm-1 ~ col-sm-12，多列在浏览器像素宽度大于等于768px时才在一行内。
+md：col-md-1 ~ col-md-12，多列在浏览器像素宽度大于等于992px时才在一行内。
+lg：col-lg-1 ~ col-lg-12，多列在浏览器像素宽度大于等于1200px时才在一行内。
+
+不管在哪种屏幕上，栅格系统都会自动的分12列 col-xs-*和col-sm-* 和col-md-*后面跟的参数表示在当前的屏幕中 div占的宽度。
+
+栅格偏移
+理解了栅格化，那么栅格偏移也相对容易理解了。v3的偏移分别有以下几种：
+
+offset：左外边距（margin-left）；
+pull：右位移（right）；
+push：左位移（left）
+
+<div class="col-sm-10 col-md-8"> 表示：在中等屏幕设备上该div占用8列的宽度；在小屏幕上该div占用10列的宽度
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+响应式布局
+
+根据不同的设备（浏览窗口的尺寸）应用不同的样式
+
+//当窗口的大小在500与600px之间时，背景颜色进行改变
+<style>
+body{background:#000;}
+
+@media(min-width:500px) and (max-width:600px){
+body{background:#f00;}
+}
+</style>
+
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+文字标签
+<abbr class="initialism" title="Content Management System">cms</abbr> 缩写
+
+<strong>重要的文字</strong>    加粗
+
+<em>使用斜体强调的文字</em>     斜体
+
+<blockquote class="pull-right"></blockquote>  在这段文字前加一个黑色边框
+如果添加pull-right这个class，那么里面的文字往右边显示
+
+<small>来自<cite>宁皓网</cite></small>  变小，cite会在前面加一个破折号
+
+列表标签
+
+无序列表：ul
+有序列表：ol，在前面加一个序号1，2，3...
+描述列表:dl，描绘的名称dt，解释dd
+
+<h2>描述列表</h2>
+<dl class="dl-horizontal">
+
+<dt>Drupal</dt>
+<dd>强大而灵活的CMF</dd>
+
+<dt>Joomla</dt>
+<dd> 简单易用的CMS</dd>
+
+<dt>Wordpress</dt>
+<dd>优雅的内容发布应用</dd>
+
+</dl>
+
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+代码标签
+
+用于显示代码内容
+
+<code></code>
+<pre></pre>
+
+用google的prettify.js可以让pre的内容更美观
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+表格标签
+
+带边框的表格
+
+ <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>下载量</th>
+      <th>图书出版</th>
+      <th>外链数</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Wordpress</td>
+    <td>644,880</td>
+    <td>83</td>
+    <td>26,900</td>
+  </tr>
+  <tr>
+    <td>Joomla</td>
+    <td>86,547</td>
+    <td>64</td>
+    <td>45,600</td>
+  </tr>
+  <tr>
+    <td>Drupal</td>
+    <td>22,836</td>
+    <td>65</td>
+    <td>37,100</td>
+  </tr>
+</table>
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+表单样式
+
+1.输入框
+<input id="username" type="text" class="span3" placeholder="输入您的用户名">
+
+2.单选按钮
+<label class="radio"><input name="gender" type="radio" value="male">男</label>
+
+3.多选框
+<label class="checkbox inline"><input type="checkbox" value="wordpress">Wordpress</label>
+
+4.多个内容进行显示，选择列表
+<select multiple="multiple">
+    <option value="italy">意大利</option>
+    <option value="US">美国</option>
+    <option value="UK">英国</option>
+</select>
+
+5.按钮
+<button class="btn">
+
+6.将文本框与按钮连接一起显示
+<div class="input-append">
+  <input type="text"> <button class="btn" type="button">搜索</button>
+</div>
+
+7.排版
+<form class="form-horizontal">
+<legend>用户登录</legend>
+<fieldset>
+<div class="control-group">
+        
+        <label class="control-label" for="username">用户名</label>
+        
+        <div class="controls">
+          <input id="username" type="text">
+          <p class="help-block">请输入您想要注册的用户名</p>
+        </div>
+
+</div>
+
+
+<div class="control-group">
+        
+        <label class="control-label" for="password">密码</label>
+        
+        <div class="controls">
+          <input id="password" type="password">
+          <p class="help-block">请输入设置的密码</p>
+        </div>
+      
+</div>
+</fieldset>
+</form>
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+按钮
+
+把几个按钮组合在一起显示
+
+<div class="btn-group">
+ <button class="btn">粗体</button>
+ <button class="btn">斜体</button>
+ <button class="btn">下划线</button>
+</div>
+
+<div class="btn-toolbar">可以把多个按钮组一起显示，并排显示，组与组中间留出一些空隙
+
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+下拉菜单的按钮
+
+1.定义一个有下拉功能的按钮 class="btn dropdown-toggle" data-toggle="dropdown" 
+<a class="btn dropdown-toggle" data-toggle="dropdown" data-target="#navi_menu" href="#">字体 <span class="caret"></span></a>
+
+2.class="dropdown-menu"， 为这个下拉菜单添加内容
+ <ul class="dropdown-menu" id="navi_menu">
+    <li><a href="#">黑体</a></li>
+    <li><a href="#">宋体</a></li>
+    <li><a href="#">仿宋</a></li>    
+</ul>
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+缩略图
+
+<ul class="thumbnails">
+  
+  <li class="span3"><a class="thumbnail" href="#"><img src="http://placehold.it/260x180" alt=""></a></li>
+  
+  <li class="span3"><a class="thumbnail" href="#"><img src="http://placehold.it/260x180" alt=""></a></li>
+  
+  
+</ul>
+  

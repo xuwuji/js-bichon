@@ -57,3 +57,429 @@ $('ul li a').css('color','yellow')
 
 6.通配符选择器
 $('*')
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+过滤选择器
+
+1.伪类选择器
+
+E:pseudo-class {property:value}
+/*其中E为元素;pseudo-class为伪类名称;property是css的属性;value为css的属性值*/
+
+<style type="text/css">
+a:link {color: #FF0000}
+a:visited {color: #00FF00}
+a:hover {color: #FF00FF}
+a:active {color: #0000FF}
+</style>
+
+$('ul:first li:last').css('color', 'green'); //第一ul中的最后一个li
+
+$('ul:last li:not(.green)').css('color', 'blue'); //最后一个ul中的所有class不为green的li
+
+$('ul:eq(1) li:last').css('color', 'green'); //第二个ul，注意eq是从0开始计算
+
+
+
+2.内容过滤器
+
+$('div:contains("link")').css('color', 'blue'); //文本中包含link的div
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+DOM操作
+
+1.元素操作
+
+在常规的 DOM 元素中,我们可以使用 html()和 text()方法获取内部的数据。html()方法 可以获取或设置 html 内容,text()可以获取或设置文本内容。
+
+$('#box').html(); //获取 html 内容
+$('#box').text();  //获取文本内容,会自动清理 html 标签
+$('#box').html('<em>www.li.cc</em>');  //设置 html 内容
+$('#box').text('<em>www.li.cc</em>');  //设置文本内容,会自动转义 html 标签
+
+注意:当我们使用 html()或 text()设置元素里的内容时,会清空原来的数据。而我们期 望能够追加数据的话,需要先获取原本的数据。
+$('#box').html($('#box').html() + '<em>www.li.cc</em>'); //追加数据
+
+
+如果元素是表单的话,jQuery 提供了 val()方法进行获取或设置内部的文本数据。
+$('input').val(); //获取表单内容 
+$('input').val('www.li.cc'); //设置表单内容
+
+
+如果想设置多个选项的选定状态,比如下拉列表、单选复选框等等,可以通过数组传递 操作。
+$("input").val(["check1","check2", "radio1" ]); //value 值是这些的将被选定
+
+2.属性操作
+除了对元素内容进行设置和获取,通过 jQuery 也可以对元素本身的属性进行操作,包括获取属性的属性值、设置属性的属性值,并且可以删除掉属性。
+
+attr()和 removeAttr()
+
+$('div').attr('title');  //获取属性的属性值 
+
+$('div').attr('title', '我是域名');  //设置属性及属性值
+
+$('div').attr('title', function () {    //通过匿名函数返回属性值
+return '我是域名'; });
+
+$('div').attr('title', function (index, value) { return value + (index+1) + ',我是域名';  //可以接受两个参数
+});
+ 
+
+注意:attr()方法里的 function() {},可以不传参数。可以只传一个参数 index,表示当前 元素的索引(从 0 开始)。也可以传递两个参数 index、value,第二个参数表示属性原本的值。
+
+注意:jQuery 中很多方法都可以使用 function() {}来返回出字符串,比如 html()、text()、 val()和上一章刚学过的 is()、filter()方法。而如果又涉及到多个元素集合的话,还可以传递 index 参数来获取索引值,并且可以使用第二个参数 value(并不是所有方法都适合,有兴趣 可以自己逐个尝试)。
+
+$('div').html(function (index) { //通过匿名函数赋值,并传递 index return '我是' + (index+1) + '号 div';
+});
+$('div').html(function (index, value) { //还可以实现追加内容 return '我是' + (index+1) + '号 div:'+value ;
+});
+
+注意:我们也可以使用 attr()来创建 id 属性,但我们强烈不建议这么做。这样会导致整 个页面结构的混乱。当然也可以创建 class 属性,但后面会有一个语义更好的方法来代替 attr() 方法,所以也不建议使用。
+
+删除指定的属性,这个方法就不可以使用匿名函数,传递 index 和 value 均无效。 $('div').removeAttr('title'); //删除指定的属性
+
+
+3.元素样式操作
+
+css({name1 : value1, name2 : value2})  设置某个元素行内多个 CSS 样式
+
+addClass(class)    给某个元素添加一个 CSS 类
+
+addClass(class1 class2 class3...)  给某个元素添加多个 CSS 类
+
+removeClass(class)  删除某个元素的一个 CSS 类
+
+removeClass(class1 class2 class3...)  删除某个元素的多个 CSS 类
+
+toggleClass(class)  来回切换默认样式和指定样式
+
+toggleClass(class1 class2 class3...)  同上
+
+toggleClass(class, switch)  来回切换样式的时候设置切换频率
+
+toggleClass(function () {})  通过匿名函数设置切换的规则
+
+toggleClass(function () {}, switch)  在匿名函数设置时也可以设置频率
+
+toggleClass(function (i, c, s) {}, switch)  在匿名函数设置时传递三个参数
+
+4.节点操作
+
+var box = $('<div id="box">节点</div>'); //创建一个节点 
+$('body').append(box); //将节点插入到<body>元素内部
+
+
+appendTo(content)
+将指定元素移入到指定元素 content 内部后面
+
+wrap(html) 向指定元素包裹一层 html 代码
+wrap(element) 向指定元素包裹一层 DOM 对象节点
+
+$('div').wrap('<strong></strong>'); //在 div 外层包裹一层 strong 
+$('div').wrap('<strong>123</strong>'); //包裹的元素可以带内容
+$('div').wrap('<strong><em></em></strong>');  //包裹多个元素
+$('div').wrap($('strong').get(0)); //也可以包裹一个原生 DOM
+$('div')unwrap() //移除一层指定元素包裹的内容
+
+$('div').remove(); //直接删除 div 元素
+
+$('div').empty();  //删除掉节点里的内容
+
+$('div').replaceWith('<span>节点</span>'); //替换节点 
+
+$('<span>节点</span>').replaceAll('div'); //将 div 替换成 span 元素
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+事件
+
+JavaScript 在事件处理函数中默认传递了 event 对象,也就是事件对象。
+
+type    获取这个事件的事件类型串,例如:click
+target  获取绑定事件的 DOM 元素
+data    获取事件调用时的额外数据
+relatedTarget  获取移入移出目标点离开或进入的那个 DOM 元素
+currentTarget  获取冒泡前触发的 DOM 元素,等同与 this
+pageX/pageY    获取相对于页面原点的水平/垂直坐标
+screenX/screenY  获取显示器屏幕位置的水平/垂直坐标(非 jQuery 封装)
+clientX/clientY  获取相对于页面视口的水平/垂直坐标(非 jQuery 封装)
+result           获取上一个相同事件的返回值
+timeStamp        获取事件触发的时间戳
+which            获取鼠标的左中右键(1,2,3),或获取键盘按键
+altKey/shiftKey/ ctrlKey/metaKey     获取是否按下了 alt、shift、ctrl(这三个非 jQuery 封装)或 meta 键(IE 原生 meta 键,jQuery 做了封装)
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+高级事件
+
+1.模拟操作
+
+事件触发的时候,有时我们需要一些模拟用户行为的操作。例如:当网页加载完毕后 自行点击一个按钮触发一个事件,而不是用户去点击。
+
+//用户没有点，但是会模拟已经点击操作
+$('input').click(function () {
+    alert('我的第一次点击来自模拟!'); 
+}).trigger('click');
+
+有时在模拟用户行为的时候,我们需要给事件执行传递参数,这个参数类似与 event.data 的额外数据,可以可以是数字、字符串、数组、对象。
+$('input').click(function (e, data1, data2) { 
+    alert(data1 + ',' + data2);
+}).trigger('click', ['abc', '123']);
+
+注意:当传递一个值的时候,直接传递即可。当两个值以上,需要在前后用中括号包含 起来。但不能认为是数组形式,下面给出一个复杂的说明。
+$('input').click(function (e, data1, data2) {
+    alert(data1.a + ',' + data2[1]);
+  }).trigger('click', [{'a' : '1', 'b' : '2'}, ['123','456']]);
+  
+.trigger()方法提供了简写方案,只要想让某个事件执行模拟用户行为,直接再调用一个 空的同名事件即可。
+$('input').click(function () { 
+    alert('我的第一次点击来自模拟!');
+}).click(); //空的 click()执行的是 trigger()
+
+2.on/off/one
+
+用.on()和.off()方法进行事件的绑定
+
+$('.button').on({
+mouseover : function () {
+    alert('替代.bind()移入!');
+},
+mouseout : function () {
+    alert('替代.bind()移出!'); }
+});
+
+不管是.bind()还是.on(),绑定事件后都不是自动移除事件的,需要通过.unbind()和.off() 来手工移除。
+
+jQuery 提供了.one()方法,绑定元素执行完毕后自动移除事件,可以方法仅触 发一次的事件。
+
+//类似于.bind()只触发一次 
+$('.button').one('click', function () {
+    alert('one 仅触发一次!'); 
+});
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+动画效果
+
+1.显示、隐藏
+
+jQuery 中显示方法为:.show(),隐藏方法为:.hide()。在无参数的时候,只是硬性的显示内容和隐藏内容。
+
+    $('#box').show();
+
+    $('#box').hide(); 
+
+可以传递一个参数,这个参数以毫秒(1000 毫秒等于 1 秒钟)来控 制速度。并且里面富含了匀速变大变小,以及透明度变换。
+jQuery 还提供了三种预设速度参数字符串:slow、 normal 和 fast,分别对应 600 毫秒、400 毫秒和 200 毫秒。
+
+//使用.show()和.hide()的回调函数,可以实现列队动画效果
+//在.show执行后，再执行alert
+function show() {
+    $('#displaybox').show(1000,function(){
+        alert('show');
+    });
+}
+
+我们在使用.show()和.hide()的时候,如果需要一个按钮切换操作,需要进行一些条件判断。而 jQuery 提供给我们一个类似功能的独立方法:.toggle()。
+
+$(this).toggle('slow');
+
+function toggle() {
+    $('#displaybox').toggle(1000, function() {
+        alert('toggle');
+    });
+}
+
+//列队动画,使用函数名调用自身
+$('.show').click(function () {
+$('div').first().show('fast', function showSpan() { $(this).next().show('fast', showSpan);
+}); });
+
+function selfhide() {
+    $('.self').last().hide('fast', function() {
+        $(this).prev().hide(1000, arguments.callee);
+    });
+}
+
+function selfshow() {
+    $('.self').first().show('fast', function() {
+        $(this).next().show(1000, arguments.callee);
+    });
+}
+
+function selftoggle() {
+    $('.self').first().toggle('fast', function() {
+        $(this).next().toggle(1000, arguments.callee);
+    });
+}
+
+2.滑动、卷动
+
+function up() {
+        $('#updownbox').slideUp();
+    }
+
+function down() {
+        $('#updownbox').slideDown();
+    }
+    
+3.淡入、淡出
+function fadein () {
+        $('#fadebox').fadeIn();
+}
+
+function fadeout() {
+        $('#fadebox').fadeOut();
+}
+
+4.自定义动画效果
+function ani() {
+    $('#ani').animate({
+            'width': '300px',
+            'height': '200px',
+            'fontSize': '50px',
+            'opacity': 0.5,
+            'left':'100px';
+    },1000,function(){
+        alert('complete');
+    });
+}
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+Ajax
+
+1.基本操作
+
+Ajax 这个概念是由 Jesse James Garrett 在 2005 年发明的。它本身不是单一技术,是一串技术的集合,主要有:
+
+1.JavaScript,通过用户或其他与浏览器相关事件捕获交互行为;
+2.XMLHttpRequest 对象,通过这个对象可以在不中断其它浏览器任务的情况下向服务
+器发送请求;
+3.服务器上的文件,以 XML、HTML 或 JSON 格式保存文本数据;
+4.其它 JavaScript,解释来自服务器的数据(比如 PHP 从 MySQL 获取的数据)并将其
+呈现到页面上。
+
+jQuery 采用了三层封装:最底层的封装方法为:$.ajax(),而通过这层封装了第二层有三种方法:.load()、$.get()和$.post(),最高层是$.getScript()和$.getJSON()方法。
+
+1.GET 请求是通过 URL 提交的,而 POST 请求则是 HTTP 消息实体提交的; 2.GET 提交有大小限制(2KB),而 POST 方式不受限制;
+3.GET 方式会被缓存下来,可能有安全性问题,而 POST 没有这个问题; 4.GET 方式通过$_GET[]获取,POST 方式通过$_POST[]获取。
+
+jQuery 提供了一组用于特定异步加载的方法:$.getScript(),用于加载特定的 JS 文件;
+$.getJSON(),用于专门加载 JSON 文件。
+
+//点击按钮后再加载 JS 文件
+$('input').click(function () {
+    $.getScript('test.js'); 
+});
+
+$.getJSON()方法是专门用于加载 JSON 文件的,使用方法和之前的类似。 
+$('input').click(function () {
+    $.getJSON('test.json', function (response, status, xhr) { 
+        alert(response[0].url);
+    }); 
+});
+
+
+2.表单序列化
+
+使用表单序列化方法.serialize(),会智能的获取指定表单内的所有元素。这样,在面对 大量表单元素时,会把表单元素内容序列化为字符串,然后再使用 Ajax 请求
+
+form表单中input一定要有name才行  
+<form id='ajaxForm'>
+            <input type='text' value="username" name="username" />
+            <input type='password' value='password' name="password" />
+            <input type='button' value='submit' />
+</form>
+
+console.log($('#ajaxForm').serialize());  //username=username&password=password 得到表单内容
+
+在使用 data 属性传递的时候,如果是以对象形式传递键值对,可以使用$.param()方法 将对象转换为字符串键值对格式。
+var obj = {a : 1, b : 2, c : 3}; 
+var form = $.param(obj); 
+alert(form);
+
+
+3.ajax全局请求事件/局部事件
+
+jQuery 提供了两个全局事件,.ajaxStart()和.ajaxStop()。这两个全局事件,只要用户触发 了 Ajax,请求开始时(未完成其他请求)激活.ajaxStart(),请求结束时(所有请求都结束了) 激活.ajaxStop()。
+
+必须绑定在 document 元素上
+
+$(document).ajaxStart(function() {
+        alert('begin');
+}).ajaxStop(function() {
+        alert('end');
+});
+
+.success(),请求成功完成时执行,.complete(),请求完成后注册一个回调函数, beforeSend,请求发送之前要绑定的函数
+$.ajax({
+        type: "GET",
+        url: "http://localhost:8080/backend",
+        data: {},
+        beforeSend: function(xhr, settings) {
+            alert('请求之前' + ' - ' + xhr.readyState + ' - ' + settings.url);
+        }
+    }).done(function(data) {
+        //console.log(data);
+    });
+    
+
+4.JSON 和 JSONP
+如果在同一个域下,$.ajax()方法只要设置 dataType 属性即可加载 JSON 文件。而在非同域下,可以使用 JSONP,但也是有条件的。
+
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+ 
+ 工具函数
+ 
+ 一.字符串操作
+在 jQuery 中,字符串的工具函数只有一个,就是去除字符串左右空格的工具函数: $.trim()。
+
+二.数组和对象操作
+//$.each()遍历数组
+
+var arr = ['张三', '李四', '王五', '马六'];
+
+$.each(arr, function (index, value) {
+$('#box').html($('#box').html() + index + '.' + value + '<br />');
+});
+
+//$.each()遍历对象
+
+$.each($.ajax(), function (name, fn) {
+
+$('#box').html($('#box').html() + name + '.' + '<br /><br />');
+})
+
+//$.merge()合并两个数组
+var arr = [5,2,9,4,11,57,89,1,23,8];
+var arr2 = [23,2,89,3,6,7]; 
+alert($.merge(arr, arr2));
+
+//$.unique()删除重复的 DOM 元素
+var divs = $('div').get();
+divs = divs.concat($('.box').get());
+$.unique(divs);
+
+三.测试操作
+
+//$.type()检测数据类型
+//$.isNumeric 检测数据是否为数值
+//$.isFunction(fn) 判断是否为数组对象
+//$.isEmptyObject(obj) 判断是否为空对象
+//$.isFunction(fn) 判断是否为函数
+
+四.URL 操作
+//$.param()将对象键值对转换为 URL 字符串键值对 
+var obj = {
+name : 'Lee',
+age : 100 
+};
+
+alert($.param(obj));
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
