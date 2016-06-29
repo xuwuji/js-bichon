@@ -9,23 +9,28 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css" />
     <script src="js/bootstrap-select.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="js/highstock.js"></script>
+    <script src="js/jquery.qtip.js"></script>
+    <script src="js/highcharts-more.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css " href="css/style.css" />
+    <link rel="stylesheet" type="text/css " href="css/jquery.qtip.min.css" />
 </head>
 
 <body>
 
 
-    <div class="container" style="width:90%">
+    <div class="container " style="width:90% ">
 
         <!--nav page name-->
-        <div class="nav_page_name">
+        <div class="nav_page_name ">
             Product Health
         </div>
 
         <!--nav tab-->
-        <div class="nav_tab_div">
-            <ul class="nav nav-tabs">
-                <li class="active"><a>Shopping Experience</a></li>
+        <div class="nav_tab_div ">
+            <ul class="nav nav-tabs ">
+                <li class="active "><a>Shopping Experience</a></li>
                 <li>
                     <a>Customer Connection & Trust</a>
                 </li>
@@ -36,72 +41,173 @@
         </div>
 
         <!--filter selection-->
-        <div class="filter_section">
-
-            <div class="row">
+        <div class="row ">
+            <div class="filter_section well col-lg-12 ">
                 <!--site-->
-                <div id="" class="col-md-2 col-lg-2">
+                <div id=" " class="filterUnit col-lg-2 ">
                     Site
-                    <div class="form-group" style="margin-top:10px">
-                        <select id="site_selector" class=" selectpicker form-control" multiple data-actions-box="true" data-live-search="true">
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="site_selector" class=" selectpicker form-control multi-select" multiple data-actions-box="true " data-live-search="true ">
 
                         </select>
                     </div>
                 </div>
 
                 <!--device-->
-                <div class="col-md-2 col-lg-2">
+                <div class="filterUnit col-lg-2 ">
                     Device
-                    <div class="form-group" style="margin-top:10px">
-                        <select id="device_selector" class="selectpicker form-control" multiple data-actions-box="true" data-live-search="true">
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="device_selector" class="selectpicker form-control multi-select" multiple data-actions-box="true " data-live-search="true ">
                         </select>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div id="apply_btn" class="col-md-2 col-lg-2">
+                <!--Experience-->
+                <div class="filterUnit col-lg-2 ">
+                    Experience
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="experience_selector" class="selectpicker form-control multi-select" multiple data-actions-box="true " data-live-search="true ">
+                        </select>
+                    </div>
+                </div>
+
+
+                <!--Date Range-->
+                <div class="filterUnit col-lg-2 ">
+                    Date Range
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="compare " class="selectpicker form-control" data-actions-box="true " data-live-search="true ">
+
+                        </select>
+                    </div>
+                </div>
+
+                <!--compare-->
+                <div id=" " class="filterUnit col-lg-2 ">
+                    Compare
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="device_selector" class=" selectpicker form-control" data-actions-box="true " data-live-search="true ">
+                            <option>None</option>
+                            <option selected>Year</option>
+                            <option>Site</option>
+                            <option>Device</option>
+                            <option>Experience</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--and-->
+                <div class="filterUnit col-lg-2 ">
+                    And
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="device_selector " class="selectpicker form-control " data-actions-box="true " data-live-search="true ">
+                            <option selected>None</option>
+                            <option>Site</option>
+                            <option>Device</option>
+                            <option>Experience</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--and-->
+                <div class="filterUnit col-lg-2 ">
+                    And
+                    <div class="form-group " style="margin-top:10px ">
+                        <select id="device_selector " class="selectpicker form-control" disabled data-actions-box="true " data-live-search="true ">
+                            <option selected>None</option>
+                            <option>Device</option>
+                            <option>Experience</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filterUnit col-lg-2 ">
+                    <input type="checkbox" />7DMA
+                    <a href="# ">MMD</a>
+                </div>
+
+                <div id="apply_btn " class="filterUnit col-lg-2 ">
                     <button class="btn btn-primary ">Apply</button>
                 </div>
             </div>
 
         </div>
 
-        <div class="nav_label_name">
 
-            <div class="one_column_chart col-lg-3">
-                <div class="vertical">
+        <!--report-->
 
+        <div class="report row ">
+
+            <div class="col-lg-3 " style="padding:0px ">
+                <div class="odd_column_chart ">
                     Engagement
-                    <div class="high_chart col-lg-3">
+                </div>
+                <div class="sub_title ">
+                    <label>Home Page</label>
+                </div>
+                <div>
+                    <div class="highchart_section " id="chart_2">
 
                     </div>
+                    <div id="sqlbtn" style=" position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;"></i></div>
                 </div>
             </div>
 
 
-            <div class="one_column_chart col-lg-9">
-                Engagement
+
+            <div class="col-lg-9 " style="padding:0px ">
+                <div class="even_column_chart ">
+                    Buying
+                </div>
             </div>
 
         </div>
+
+
     </div>
 
 </body>
+<script src="js/phd_hightchart.js"></script>
+<script src="js/phd_filter.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(
-        initSelector()
-    );
+    //initFilter();
 
-    function initSelector() {
-        $('#site_selector').append('<option>Relish</option>');
-        $('.selectpicker').selectpicker('selectAll');
-    }
+    $(document).ready(
+        function() {
+            //$('#site_selector').append('<option>Relish</option>');
+            //$('.selectpicker').selectpicker('selectAll');
+        }
+    );
 
     function collectSeletorData() {
         var site = $('#site_selector').val();
     }
+
+    $('#deepdivebtn').qtip({
+        content: {
+            text: 'deep dive' // Use the "div" element next to this for the content
+        },
+        position: {
+            at: 'bottom center'
+        },
+        style: {
+            classes: 'qtip-bootstrap'
+        }
+    });
+
+    $('#sqlbtn').qtip({
+        content: {
+            text: 'show sql' // Use the "div" element next to this for the content
+        },
+        position: {
+            at: 'bottom center'
+        },
+        style: {
+            classes: 'qtip-bootstrap'
+        }
+    });
+
 </script>
 
 </html>
