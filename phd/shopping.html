@@ -11,10 +11,14 @@
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/highstock.js"></script>
     <script src="js/jquery.qtip.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/daterangepicker.js"></script>
     <script src="js/highcharts-more.js"></script>
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css " href="css/style.css" />
+
     <link rel="stylesheet" type="text/css " href="css/jquery.qtip.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css " href="css/style.css" />
 </head>
 
 <body>
@@ -23,7 +27,7 @@
     <div class="container " style="width:90% ">
 
         <!--nav page name-->
-        <div class="nav_page_name ">
+        <div class="nav_page_name">
             Product Health
         </div>
 
@@ -41,10 +45,10 @@
         </div>
 
         <!--filter selection-->
-        <div class="row ">
+        <div class="row">
             <div class="filter_section well col-lg-12 ">
                 <!--site-->
-                <div id=" " class="filterUnit col-lg-2 ">
+                <div class="filterUnit col-lg-2 ">
                     Site
                     <div class="form-group " style="margin-top:10px ">
                         <select id="site_selector" class=" selectpicker form-control multi-select" multiple data-actions-box="true " data-live-search="true ">
@@ -73,20 +77,20 @@
 
 
                 <!--Date Range-->
-                <div class="filterUnit col-lg-2 ">
+                <div class="filterUnit col-lg-2">
                     Date Range
-                    <div class="form-group " style="margin-top:10px ">
-                        <select id="compare " class="selectpicker form-control" data-actions-box="true " data-live-search="true ">
-
-                        </select>
+                    <div style="margin-top:10px">
+                        <input type="text" class="form-control" id="filterDateRange" style="width: 220px;padding-left: 36px;">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar" style="position: absolute; top: 40px;left: 20px;"></i>
+                        <span></span>
                     </div>
                 </div>
 
                 <!--compare-->
-                <div id=" " class="filterUnit col-lg-2 ">
+                <div id=" " class="filterUnit col-lg-2 " style="margin-left:20px ">
                     Compare
                     <div class="form-group " style="margin-top:10px ">
-                        <select id="device_selector" class=" selectpicker form-control" data-actions-box="true " data-live-search="true ">
+                        <select id="compared1_selector" class=" selectpicker form-control" data-actions-box="true " data-live-search="true ">
                             <option>None</option>
                             <option selected>Year</option>
                             <option>Site</option>
@@ -100,7 +104,7 @@
                 <div class="filterUnit col-lg-2 ">
                     And
                     <div class="form-group " style="margin-top:10px ">
-                        <select id="device_selector " class="selectpicker form-control " data-actions-box="true " data-live-search="true ">
+                        <select id="compared2_selector" class="selectpicker form-control " data-actions-box="true " data-live-search="true ">
                             <option selected>None</option>
                             <option>Site</option>
                             <option>Device</option>
@@ -113,7 +117,7 @@
                 <div class="filterUnit col-lg-2 ">
                     And
                     <div class="form-group " style="margin-top:10px ">
-                        <select id="device_selector " class="selectpicker form-control" disabled data-actions-box="true " data-live-search="true ">
+                        <select id="compared3_selector" class="selectpicker form-control" disabled data-actions-box="true " data-live-search="true ">
                             <option selected>None</option>
                             <option>Device</option>
                             <option>Experience</option>
@@ -127,7 +131,7 @@
                 </div>
 
                 <div id="apply_btn " class="filterUnit col-lg-2 ">
-                    <button class="btn btn-primary ">Apply</button>
+                    <button class="btn btn-primary" onclick="getSelected()">Apply</button>
                 </div>
             </div>
 
@@ -146,11 +150,34 @@
                     <label>Home Page</label>
                 </div>
                 <div>
-                    <div class="highchart_section " id="chart_2">
+                    <div class="highchart_section" id="chart_2">
 
                     </div>
-                    <div id="sqlbtn" style=" position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;"></i></div>
+                    <div class="sqlbtn" style=" position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;"></i></div>
                 </div>
+
+
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Modal Header</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Some text in the modal.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+
             </div>
 
 
@@ -171,22 +198,17 @@
 <script src="js/phd_filter.js"></script>
 
 <script type="text/javascript">
-    //initFilter();
-
     $(document).ready(
-        function() {
-            //$('#site_selector').append('<option>Relish</option>');
-            //$('.selectpicker').selectpicker('selectAll');
-        }
+        function() {}
     );
 
     function collectSeletorData() {
         var site = $('#site_selector').val();
     }
 
-    $('#deepdivebtn').qtip({
+    $('.deepdivebtn').qtip({
         content: {
-            text: 'deep dive' // Use the "div" element next to this for the content
+            text: 'deep dive'
         },
         position: {
             at: 'bottom center'
@@ -196,9 +218,9 @@
         }
     });
 
-    $('#sqlbtn').qtip({
+    $('.sqlbtn').qtip({
         content: {
-            text: 'show sql' // Use the "div" element next to this for the content
+            text: 'show sql'
         },
         position: {
             at: 'bottom center'
@@ -206,6 +228,12 @@
         style: {
             classes: 'qtip-bootstrap'
         }
+    });
+
+
+    $("#chart_2").hover(function() {
+        //alert('dd');
+        $('#myModal').stop().show();
     });
 
 </script>
