@@ -47,12 +47,15 @@
      initDateRange: function () {
 
          function cb(start, end) {
-             $('#filterDateRange span').html(start.format('MMMM D, YYYY') + ' to ' + end.format('MMMM D, YYYY'));
+             //alert('dd');
+             $('#filterDateRange').html(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
          }
 
-         cb(moment().subtract(29, 'days'), moment());
+         //cb(moment().subtract(29, 'days'), moment());
 
          $('#filterDateRange').daterangepicker({
+             "startDate": moment(moment().subtract(29, 'days')),
+             "endDate": moment(),
              ranges: {
                  'Today': [moment(), moment()],
                  'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -62,10 +65,86 @@
                  'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
              },
              "applyClass": "btn-primary"
-         }, cb);
+         }, cb(moment().subtract(29, 'days'), moment()));
      },
 
  }
+
+ var query = {
+     "source": "Mysql",
+     "queryType": "groupBy",
+     "dataSource": {
+         "table": "src488",
+         "family": "fake"
+     },
+     "granularity": "day",
+     "dimensions": ["0"],
+     "filter": {
+         "type": "and",
+         "fields": []
+     },
+     "aggregations": [{
+         "type": "doubleSum",
+         "name": "2",
+         "fieldName": "2"
+    }, {
+         "type": "doubleSum",
+         "name": "3",
+         "fieldName": "3"
+    }, {
+         "type": "doubleSum",
+         "name": "4",
+         "fieldName": "4"
+    }, {
+         "type": "doubleSum",
+         "name": "5",
+         "fieldName": "5"
+    }, {
+         "type": "doubleSum",
+         "name": "6",
+         "fieldName": "6"
+    }, {
+         "type": "doubleSum",
+         "name": "7",
+         "fieldName": "7"
+    }, {
+         "type": "doubleSum",
+         "name": "8",
+         "fieldName": "8"
+    }, {
+         "type": "doubleSum",
+         "name": "9",
+         "fieldName": "9"
+    }, {
+         "type": "doubleSum",
+         "name": "10",
+         "fieldName": "10"
+    }, {
+         "type": "doubleSum",
+         "name": "11",
+         "fieldName": "11"
+    }, {
+         "type": "doubleSum",
+         "name": "12",
+         "fieldName": "12"
+    }, {
+         "type": "doubleSum",
+         "name": "13",
+         "fieldName": "13"
+    }, {
+         "type": "doubleSum",
+         "name": "14",
+         "fieldName": "14"
+    }, {
+         "type": "doubleSum",
+         "name": "15",
+         "fieldName": "15"
+    }, {
+         "type": "doubleSum",
+         "name": "16",
+         "fieldName": "16"
+    }]
+ };
 
 
  //get selected config data for filter
@@ -73,9 +152,22 @@
      var site = $('#site_selector').val();
      var device = $('#device_selector').val();
      var experience = $('#experience_selector').val();
+     var date = $('#filterDateRange').val().split('-');
+     date[0] = moment(date[0]).format("YYYY-MM-DD");
+     date[1] = moment(date[1]).format("YYYY-MM-DD");
+     dateO = {};
+     dateO.type = "daterange";
+     dateO.dimension = 0;
+     dateO.value = date;
+     siteO = {};
      console.log(site);
      console.log(device);
      console.log(experience);
+     console.log(dateO);
+     var queryData = query;
+     queryData["filter"]["fields"]=[];
+     queryData["filter"]["fields"].push(dateO);
+     console.log(queryData);
  };
 
  $('#compared2_selector').on('change', function () {

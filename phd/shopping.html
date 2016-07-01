@@ -15,7 +15,6 @@
     <script src="js/daterangepicker.js"></script>
     <script src="js/highcharts-more.js"></script>
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
-
     <link rel="stylesheet" type="text/css " href="css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
     <link rel="stylesheet" type="text/css " href="css/style.css" />
@@ -150,34 +149,26 @@
                     <label>Home Page</label>
                 </div>
                 <div>
+                    <div class="highchart_section" id="chart_1">
+
+                    </div>
+
+                </div>
+                <div>
                     <div class="highchart_section" id="chart_2">
 
                     </div>
-                    <div class="sqlbtn" style=" position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;"></i></div>
                 </div>
+                <div>
+                    <div class="highchart_section" id="chart_3">
 
-
-                <!-- Modal -->
-                <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Modal Header</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>Some text in the modal.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <!-- Modal -->
+                <div>
+                    <div class="highchart_section" id="chart_4">
 
+                    </div>
+                </div>
             </div>
 
 
@@ -186,52 +177,97 @@
                 <div class="even_column_chart ">
                     Buying
                 </div>
+                <div class="col-lg-4">
+
+                    <div class="sub_title ">
+                        <label>Search</label>
+                    </div>
+                    <div>
+                        <div class="highchart_section" id="chart_5">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+
+                    <div class="sub_title ">
+                        <label>View Item</label>
+                    </div>
+                    <div>
+                        <div class="highchart_section" id="chart_6">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+
+                    <div class="sub_title ">
+                        <label>Checkout</label>
+                    </div>
+                    <div>
+                        <div class="highchart_section" id="chart_7">
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
-
     </div>
+
+
+    <!-- DEEP DIVE Modal -->
+    <div id="DDModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="dd-modal-title">Modal Header</h4>
+                </div>
+                <div class="dd-modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--DEEP DIVE Modal -->
+
+
+
+    <!-- SQL DESC Modal -->
+    <div id="SQLModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="sql-modal-title">Modal Header</h4>
+                </div>
+                <div class="sql-modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--SQL DESC Modal -->
+
 
 </body>
 <script src="js/phd_hightchart.js"></script>
 <script src="js/phd_filter.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(
-        function() {
-            $('.deepdivebtn').qtip({
-                content: {
-                    text: 'deep dive'
-                },
-                position: {
-                    at: 'bottom center'
-                },
-                style: {
-                    classes: 'qtip-bootstrap'
-                }
-            });
-
-            $('.sqlbtn').qtip({
-                content: {
-                    text: '<div style="font-size:10px text-aligen:center">show sql</div>'
-                },
-                position: {
-                    at: 'bottom center'
-                },
-                style: {
-                    classes: 'qtip-bootstrap'
-                }
-            });
-        }
-
-
-    );
-
-    function collectSeletorData() {
-        var site = $('#site_selector').val();
-    }
-
-</script>
+<script src="js/phd_sql.js"></script>
+<script src="js/phd_deepdive.js"></script>
+<script src="js/phd_qtip.js"></script>
+<script type="text/javascript"></script>
 
 </html>
