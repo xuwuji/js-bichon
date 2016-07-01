@@ -199,42 +199,38 @@
 
 <script type="text/javascript">
     $(document).ready(
-        function() {}
+        function() {
+            $('.deepdivebtn').qtip({
+                content: {
+                    text: 'deep dive'
+                },
+                position: {
+                    at: 'bottom center'
+                },
+                style: {
+                    classes: 'qtip-bootstrap'
+                }
+            });
+
+            $('.sqlbtn').qtip({
+                content: {
+                    text: '<div style="font-size:10px text-aligen:center">show sql</div>'
+                },
+                position: {
+                    at: 'bottom center'
+                },
+                style: {
+                    classes: 'qtip-bootstrap'
+                }
+            });
+        }
+
+
     );
 
     function collectSeletorData() {
         var site = $('#site_selector').val();
     }
-
-    $('.deepdivebtn').qtip({
-        content: {
-            text: 'deep dive'
-        },
-        position: {
-            at: 'bottom center'
-        },
-        style: {
-            classes: 'qtip-bootstrap'
-        }
-    });
-
-    $('.sqlbtn').qtip({
-        content: {
-            text: 'show sql'
-        },
-        position: {
-            at: 'bottom center'
-        },
-        style: {
-            classes: 'qtip-bootstrap'
-        }
-    });
-
-
-    $("#chart_2").hover(function() {
-        //alert('dd');
-        $('#myModal').stop().show();
-    });
 
 </script>
 

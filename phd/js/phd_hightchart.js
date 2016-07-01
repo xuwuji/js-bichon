@@ -85,9 +85,6 @@ var options = {
             });
             return ret;
         }
-    },
-    report: {
-        note: 'sd',
     }
 }
 
@@ -171,10 +168,49 @@ function getData() {
         options.title.text = '%HP Visitors Who Search'
         '%HP Visitors Who Search';
         options.series = resultData;
-        new Highcharts.Chart(options);
+        var chart = new Highcharts.Chart(options);
         initDeepDiveBtn();
+        addChartDesc(chart);
     });
 }
 
+
+
+function addChartDesc(chart) {
+    var container = $(chart.renderTo).find('.highcharts-container');
+    var titleContainer = container.find('.highcharts-title');
+    var titlePos = titleContainer.position();
+    if (titlePos == null) {
+        return;
+    }
+    var bbox = titleContainer[0].getBBox();
+    var top = parseInt(bbox.y);
+    var left = parseInt(bbox.x - 5);
+    var width = parseInt(bbox.width + 10);
+    var height = parseInt(bbox.height + 5);
+
+
+    var noteMaskDiv = $('<div style="z-index:20;position: absolute;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px;height:' + height + 'px;background-color:white;opacity:0"></div>');
+
+    var descDiv = $('<div>noteText</div>');
+
+    var statusDiv = '';
+
+    descDiv.append(statusDiv);
+    container.append(noteMaskDiv);
+
+    noteMaskDiv.qtip({
+        content: {
+            title: '<b>Note:</b>',
+            text: descDiv.html(),
+        },
+        position: {
+            target: 'mouse'
+        },
+        style: {
+           classes: 'qtip-bootstrap'
+        }
+    });
+}
 
 getData();
