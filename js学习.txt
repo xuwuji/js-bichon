@@ -15,6 +15,26 @@ f.Symbol（es6才有的）
   data='b';
 这里并不代表a被改变了，而是对系统来说创建了两个基本类型的string数据，分别是'a'和'b'，而data只是从'a'换成指向'b'而已
 
+在js中只有对象才可以使用方法，所以基本类型都有对应的包装对象：String，Number，Boolean
+
+var str＝'abc';
+str.chartAt(0);
+当使用基本类型去调用方法时，自动包装，应用包装对象去调用方法
+
+与Java中的自动包装，自动拆包同样理念
+
+比如想为string添加一个新的方法，需要为其对应的包装对象的原型中添加，这样无论创建多少个新的包装对象，都会找到这个方法，因为原型下的方法是共享的
+
+String.prototype.lastValue=function(){
+    return this.chartAt(this.length-1);
+}
+
+var str＝'abc';
+str.number=10; //在对应的对象里，添加一个属性number并等于10
+在执行完时，这个包装对象已经消失了
+alert(str.number) //undefined
+因为此时会去创建一个新的包装对象，而此时这个包装对象里并没有number这个属性，所以抛出undefined
+
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
 
 2.对象
@@ -164,6 +184,8 @@ function f1(){
 f1();
 alert(n); // 999
 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
 五、闭包
 
 闭包：我们有时候需要得到函数内的局部变量，正常情况下，这是办不到的，只有通过变通方法才能实现，那就是在函数的内部，再定义一个函数。
@@ -180,7 +202,7 @@ function f1(){
 function f1(){
 　　　　var n=999;
 　　　　function f2(){
-　　　　　　alert(n); 
+　　　　　　return n;
 　　　　}
 　　　　return f2;
 　　}
@@ -196,7 +218,9 @@ result(); // 999
 1）由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。
 2）闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。
 
-六、prototype
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+六、prototype原型
 
 1.prototype对象是实现面向对象的一个重要机制。每个函数也是一个对象，它们对应的类就是function，每个函数对象都具有一个子对象prototype。Prototype 表示了该函数的原型，
 prototype表示了一个类的属性的集合。当通过new来生成一个类的对象时，prototype对象的属性就会成为实例化对象的属性。
@@ -204,11 +228,13 @@ prototype表示了一个类的属性的集合。当通过new来生成一个类�
 prototype是一个对象，因此，你能够给它添加属性。你添加给prototype的属性将会成为使用这个构造函数创建的对象的通用属性。
 
 例如，我下面有一个数据类型Fish，我想让所有的鱼都有这些属性：livesIn="water"和price=20；为了实现这个，我可以给构造函数Fish的prototype添加那些属性。
+
 function Fish(name, color)
 {
 this.name=name;
 this.color=color;
 }
+
 Fish.prototype.livesIn="water";
 Fish.prototype.price=20;
 
@@ -279,4 +305,113 @@ obj.subMethods();
 
 在以上的代码中，首先是HelloSubClass具有了和HelloClass一样的prototype，如果不考虑构造方法，则两个类是等价的。随后，又通过prototype给HelloSubClass赋予了额外的属性和方法所以HelloSubClass是在HelloClass的基础上增加了新的属性和方法，从而实现了类的继承。
 
-七、循环
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+原型链
+
+实例对象与原型的链接，JS在创建对象（不论是普通对象还是函数对象）的时候，都有一个叫做__proto__的内置属性，用于指向创建它的函数对象的原型对象prototype
+
+JavaScritp引擎在访问对象的属性时，如果在对象本身中没有找到，则会去原型链中查找，如果找到，直接返回值，如果整个链都遍历且没有找到属性，则返回undefined.原型链一般实现为一个链表，这样就可以按照一定的顺序来查找
+
+function A(){}
+
+A.prototype.number=10;
+
+var a1=new A();
+
+alert(a1.number); //10
+
+a1是实例，prototype是原型，__proto__是原型链
+
+
+function A(){
+    this.number=20;
+}
+
+A.prototype.number=10;
+
+var a1=new A();
+
+alert(a1.number); //20
+
+
+
+原型链的最外层：Object.prototype
+
+function A(){
+  
+}
+
+Object.prototype.number=30;
+
+var a1=new A();
+
+alert(a1.number); //30
+
+在这条链寻找中，自己本身没有number属性，再去找自己的原型也没有，那么最外层是Object，而Object有number属性，则进行赋值
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+对象的继承
+
+在原有对象基础上，进行修改，对原有对象不影响
+
+（1）属性继承：调用父类的构造函数 call
+function CreatePerson(name,sex){   //父类
+	this.name = name;
+	this.sex = sex;
+}
+
+CreatePerson.prototype.showName = function(){
+	alert( this.name );
+};
+
+var p1 = new CreatePerson('小明','男');
+
+
+function CreateStar(name,sex,job){  //子类
+	
+	CreatePerson.call(this,name,sex);
+	
+	this.job = job;	
+}
+
+
+
+
+（2）方法继承：将父类的原型赋给子类的原型，for in :  拷贝继承 (jquery也是采用拷贝继承extend)
+
+function CreatePerson(name,sex){   //父类
+	this.name = name;
+	this.sex = sex;
+}
+
+CreatePerson.prototype.showName = function(){
+	alert( this.name );
+};
+
+var p1 = new CreatePerson('小明','男');
+
+
+function CreateStar(name,sex,job){  //子类
+	
+	CreatePerson.call(this,name,sex);
+	this.job = job;	
+}
+
+extend(CreateStar.prototype, CreatePerson.prototype);
+
+CreateStar.prototype.showJob = function(){
+};
+
+var p2 = new CreateStar('黄晓明','男','演员');
+
+p2.showName();
+
+
+function extend(obj1,obj2){
+	for(var attr in obj2){
+		obj1[attr] = obj2[attr];
+	}
+}
+

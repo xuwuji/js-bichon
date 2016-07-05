@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>angular</title>
+    <script type="text/javascript" src="angular-1.5.7/angular.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+</head>
+
+<body ng-app="myApp">
+    <div>
+        <div ng-controller="firstController">
+            input:
+            <input type="text" ng-model="name" value="" />
+            <br> expression:{{name}}
+            <br>ng-bind:
+            <div ng-bind="name">
+            </div>
+            {{date}}
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <div id="cart" ng-controller="cartController">
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    var myApp = angular.module('myApp', []);
+
+    myApp.controller('firstController', ['$scope', function($scope) {
+
+        $scope.name = 'abc';
+
+        setInterval(function() {
+            //应用改变到model上
+            $scope.$apply(function() {
+                $scope.date = new Date();
+            });
+        }, 100);
+
+        //对model进行监听
+        $scope.$watch('name', function(newV, oldV) {
+            if (newV === 'abcd') {
+                alert('a');
+            }
+        })
+
+
+    }]);
+
+    myApp.controller('cartController',['$scope',function($scope){
+        
+    }]);
+    
+    
+    
+</script>
+
+
+
+</html>
