@@ -2,10 +2,12 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>angular</title>
     <script type="text/javascript" src="angular-1.5.7/angular.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css" />
 </head>
+<!--一个页面只有一个ng-app-->
 
 <body ng-app="myApp">
     <div>
@@ -16,7 +18,8 @@
             <br>ng-bind:
             <div ng-bind="name">
             </div>
-            {{date}}
+            当地时间 : {{date}}
+
         </div>
     </div>
 
@@ -24,44 +27,78 @@
     <br>
     <br>
     <br>
-    <div id="cart" ng-controller="cartController">
 
+    <div id="cart" ng-controller="cartController" class="container">
+        title : {{message}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>quantity</th>
+                    <th>price</th>
+                    <th>total</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in cart">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <button type="button" class="btn btn-default" ng-click="reduce(item.id)">-</button> {{item.quantity}}
+                        <button type="button" class="btn btn-default" ng-click="add(item.id)">+</button>
+                    </td>
+                    <td>{{item.price}}</td>
+                    <td>{{(item.price)*(item.quantity)}}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" ng-click="remove(item.id)">remove</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>total quantity:</td>
+                    <td>{{totalquantity()}}</td>
+                    <td>total price:</td>
+                    <td>{{totalprice()}}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" ng-click="removeAll()">removeAll</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="container" id="list" ng-controller="listController">
+        title : {{message}}
+        <form>
+            <input type="text" class="form-control" placeholder="search" ng-model="search">
+        </form>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td ng-class="{dropup:order===''}">id<span class="caret" ng-click="changeOrder(id)"></span></td>
+                    <td ng-class="{dropup:order===''}">
+                        name<span class="caret" ng-click="changeOrder(name)"></span>
+                    </td>
+                    <td ng-class="{dropup:order===''}">
+                        quantity<span class="caret" ng-click="changeOrder(quantity)"></span> </td>
+                    <td ng-class="{dropup:order===''}">price<span class="caret" ng-click="changeOrder(price)"></span></td>
+                </tr>
+            </thead>
+            <tboay>
+                <tr ng-repeat="item in list|filter:search| orderBy:order + orderType|uniqueFilter:'id'|quantityFilter">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.price}}</td>
+                </tr>
+            </tboay>
+        </table>
     </div>
 
 </body>
-
-<script type="text/javascript">
-    var myApp = angular.module('myApp', []);
-
-    myApp.controller('firstController', ['$scope', function($scope) {
-
-        $scope.name = 'abc';
-
-        setInterval(function() {
-            //应用改变到model上
-            $scope.$apply(function() {
-                $scope.date = new Date();
-            });
-        }, 100);
-
-        //对model进行监听
-        $scope.$watch('name', function(newV, oldV) {
-            if (newV === 'abcd') {
-                alert('a');
-            }
-        })
-
-
-    }]);
-
-    myApp.controller('cartController',['$scope',function($scope){
-        
-    }]);
-    
-    
-    
-</script>
-
-
+<script type="text/javascript" src="index.js"></script>
 
 </html>
