@@ -14,8 +14,8 @@ function getGroup(data) {
 
         var date = key.substring(0, key.indexOf("_"));
         var other = key.substring(key.indexOf("_"));
-        console.log(date);
-        console.log(other);
+        //console.log(date);
+        //console.log(other);
         var year = key.substring(0, 4);
         group["year"][0] = date;
         if (date !== group["year"][0]) {

@@ -1,7 +1,10 @@
 //中括号里写myApp依赖的模块    
-var myApp = angular.module('myApp', []);
+var myApp = angular.module('myApp', ['ngRoute']);
 
 //myApp中controller共享的service
+
+//Services are reusable pieces of code that can be shared across controllers, directives,  lters, and services itself. Services are singleton in nature so they also provide a mechanism for sharing data across these constructs.
+
 myApp.factory('cartFactory', function () {
     return {
         message: "cart",
@@ -203,4 +206,26 @@ myApp.controller('listController', ['$scope', 'listFactory', '$filter', function
         }
     };
 
+}]);
+
+
+myApp.controller('guessController', ['$scope', function ($scope) {
+
+    $scope.$watch('guessData', function () {
+        console.log($scope.guessData);
+    });
+
+    $scope.initData = 10;
+    $scope.count = 0;
+
+    $scope.guess = function () {
+        $scope.deviation = $scope.guessData - $scope.initData;
+        $scope.count++;
+    };
+
+    $scope.restart = function () {
+        $scope.initData = Math.floor((Math.random() * 10) + 1);
+        alert('have generated a new number');
+        $scope.count = 0;
+    };
 }]);

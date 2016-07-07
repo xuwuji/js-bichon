@@ -8,9 +8,11 @@ myApp.directive('hello',
             //M(注释)
             //其中默认值为A；
             restrict: 'E',
-            template: '<div>hello  <span ng-transclude></span><div>',
+            //template: '<div>hello  <span ng-transclude></span><div>',
             replace: true,
-            //templateUrl: './index_template.html'
+            templateUrl: './index_template.html',
             transclude:true, //将原来的数据放入到 ng-transclude
         }
     });
+
+
