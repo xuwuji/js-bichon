@@ -1,5 +1,5 @@
 //中括号里写myApp依赖的模块    
-var myApp = angular.module('myApp', ['ngRoute']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngSanitize', 'mediaPlayer']);
 
 //myApp中controller共享的service
 

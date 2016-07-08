@@ -1,0 +1,60 @@
+<div class="container">
+
+    <h1>7 minutes workout</h1>
+    <pre>Current Exercise:{{current|json}}</pre>
+
+</div>
+
+<div style="margin-left: 10px;margin-right: 10px;">
+
+    <div id="exercise-pane">
+        <div class="row">
+            <div id="description-panel" class="col-lg-2">
+                <div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Description</h3>
+                        </div>
+                        <div class="panel-body" ng-bind-html="current.details.description">
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Steps</h3>
+                        </div>
+                        <div class="panel-body" ng-bind-html="current.details.procedure">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="exercise-pane" class="col-lg-7" style=" text-align:center">
+                <div class="workout-content">
+                    <div class="workout-display-div">
+                        <h1>Time Remaining: {{totalTime|secondsToTime}}</h1>
+                        <h1>{{current.details.title}}</h1>
+                        <img ng-src="{{current.details.image}}" />
+                        <div class="progress time-progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{current.duration}}" ng-style="{'width' :(past/current.duration) * 100 + '%'}">
+                            </div>
+                        </div>
+                        <h2 ng-if="current.details.name=='rest'">Next Up:{{workout.exercises[0].details.title}}</h2>
+                        <h3>Time Remaining: {{current.duration-past}}</h3>
+                        <pre>finished:{{finishCount}}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default col-lg-3" style="padding-left: 0px;padding-right: 0px; width:350px">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Videos</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="video in current.details.related.videos">
+                        <iframe width="330" height="220" src="{{video}}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
