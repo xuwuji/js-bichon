@@ -1,0 +1,47 @@
+.toptitle {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    background: #F3F3F3;
+    height: 42px;
+    line-height: 42px;
+    border-right: 1px solid #fff;
+}
+
+.shipping-chart {
+    border: 1px solid #DDD;
+    height: 270px;
+    border-bottom-width: 0;
+}
+
+.shipping-chart:first-child {
+    border-radius: 10px 10px 0 0;
+}
+
+.shipping-chart:last-child {
+    border-radius: 0 0 10px 10px;
+    border-bottom-width: 1px;
+}
+
+.shipping-chart {
+    background: white;
+    position: relative;
+    height: 270px;
+}
+
+.shipping-chart .chart-cntr {
+    height: 255px;
+    width: 97%;
+    padding-left: 7px;
+    text-align: center;
+}
+
+.shipping-chart .chart-cntr .loading {
+    margin-top: 120px;
+}
+
+.phd_filter {
+    background: #F3F3F3;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+}

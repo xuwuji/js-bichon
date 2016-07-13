@@ -1,0 +1,83 @@
+<div class="container phd_filter">
+
+    <div class="row">
+        <!--   Site -->
+        <div class="col-lg-2" id="siteSelect">
+            <div>
+                <div>
+                    <div style="float: left">Site</div>
+                </div>
+            </div>
+            <div>
+                <select toggle ng-model="result.site" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.sites">
+                </select>
+            </div>
+        </div>
+        <!--   Device -->
+        <div class="col-lg-2" id="siteSelect">
+            <div>
+                <div>
+                    <div style="float: left">Device</div>
+                </div>
+            </div>
+            <div>
+                <select toggle ng-model="result.device" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.devices">
+                </select>
+            </div>
+        </div>
+        <!--   Experience -->
+        <div class="col-lg-2" id="siteSelect">
+            <div>
+                <div>
+                    <div style="float: left">Experience</div>
+                </div>
+            </div>
+            <div>
+                <select toggle ng-model="result.experience" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.experiences">
+                </select>
+            </div>
+        </div>
+        <!--    Date    -->
+        <div class="col-lg-2" id="dateSelect">
+            <div>
+                <div style="float: left; margin-right: 5px" ng-if="dim.is_optional">
+                    <input type="checkbox" ng-model="result.checked">
+                </div>
+                <div style="float: left">Date Range</div>
+            </div>
+        </div>
+        <!--      compare  -->
+        <div class="col-lg-2">
+            <div>
+                <div style="float: left">Compare</div>
+            </div>
+            <div>
+                <select id="compare" toggle ng-model="result.compare" selectpicker data-live-search="true" ng-options="s.value as s.display for s in query.compare">
+                </select>
+            </div>
+            {{compare}}
+        </div>
+
+        <!--      and  -->
+        <div class="col-lg-2" id="and">
+            <div>
+                <div style="float: left">And</div>
+            </div>
+        </div>
+        <!--    separator    -->
+        <div>
+
+        </div>
+        <!--      7DMA  -->
+        <div>
+            <div style="float: left; margin-right: 5px" ng-if="dim.is_optional">
+                <input type="checkbox" ng-model="result.checked"> 7DMA
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row col-lg-2" style="margin-top:10px">
+        <button class="btn btn-primary">Apply</button>
+    </div>
+</div>
