@@ -1,13 +1,13 @@
 <div>
-    <div style="widows: 100%;height: 100%;" ng-if="hasData()">
-        <highchart class="highCon" config="chartConfig">
+    <!--        {{chartConfig}}-->
+    <div style="widows: 100%;height: 100%;">
+
+        <highchart class="highContainer" config="chartConfig">
         </highchart>
-    </div>
-    
-    <div style="widows: 100%;height: 100%;" ng-if="!hasData()">
-        <div class="phd_title_s">{{chartConfig.options.title.text}}</div>
-        <br>
-        <div ng-show="seriesLoaded()" style="text-align:center; margin-top:20px;font-size:20px;color:#999">No Data</div>
+
+        <div class="deepdivebtn" style="position: absolute; top:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-plus-square-o" style="margin-left: 10px;" data-toggle="modal" data-target="#DDModal" ng-click="showDD(' + this.chartConfig.chart_id + ',' + this.chartConfig.page_id + ')"></i></div>
+
+        <div class="sqlbtn" style="position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;" data-toggle="modal" data-target="#SQLModal" ng-click="showSQL(chartConfig.id)"></i></div>
     </div>
 
 </div>

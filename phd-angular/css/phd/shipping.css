@@ -10,7 +10,7 @@
 
 .shipping-chart {
     border: 1px solid #DDD;
-    height: 270px;
+    height: 200px;
     border-bottom-width: 0;
 }
 
@@ -26,7 +26,7 @@
 .shipping-chart {
     background: white;
     position: relative;
-    height: 270px;
+    height: 200px;
 }
 
 .shipping-chart .chart-cntr {
@@ -44,4 +44,22 @@
     background: #F3F3F3;
     border: 1px solid #DDD;
     border-radius: 5px;
+}
+
+.highContainer {
+    height: 200px;
+}
+
+.modal-lg {
+    width: 1200px;
+}
+
+.sql-modal-body pre {
+    border: 0px;
+    background: white;
+}
+
+.sql-modal-body code {
+    border: 0px;
+    background: white;
 }
