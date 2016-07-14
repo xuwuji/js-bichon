@@ -1,6 +1,8 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs']);
 
 shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $http) {
+
+    $scope.isLoading = true;
     //sql modal 
     $scope.sqlModal = {};
     //query
@@ -207,6 +209,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
                 $scope.reports[chartId].series = chartData;
             }
             console.log($scope.reports);
+            $scope.isLoading = false;
         });
     }
 
