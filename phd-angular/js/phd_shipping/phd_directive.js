@@ -49,24 +49,19 @@ shipApp.directive('phdChart', ['$http', function ($http) {
         link: function ($scope, element, attrs) {
             $scope.showSQL = function (chartId) {
                 console.log(chartId);
-                $http.get('http://localhost:8080/OLAPService/config/pageConfig/1').then(function (response) {
+                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
                     console.log(response.data[chartId]);
                     var config = response.data[chartId];
-                    //alert(config.chart_sql_desc);
                     var re = new RegExp('\n', 'g');
-                    // $scope.sqlModal.sql = config.chart_sql_desc.replace(re, '<br>');
                     $scope.sqlModal.sql = config.chart_sql_desc;
                     $scope.sqlModal.chart_desc = config.chart_desc;
                     $scope.sqlModal.sql_fomula = config.sql_fomula;
                     $scope.sqlModal.sql_contact = config.sql_contact;
                     $scope.sqlModal.title = config.chart_title;
                 });
-
-
                 //var config = $scope.pageConfig[chartId];
                 //var sql = config.chart_sql; console.log(sql);
-
             }
         }
     }
-            }]);
+}]);

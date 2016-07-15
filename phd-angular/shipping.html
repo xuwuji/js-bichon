@@ -39,7 +39,7 @@
                 <div class="toptitle">Tracking</div>
 
                 <div class="charts-cntr">
-                    <div id="shipvld" class="shipping-chart">
+                    <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
@@ -51,7 +51,7 @@
                     </div>
 
 
-                    <div id="shippct" class="shipping-chart">
+                    <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
@@ -67,7 +67,7 @@
             <div class="col-lg-3">
                 <div class="toptitle">Pick Up Drop Off</div>
                 <div class="charts-cntr">
-                    <div id="shippdvi" class="shipping-chart">
+                    <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
@@ -75,7 +75,7 @@
 
                         </phd-chart>
                     </div>
-                    <div id="shippdtrx" class="shipping-chart">
+                    <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
@@ -91,11 +91,21 @@
             <div class="col-lg-3">
                 <div class="toptitle">Label Adoption & GSP</div>
                 <div class="charts-cntr">
-                    <div id="shiplbl" class="shipping-chart">
+                    <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['5']" sql-modal="sqlModal">
+
+                        </phd-chart>
+                    </div>
+                </div>
+                <div class="charts-cntr">
+                    <div class="shipping-chart">
+                        <div class="chart-cntr smask" style="" ng-if="isLoading">
+                            <img class="loading" src="img/ajax-loader.gif" />
+                        </div>
+                        <phd-chart class="chart-cntr" chart-config="reports['6']" sql-modal="sqlModal">
 
                         </phd-chart>
                     </div>
@@ -105,7 +115,24 @@
             <div class="col-lg-3">
                 <div class="toptitle">GSP</div>
                 <div class="charts-cntr">
+                    <div class="shipping-chart">
+                        <div class="chart-cntr smask" style="" ng-if="isLoading">
+                            <img class="loading" src="img/ajax-loader.gif" />
+                        </div>
+                        <phd-chart class="chart-cntr" chart-config="reports['7']" sql-modal="sqlModal">
 
+                        </phd-chart>
+                    </div>
+                    <div class="charts-cntr">
+                        <div class="shipping-chart">
+                            <div class="chart-cntr smask" style="" ng-if="isLoading">
+                                <img class="loading" src="img/ajax-loader.gif" />
+                            </div>
+                            <phd-chart class="chart-cntr" chart-config="reports['8']" sql-modal="sqlModal">
+
+                            </phd-chart>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,4 +178,5 @@
 <script type="text/javascript" src="js/phd_shipping/phd_controller.js"></script>
 <script type="text/javascript" src="js/phd_shipping/phd_directive.js"></script>
 <script type="text/javascript" src="js/phd_shipping/phd.js"></script>
+
 </html>

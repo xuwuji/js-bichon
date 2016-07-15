@@ -1,9 +1,9 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs']);
 
 shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $http) {
-
+    //check if the ajax call is loading
     $scope.isLoading = true;
-    //sql modal 
+    //details for showing sql modal 
     $scope.sqlModal = {};
     //query
     $scope.query = {
@@ -14,83 +14,130 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
             "family": "fake"
         },
         "granularity": "day",
-        "dimensions": ["0"],
+        "dimensions": [
+        "0"
+    ],
         "filter": {
             "type": "and",
-            "fields": [{
-                "type": "daterange",
-                "dimension": "0",
-                "value": ["2016-01-01", "2016-03-01", "2015-01-01", "2015-03-01"]
-            }, {
-                "type": "selector",
-                "dimension": "1",
-                "value": ["befr.ebay.be", "benl.ebay.be", "cafr.ebay.ca", "ebay.at", "ebay.ca", "ebay.ch", "ebay.co.uk", "ebay.com", "ebay.com.au", "ebay.com.hk", "ebay.com.my", "ebay.com.sg", "ebay.de", "ebay.es", "ebay.fr", "ebay.ie", "ebay.in", "ebay.it", "ebay.nl", "ebay.ph", "ebay.pl", "others"]
-            }]
+            "fields": [
+                {
+                    "type": "daterange",
+                    "dimension": "0",
+                    "value": [
+                    "2016-03-01",
+                    "2016-06-01",
+                    "2015-03-01",
+                    "2015-06-01"
+                ]
+            },
+                {
+                    "type": "selector",
+                    "dimension": "1",
+                    "value": [
+                    "befr.ebay.be",
+                    "benl.ebay.be",
+                    "cafr.ebay.ca",
+                    "ebay.at",
+                    "ebay.ca",
+                    "ebay.ch",
+                    "ebay.co.uk",
+                    "ebay.com",
+                    "ebay.com.au",
+                    "ebay.com.hk",
+                    "ebay.com.my",
+                    "ebay.com.sg",
+                    "ebay.de",
+                    "ebay.es",
+                    "ebay.fr",
+                    "ebay.ie",
+                    "ebay.in",
+                    "ebay.it",
+                    "ebay.nl",
+                    "ebay.ph",
+                    "ebay.pl",
+                    "others"
+                ]
+            }
+        ]
         },
-        "aggregations": [{
-            "type": "doubleSum",
-            "name": "2",
-            "fieldName": "2"
-        }, {
-            "type": "doubleSum",
-            "name": "3",
-            "fieldName": "3"
-        }, {
-            "type": "doubleSum",
-            "name": "4",
-            "fieldName": "4"
-        }, {
-            "type": "doubleSum",
-            "name": "5",
-            "fieldName": "5"
-        }, {
-            "type": "doubleSum",
-            "name": "6",
-            "fieldName": "6"
-        }, {
-            "type": "doubleSum",
-            "name": "7",
-            "fieldName": "7"
-        }, {
-            "type": "doubleSum",
-            "name": "8",
-            "fieldName": "8"
-        }, {
-            "type": "doubleSum",
-            "name": "9",
-            "fieldName": "9"
-        }, {
-            "type": "doubleSum",
-            "name": "10",
-            "fieldName": "10"
-        }, {
-            "type": "doubleSum",
-            "name": "11",
-            "fieldName": "11"
-        }, {
-            "type": "doubleSum",
-            "name": "12",
-            "fieldName": "12"
-        }, {
-            "type": "doubleSum",
-            "name": "13",
-            "fieldName": "13"
-        }, {
-            "type": "doubleSum",
-            "name": "14",
-            "fieldName": "14"
-        }, {
-            "type": "doubleSum",
-            "name": "15",
-            "fieldName": "15"
-        }, {
-            "type": "doubleSum",
-            "name": "16",
-            "fieldName": "16"
-        }]
+        "aggregations": [
+            {
+                "type": "doubleSum",
+                "name": "2",
+                "fieldName": "2"
+        },
+            {
+                "type": "doubleSum",
+                "name": "3",
+                "fieldName": "3"
+        },
+            {
+                "type": "doubleSum",
+                "name": "4",
+                "fieldName": "4"
+        },
+            {
+                "type": "doubleSum",
+                "name": "5",
+                "fieldName": "5"
+        },
+            {
+                "type": "doubleSum",
+                "name": "6",
+                "fieldName": "6"
+        },
+            {
+                "type": "doubleSum",
+                "name": "7",
+                "fieldName": "7"
+        },
+            {
+                "type": "doubleSum",
+                "name": "8",
+                "fieldName": "8"
+        },
+            {
+                "type": "doubleSum",
+                "name": "9",
+                "fieldName": "9"
+        },
+            {
+                "type": "doubleSum",
+                "name": "10",
+                "fieldName": "10"
+        },
+            {
+                "type": "doubleSum",
+                "name": "11",
+                "fieldName": "11"
+        },
+            {
+                "type": "doubleSum",
+                "name": "12",
+                "fieldName": "12"
+        },
+            {
+                "type": "doubleSum",
+                "name": "13",
+                "fieldName": "13"
+        },
+            {
+                "type": "doubleSum",
+                "name": "14",
+                "fieldName": "14"
+        },
+            {
+                "type": "doubleSum",
+                "name": "15",
+                "fieldName": "15"
+        },
+            {
+                "type": "doubleSum",
+                "name": "16",
+                "fieldName": "16"
+        }
+    ]
     };
-
-    //$scope.query = {};
     $scope.query.sites = [];
     $scope.query.devices = [];
     $scope.query.experiences = [];
@@ -113,7 +160,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
 
     //declare the query default value
     function initFilter($http) {
-        $http.get('http://localhost:8080/OLAPService/config/filter/124').then(function (response) {
+        $http.get('http://localhost:8080/OLAPService/config/filter/488').then(function (response) {
             console.log(response.data);
 
             //sites
@@ -158,7 +205,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
 
     function getChartConfig() {
         //1.get configs for this page, it contains each chart's config
-        $http.get('http://localhost:8080/OLAPService/config/pageConfig/1').then(function (response) {
+        $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
             //console.log(response.data);
             var configs = response.data;
             //console.log(configs);
@@ -172,6 +219,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
                     title: item.chart_title,
                     sql: item.chart_sql_desc,
                     title_desc: item.chart_desc,
+                    formula: item.chart_formula,
                 };
             }
             //console.log($scope.reports);
@@ -192,15 +240,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
             }
         }).then(function (response) {
             var data = response.data;;
-            console.log($scope.reports);
+            console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
-                //console.log(item.id);
-                var chartData = getDataByChartId(data, item.id, item.id + 5);
+                //console.log(item.formula);
+                var chartData = getDataByChartId(data, item.id, item.formula);
                 var o = getOption();
-                //o.chart.renderTo = 'chart_' + item.id;
                 o.tooltip.title = item.title;
-                //o.series = chartData;
                 $scope.reports[chartId].id = chartId;
                 $scope.reports[chartId].options = o;
                 $scope.reports[chartId].title = {
@@ -214,11 +260,11 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
     }
 
     //generate data by chart id
-    function getDataByChartId(data, chartId, colId) {
+    function getDataByChartId(data, chartId, expression) {
         fillData1 = {
             name: '',
             data: [],
-            color: '#7cb5ec'
+            color: '#000000'
         };
 
         fillData2 = {
@@ -233,16 +279,16 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
             //console.log(date);
             var record = data[date]
                 //console.log();
-            var value = record[colId];
+            var value = calculate(record, expression);
             if (date.indexOf('2016') == -1) {
                 var point = [];
                 point[0] = date;
-                point[1] = parseInt(value);
+                point[1] = value;
                 fillData2.data.push(point);
             } else {
                 var point = [];
                 point[0] = date;
-                point[1] = parseInt(value);
+                point[1] = value;
                 fillData1.data.push(point);
             }
         }
@@ -252,6 +298,31 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
         fillData2.data.sort(compare);
         resultData.push(fillData1);
         resultData.push(fillData2);
+        console.log(resultData);
         return resultData;
+    };
+
+    function calculate(record, expression) {
+        console.log(expression);
+        if (expression.indexOf('divide') != -1) {
+            var item = expression.substring(expression.indexOf('(') + 1, expression.length - 1);
+            var numerator = record[item.split(',')[0]];
+            var denominator = record[item.split(',')[1]];
+            console.log(numerator);
+            console.log(denominator);
+            if (denominator == 0) {
+                value = 0
+            } else {
+                var value = numerator / denominator;
+            }
+
+            value = parseFloat(value.toFixed(4));
+            console.log(value);
+            // console.log(denominator);
+            return value;
+        } else {
+            return record[expression];
+        }
     }
+
 }]);

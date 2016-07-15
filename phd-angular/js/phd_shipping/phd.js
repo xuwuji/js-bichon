@@ -30,7 +30,23 @@
          yAxis: {
              title: {
                  text: null
-             }
+             },
+             labels: {
+                 formatter: function () {
+                     if (this.value >= 1000000) {
+                         return (this.value / 1000000)
+                             .toFixed(0) + 'm';
+                     } else if (this.value >= 1000) {
+                         return (this.value / 1000).toFixed(0) + 'k';
+                     } else if (this.value < 1) {
+                         return (this.value * 100).toFixed(1) + '%';
+                     } else {
+                         return this.value;
+                     }
+                 }
+
+             },
+             gridLineColor: '#f0f0f0',
          },
          xAxis: {
              labels: {
@@ -83,7 +99,13 @@
                  });
 
                  $.each(point, function (idx, point) {
-                     ret += '<span style="color:' + point.color + '">' + moment(point.xValue).format("YYYY-MM-DD") + '</span>: <b>' + point.yValue + '</b><br/>';
+                     //ret = '';
+                     if (point.yValue < 1) {
+                         ret += '<span style="color:' + point.color + '">' + moment(point.xValue).format("YYYY-MM-DD") + '</span>: <b>' + ((point.yValue) * 100).toFixed(2) + '%</b><br/>';
+
+                     } else {
+                         ret += '<span style="color:' + point.color + '">' + moment(point.xValue).format("YYYY-MM-DD") + '</span>: <b>' + (point.yValue) + '%</b><br/>';
+                     }
                  });
                  return ret;
              }
@@ -102,3 +124,30 @@
          return 1;
      return 0;
  }
+
+
+ $(document).ready(function () {
+     $('.deepdivebtn').qtip({
+         content: {
+             text: '<div style="font-size:15px;text-aligen:center;height:50px;line-height:30px;width:50px">deep dive</div>'
+         },
+         position: {
+             at: 'center'
+         },
+         style: {
+             classes: 'qtip-bootstrap'
+         }
+     });
+
+     $('.sqlbtn').qtip({
+         content: {
+             text: '<div style="font-size:15px;text-aligen:center;height:50px;line-height:30px;">show sql</div>'
+         },
+         position: {
+             at: 'bottom center'
+         },
+         style: {
+             classes: 'qtip-bootstrap'
+         }
+     });
+ });
