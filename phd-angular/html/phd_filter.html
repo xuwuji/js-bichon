@@ -9,31 +9,7 @@
                 </div>
             </div>
             <div>
-                <select toggle ng-model="result.site" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.sites">
-                </select>
-            </div>
-        </div>
-        <!--   Device -->
-        <div class="col-lg-2" id="siteSelect">
-            <div>
-                <div>
-                    <div style="float: left">Device</div>
-                </div>
-            </div>
-            <div>
-                <select toggle ng-model="result.device" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.devices">
-                </select>
-            </div>
-        </div>
-        <!--   Experience -->
-        <div class="col-lg-2" id="siteSelect">
-            <div>
-                <div>
-                    <div style="float: left">Experience</div>
-                </div>
-            </div>
-            <div>
-                <select toggle ng-model="result.experience" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s.value as s.display for s in query.experiences">
+                <select toggle ng-model="result.siteSelection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s for s in defaults.site">
                 </select>
             </div>
         </div>
@@ -78,6 +54,6 @@
     </div>
 
     <div class="row col-lg-2" style="margin-top:10px">
-        <button class="btn btn-primary">Apply</button>
+        <button class="btn btn-primary" ng-click="apply()">Apply</button>
     </div>
 </div>

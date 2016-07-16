@@ -1,21 +1,23 @@
 //directive for phd filter, it contains selector, date-picker, check-box 
-shipApp.directive('phdFilter', ['$timeout', function ($timeout) {
+shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) {
     return {
         restrict: 'E',
         replace: true,
         transclude: false,
         scope: {
-            query: '=',
-            result: '='
+            defaults: '=',
+            result: '=',
+            apply: "&",
         },
 
         templateUrl: '/html/phd_filter.html',
 
         compile: function () {
-
             return {
-                pre: function () {},
-                post: function (scope, iElement, iAttrs) {
+                pre: function ($scope, iElement, iAttrs) {
+                    $scope.result.siteSelection.push($scope.defaults.site);
+                },
+                post: function ($scope, iElement, iAttrs) {
 
                     $timeout(function () {
                         var selectElement = $('select', iElement);
@@ -29,7 +31,7 @@ shipApp.directive('phdFilter', ['$timeout', function ($timeout) {
             }
         },
         controller: ['$scope', function ($scope) {
-            //$scope.result = result;
+            //$scope.apply = $scope.apply();
         }]
     };
 }]);
@@ -39,18 +41,17 @@ shipApp.directive('phdFilter', ['$timeout', function ($timeout) {
 shipApp.directive('phdChart', ['$http', function ($http) {
     return {
         restrict: 'E',
-        replace: true,
-        transclude: false,
         templateUrl: '/html/phd_chart.html',
         scope: {
             chartConfig: "=",
             sqlModal: "=",
+
         },
         link: function ($scope, element, attrs) {
             $scope.showSQL = function (chartId) {
                 console.log(chartId);
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
-                    console.log(response.data[chartId]);
+                    //console.log(response.data[chartId]);
                     var config = response.data[chartId];
                     var re = new RegExp('\n', 'g');
                     $scope.sqlModal.sql = config.chart_sql_desc;
@@ -63,5 +64,5 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                 //var sql = config.chart_sql; console.log(sql);
             }
         }
-    }
+    };
 }]);

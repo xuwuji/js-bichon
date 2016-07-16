@@ -1,209 +1,60 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs']);
 
-shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $http) {
+shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
     //check if the ajax call is loading
     $scope.isLoading = true;
     //details for showing sql modal 
     $scope.sqlModal = {};
-    //query
-    $scope.query = {
-        "source": "Mysql",
-        "queryType": "groupBy",
-        "dataSource": {
-            "table": "src488",
-            "family": "fake"
-        },
-        "granularity": "day",
-        "dimensions": [
-        "0"
-    ],
-        "filter": {
-            "type": "and",
-            "fields": [
-                {
-                    "type": "daterange",
-                    "dimension": "0",
-                    "value": [
-                    "2016-03-01",
-                    "2016-06-01",
-                    "2015-03-01",
-                    "2015-06-01"
-                ]
-            },
-                {
-                    "type": "selector",
-                    "dimension": "1",
-                    "value": [
-                    "befr.ebay.be",
-                    "benl.ebay.be",
-                    "cafr.ebay.ca",
-                    "ebay.at",
-                    "ebay.ca",
-                    "ebay.ch",
-                    "ebay.co.uk",
-                    "ebay.com",
-                    "ebay.com.au",
-                    "ebay.com.hk",
-                    "ebay.com.my",
-                    "ebay.com.sg",
-                    "ebay.de",
-                    "ebay.es",
-                    "ebay.fr",
-                    "ebay.ie",
-                    "ebay.in",
-                    "ebay.it",
-                    "ebay.nl",
-                    "ebay.ph",
-                    "ebay.pl",
-                    "others"
-                ]
-            }
-        ]
-        },
-        "aggregations": [
-            {
-                "type": "doubleSum",
-                "name": "2",
-                "fieldName": "2"
-        },
-            {
-                "type": "doubleSum",
-                "name": "3",
-                "fieldName": "3"
-        },
-            {
-                "type": "doubleSum",
-                "name": "4",
-                "fieldName": "4"
-        },
-            {
-                "type": "doubleSum",
-                "name": "5",
-                "fieldName": "5"
-        },
-            {
-                "type": "doubleSum",
-                "name": "6",
-                "fieldName": "6"
-        },
-            {
-                "type": "doubleSum",
-                "name": "7",
-                "fieldName": "7"
-        },
-            {
-                "type": "doubleSum",
-                "name": "8",
-                "fieldName": "8"
-        },
-            {
-                "type": "doubleSum",
-                "name": "9",
-                "fieldName": "9"
-        },
-            {
-                "type": "doubleSum",
-                "name": "10",
-                "fieldName": "10"
-        },
-            {
-                "type": "doubleSum",
-                "name": "11",
-                "fieldName": "11"
-        },
-            {
-                "type": "doubleSum",
-                "name": "12",
-                "fieldName": "12"
-        },
-            {
-                "type": "doubleSum",
-                "name": "13",
-                "fieldName": "13"
-        },
-            {
-                "type": "doubleSum",
-                "name": "14",
-                "fieldName": "14"
-        },
-            {
-                "type": "doubleSum",
-                "name": "15",
-                "fieldName": "15"
-        },
-            {
-                "type": "doubleSum",
-                "name": "16",
-                "fieldName": "16"
-        }
-    ]
-    };
-    $scope.query.sites = [];
-    $scope.query.devices = [];
-    $scope.query.experiences = [];
-    $scope.query.compare = [{
-        display: 'None',
-        value: 'None'
-                    }, {
-        display: 'Year',
-        value: 'Year'
-                    }, {
-        display: 'Site',
-        value: 'Site'
-                    }];
-    $scope.query.and = [];
-
     //result for selections
     $scope.result = {};
+    $scope.result.siteSelection = [];
     //options for each chart, in order to plot the chart
     $scope.reports = {};
 
-    //declare the query default value
-    function initFilter($http) {
-        $http.get('http://localhost:8080/OLAPService/config/filter/488').then(function (response) {
-            console.log(response.data);
+    $scope.defaults = {
+        site: [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"],
+    };
 
-            //sites
-            angular.forEach(response.data.site, function (item) {
-                // console.log(item);
-                var site = {
-                        display: item,
-                        value: item
-                    }
-                    //console.log(site);
-                $scope.query.sites.push(site);
-            });
 
-            //devices
-            angular.forEach(response.data.device, function (item) {
-                // console.log(item);
-                var device = {
-                        display: item,
-                        value: item
-                    }
-                    //console.log(site);
-                $scope.query.devices.push(device);
-            });
-
-            //experiences
-            angular.forEach(response.data.experience, function (item) {
-                // console.log(item);
-                var experience = {
-                        display: item,
-                        value: item
-                    }
-                    //console.log(site);
-                $scope.query.experiences.push(experience);
-            });
-        });
-
+    //get the selections and refresh the data
+    $scope.apply = function () {
+        $scope.isLoading = true;
+        console.log($scope.result);
+        var sites = $scope.result.siteSelection;
+        var query = getQuery();
+        query.filter.fields[1].value = sites;
+        console.log(query);
+        getChartConfig(query);
     }
 
-    initFilter($http);
 
-    getChartConfig();
+    //load at the first time
+    var query = getQuery();
+    getChartConfig(query);
 
-    function getChartConfig() {
+    function getChartConfig(query) {
         //1.get configs for this page, it contains each chart's config
         $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
             //console.log(response.data);
@@ -225,16 +76,16 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
             //console.log($scope.reports);
         }).then(function () {
             //3.get Data for this page and set each chart's data
-            refreshData();
+            refreshData(query);
         });
     }
 
 
-    function refreshData() {
+    function refreshData(query) {
         $http({
             method: 'POST',
             url: 'http://localhost:8080/OLAPService/dataquery',
-            data: $scope.query,
+            data: query,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -298,18 +149,18 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
         fillData2.data.sort(compare);
         resultData.push(fillData1);
         resultData.push(fillData2);
-        console.log(resultData);
+        //console.log(resultData);
         return resultData;
     };
 
     function calculate(record, expression) {
-        console.log(expression);
+        //console.log(expression);
         if (expression.indexOf('divide') != -1) {
             var item = expression.substring(expression.indexOf('(') + 1, expression.length - 1);
             var numerator = record[item.split(',')[0]];
             var denominator = record[item.split(',')[1]];
-            console.log(numerator);
-            console.log(denominator);
+            //console.log(numerator);
+            //console.log(denominator);
             if (denominator == 0) {
                 value = 0
             } else {
@@ -317,7 +168,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', function ($scope, $h
             }
 
             value = parseFloat(value.toFixed(4));
-            console.log(value);
+            //console.log(value);
             // console.log(denominator);
             return value;
         } else {

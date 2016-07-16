@@ -32,8 +32,9 @@
 
         <!--shipping filter-->
         <!--   set defualt value in 'query' and get the filter selection by 'result'     -->
-        <phd-filter query="query" result="result"></phd-filter>
-        <pre>{{result|json}}</pre>
+        <phd-filter defaults="defaults" result="result" apply="apply()"></phd-filter>
+<!--       <pre>{{result|json}}</pre>-->
+        <!--       <pre>{{query|json}}</pre>-->
         <div id="charts" class="row" style="width: 100%">
             <div class="col-lg-3">
                 <div class="toptitle">Tracking</div>
@@ -45,7 +46,6 @@
                         </div>
 
                         <phd-chart class="chart-cntr" chart-config="reports['1']" sql-modal="sqlModal">
-
                         </phd-chart>
 
                     </div>
@@ -56,7 +56,6 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['2'] " sql-modal="sqlModal">
-
                         </phd-chart>
                     </div>
 
@@ -72,7 +71,6 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['3']" sql-modal="sqlModal">
-
                         </phd-chart>
                     </div>
                     <div class="shipping-chart">
@@ -80,7 +78,6 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['4']" sql-modal="sqlModal">
-
                         </phd-chart>
                     </div>
 
@@ -96,18 +93,17 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['5']" sql-modal="sqlModal">
-
                         </phd-chart>
                     </div>
-                </div>
-                <div class="charts-cntr">
-                    <div class="shipping-chart">
-                        <div class="chart-cntr smask" style="" ng-if="isLoading">
-                            <img class="loading" src="img/ajax-loader.gif" />
-                        </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['6']" sql-modal="sqlModal">
 
-                        </phd-chart>
+                    <div class="charts-cntr">
+                        <div class="shipping-chart">
+                            <div class="chart-cntr smask" style="" ng-if="isLoading">
+                                <img class="loading" src="img/ajax-loader.gif" />
+                            </div>
+                            <phd-chart class="chart-cntr" chart-config="reports['6']" sql-modal="sqlModal">
+                            </phd-chart>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,7 +116,6 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
                         <phd-chart class="chart-cntr" chart-config="reports['7']" sql-modal="sqlModal">
-
                         </phd-chart>
                     </div>
                     <div class="charts-cntr">
@@ -129,7 +124,6 @@
                                 <img class="loading" src="img/ajax-loader.gif" />
                             </div>
                             <phd-chart class="chart-cntr" chart-config="reports['8']" sql-modal="sqlModal">
-
                             </phd-chart>
                         </div>
                     </div>
