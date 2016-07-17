@@ -10,7 +10,7 @@
 
 .shipping-chart {
     border: 1px solid #DDD;
-    height: 210px;
+    height: 220px;
     border-bottom-width: 0;
 }
 
@@ -26,7 +26,7 @@
 .shipping-chart {
     background: white;
     position: relative;
-    height: 210px;
+    height: 220px;
 }
 
 .shipping-chart .chart-cntr {
@@ -62,4 +62,8 @@
 .sql-modal-body code {
     border: 0px;
     background: white;
+}
+
+.qtip-bootstrap .qtip-content{
+    font-size: 12px;
 }

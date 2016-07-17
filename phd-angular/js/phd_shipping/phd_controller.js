@@ -1,4 +1,4 @@
-var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs']);
+var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker']);
 
 shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
     //check if the ajax call is loading
@@ -35,6 +35,32 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     "ebay.ph",
     "ebay.pl",
     "others"],
+        date: {
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        },
+        compare: [
+            'Year',
+            'Site',
+            'None'
+        ],
+        and: [
+            'Year',
+            'Site',
+            'None'
+        ]
+    };
+
+
+    $scope.date = {
+        startDate: '2014-01-01',
+        endDate: '2014-12-31'
     };
 
 
