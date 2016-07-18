@@ -5,15 +5,15 @@
         <div class="modal-content container">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="sql-modal-title"><span class="pull-left" style="font-size:16px">{{sqlModal['title']}}</span>: <span style="font-size:15px">{{sqlModal['chart_desc']}}</span></h4>
+                <h4 class="sql-modal-title"><span class="pull-left" style="font-size:16px">{{modal['title']}}</span>: <span style="font-size:15px">{{modal['chart_desc']}}</span></h4>
             </div>
 
             <div class="sql-modal-body ">
-                <p><b>Metric Formula: </b><span class="ng-binding">{{sqlModal['sql_fomula']}}</span></p>
+                <p><b>Metric Formula: </b><span class="ng-binding">{{modal['sql_fomula']}}</span></p>
                 <hr style="margin: 5px 0;padding: 0;">
-                <p><b>Analyst Contact: </b><span class="ng-binding">{{sqlModal['sql_contact']}}</span></p>
+                <p><b>Analyst Contact: </b><span class="ng-binding">{{modal['sql_contact']}}</span></p>
                 <hr style="margin: 5px 0;padding: 0;">
-                <code style="background:white" hljs class="sql" hljs-source="sqlModal['sql']"></code>
+                <code style="background:white" hljs class="sql" hljs-source="modal['sql']"></code>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

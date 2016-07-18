@@ -7,10 +7,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     //check if the ajax call is loading
     $scope.isLoading = true;
     //details for showing sql modal 
-    $scope.sqlModal = {};
+    $scope.modal = {};
 
     //options for each chart, in order to plot the chart
     $scope.reports = {};
+
+    $scope.defaults = {};
+
     $scope.refreshed = Date.now();
     //defaults
     $scope.defaults = {
@@ -64,11 +67,15 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }
     };
+    //options for deep dive modal
+    $scope.modal.ddReports = {};
+
+    $scope.ddReports = {};
 
     //result for selections
     $scope.result = {
         compare: "Year",
-        and:"None",
+        and: "None",
         siteSelection: [
     "befr.ebay.be",
     "benl.ebay.be",
@@ -99,6 +106,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         },
         compareSelected: false
     };
+
+    $scope.ddApply = function () {
+        console.log($scope.result);
+        alert('sad');
+    }
+
+
     //get the selections and refresh the data
     $scope.apply = function () {
         $scope.isLoading = true;

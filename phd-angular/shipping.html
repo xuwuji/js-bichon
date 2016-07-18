@@ -27,7 +27,6 @@
     <script src="js/daterangepicker.js" type="text/javascript"></script>
     <script src="js/angular-daterangepicker.js" type="text/javascript"></script>
 
-
     <script src="js/angular-bootstrap-select.js" type="text/javascript"></script>
     <script src="js/bootstrap-select.min.js" type="text/javascript"></script>
 
@@ -55,7 +54,7 @@
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
 
-                        <phd-chart class="chart-cntr" chart-config="reports['1']" sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['1']" modal="modal">
                         </phd-chart>
 
                     </div>
@@ -65,7 +64,7 @@
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['2'] " sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['2'] " modal="modal">
                         </phd-chart>
                     </div>
 
@@ -80,14 +79,14 @@
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['3']" sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['3']" modal="modal">
                         </phd-chart>
                     </div>
                     <div class="shipping-chart">
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['4']" sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['4']" modal="modal">
                         </phd-chart>
                     </div>
 
@@ -102,7 +101,7 @@
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['5']" sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['5']" modal="modal">
                         </phd-chart>
                     </div>
 
@@ -111,7 +110,7 @@
                             <div class="chart-cntr smask" style="" ng-if="isLoading">
                                 <img class="loading" src="img/ajax-loader.gif" />
                             </div>
-                            <phd-chart class="chart-cntr" chart-config="reports['6']" sql-modal="sqlModal">
+                            <phd-chart class="chart-cntr" chart-config="reports['6']" modal="modal">
                             </phd-chart>
                         </div>
                     </div>
@@ -125,7 +124,7 @@
                         <div class="chart-cntr smask" style="" ng-if="isLoading">
                             <img class="loading" src="img/ajax-loader.gif" />
                         </div>
-                        <phd-chart class="chart-cntr" chart-config="reports['7']" sql-modal="sqlModal">
+                        <phd-chart class="chart-cntr" chart-config="reports['7']" modal="modal">
                         </phd-chart>
                     </div>
                     <div class="charts-cntr">
@@ -133,7 +132,7 @@
                             <div class="chart-cntr smask" style="" ng-if="isLoading">
                                 <img class="loading" src="img/ajax-loader.gif" />
                             </div>
-                            <phd-chart class="chart-cntr" chart-config="reports['8']" sql-modal="sqlModal">
+                            <phd-chart class="chart-cntr" chart-config="reports['8']" modal="modal">
                             </phd-chart>
                         </div>
                     </div>
@@ -149,26 +148,8 @@
         </div>
 
 
-
-        <!-- DEEP DIVE Modal -->
-        <div id="DDModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="dd-modal-title">Modal Header</h4>
-                    </div>
-                    <div class="dd-modal-body">
-                        <p>Some text in the modal.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
+        <div ng-include="'html/phd_deepdive.html'">
         </div>
-        <!--DEEP DIVE Modal -->
 
         <div ng-include="'html/phd_show_sql_modal.html'">
         </div>
@@ -182,5 +163,8 @@
 <script type="text/javascript" src="js/phd_shipping/phd_controller.js"></script>
 <script type="text/javascript" src="js/phd_shipping/phd_directive.js"></script>
 <script type="text/javascript" src="js/phd_shipping/phd.js"></script>
+<script type="text/javascript" src="js/phd_shipping/phd_deepdive_directive.js"></script>
+
+
 
 </html>

@@ -1,0 +1,38 @@
+<div class="dd-modal-body">
+    <!-- filter  -->
+    <div class="row">
+        <!--    Date    -->
+        <div class="col-lg-2" id="dateSelect">
+            <div style="float: left">Date Range
+                <input date-range-picker class="form-control date-picker" type="text" ng-model="result.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;" options="defaults.dateRangeConfig" />
+            </div>
+
+        </div>
+        <div style=" margin-left: 15px" class="col-lg-2">
+            compare year over year
+            <input type="checkbox" ng-model="result.compare">
+        </div>
+        <div style="margin-left: 5px" class="col-lg-2">
+            7DMA
+            <input type="checkbox" ng-model="result.checked">
+        </div>
+    </div>
+
+    <div class="row col-lg-2" style="margin-top:10px">
+        <button class="btn btn-primary" ng-click="ddApply()">Apply</button>
+    </div>
+
+    <!-- highchart   -->
+    <div>
+        <h5 class="filter-desc-title">{{modal['dd_title']}}</h5>
+        <div class="mask" ng-if="isLoading">
+            <div id="example_processing" class="dataTables_processing" style="visibility: visible">
+                <img src="img/ajax-loader.gif" width="31" height="31">
+            </div>
+        </div>
+        <highchart config="ddConfig"></highchart>
+    </div>
+
+    <!--  annotation  -->
+
+</div>

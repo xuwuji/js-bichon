@@ -24,10 +24,10 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
                             $scope.result.compareSelected = true;
                         } else if (newV == 'Year') {
                             $scope.result.compareSelected = false;
-                            $scope.defaults.and=['Site','None'];
+                            $scope.defaults.and = ['Site', 'None'];
                         } else if (newV == 'Site') {
                             $scope.result.compareSelected = false;
-                             $scope.defaults.and=['Year','None'];
+                            $scope.defaults.and = ['Year', 'None'];
                         }
                     });
                 }
@@ -45,23 +45,43 @@ shipApp.directive('phdChart', ['$http', function ($http) {
         templateUrl: '/html/phd_chart.html',
         scope: {
             chartConfig: "=",
-            sqlModal: "=",
+            modal: "=",
+            ddReports: "="
 
         },
         link: function ($scope, element, attrs) {
+            //console.log($scope.chartConfig);
+            //console.log($scope.defautls);
+
             $scope.showSQL = function (chartId) {
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
                     //console.log(response.data[chartId]);
                     var config = response.data[chartId];
                     var re = new RegExp('\n', 'g');
-                    $scope.sqlModal.sql = config.chart_sql_desc;
-                    $scope.sqlModal.chart_desc = config.chart_desc;
-                    $scope.sqlModal.sql_fomula = config.sql_fomula;
-                    $scope.sqlModal.sql_contact = config.sql_contact;
-                    $scope.sqlModal.title = config.chart_title;
+                    console.log($scope.modal);
+                    $scope.modal.sql = config.chart_sql_desc;
+                    $scope.modal.chart_desc = config.chart_desc;
+                    $scope.modal.sql_fomula = config.sql_fomula;
+                    $scope.modal.sql_contact = config.sql_contact;
+                    $scope.modal.title = config.chart_title;
+
                 });
 
             }
+
+            $scope.showDD = function (chartId) {
+                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+                    //console.log(response.data[chartId]);
+                    var config = response.data[chartId];
+                    var re = new RegExp('\n', 'g');
+                    //console.log($scope.modal.dd_id);
+                    $scope.modal.dd_id = config.chart_id;
+                    $scope.modal.dd_title = config.chart_title;
+                    $scope.modal.ddReports = $scope.chartConfig;
+                    //console.log($scope.ddReports);
+                });
+            }
+
 
             $(".sqlbtn").qtip({
                 content: {
@@ -87,6 +107,6 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                 }
             });
 
-        }
-    };
+        },
+    }
 }]);

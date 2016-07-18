@@ -5,7 +5,7 @@
         <highchart class="highContainer" config="chartConfig">
         </highchart>
 
-        <div class="deepdivebtn" style="position: absolute; top:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-plus-square-o" style="margin-left: 10px;" data-toggle="modal" data-target="#DDModal" ng-click="showDD(' + this.chartConfig.chart_id + ',' + this.chartConfig.page_id + ')"></i></div>
+        <div class="deepdivebtn" style="position: absolute; top:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-plus-square-o" style="margin-left: 10px;" data-toggle="modal" data-target="#DDModal" ng-click="showDD(chartConfig.id)"></i></div>
 
         <div class="sqlbtn" style="position: absolute; bottom:3px;right:3px; width: 24px; height: 24px; font-size: 16px; cursor: pointer; color: #ccc;"><i class="fa fa-file-code-o" style="margin-left: 10px;" data-toggle="modal" data-target="#SQLModal" ng-click="showSQL(chartConfig.id)"></i></div>
     </div>
