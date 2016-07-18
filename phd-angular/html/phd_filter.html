@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div>
-                <select style="width:200px" toggle ng-model="result.siteSelection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="s for s in defaults.site">
+                <select style="width:200px" toggle ng-model="result.siteSelection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="site for site in defaults.site">
                 </select>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div style="float: left">Date Range</div>
             <div>
                 <div style="float: left; margin-right: 5px">
-                    <input date-range-picker class="form-control date-picker" type="text" ng-model="result.dateSelection" style="width: 220px;padding-left: 36px;" id="dateFilter" min="'2014-02-23'" max="'2015-02-25'" options="defaults.date" />
+                    <input date-range-picker class="form-control date-picker" type="text" ng-model="result.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;" id="dateFilter" options="defaults.dateRangeConfig" />
                 </div>
             </div>
         </div>
@@ -30,8 +30,7 @@
                 <div style="float: left">Compare</div>
             </div>
             <div>
-                <select id="compare" selectpicker ng-model="result.compare" toggle data-live-search="true" ng-options="s for s in defaults.compare">
-                    
+                <select id="compare" class="selectpicker" selectpicker ng-model="result.compare" data-live-search="true" ng-options="c for c in defaults.compare">
                 </select>
             </div>
         </div>
@@ -42,8 +41,7 @@
                 <div style="float: left">And</div>
             </div>
             <div>
-                <select id="compare" selectpicker ng-model="result.compare" toggle data-live-search="true" ng-options="s for s in defaults.and">
-                   
+                <select id="and" selectpicker ng-model="result.and" data-live-search="true" ng-options="a for a in defaults.and" ng-disabled="result.compareSelected">
                 </select>
             </div>
         </div>

@@ -14,44 +14,26 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
 
         compile: function () {
             return {
-                pre: function ($scope, iElement, iAttrs) {
+                pre: function ($scope, iElement, iAttrs) {},
 
-                    $scope.datePicker.date = {
-                        startDate: null,
-                        endDate: null
-                    };
-
-
-                    $scope.result.siteSelection.push($scope.defaults.site);
-
-                    function cb(start, end) {
-                        $('#dateFilter').html(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                    }
-
-                    $('#dateFilter').daterangepicker({
-                        "startDate": moment(moment().subtract(29, 'days')),
-                        "endDate": moment(),
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        "applyClass": "btn-primary"
-                    }, cb(moment().subtract(29, 'days'), moment()));
-
-                },
-                
-                
                 post: function ($scope, iElement, iAttrs) {
+                    $scope.$watch('result.compare', function (newV, oldV) {
+                        console.log('new:' + newV);
+                        console.log('old:' + oldV);
+                        if (newV == 'None') {
+                            $scope.result.compareSelected = true;
+                        } else if (newV == 'Year') {
+                            $scope.result.compareSelected = false;
+                            $scope.defaults.and=['Site','None'];
+                        } else if (newV == 'Site') {
+                            $scope.result.compareSelected = false;
+                             $scope.defaults.and=['Year','None'];
+                        }
+                    });
                 }
             }
         },
-        controller: ['$scope', function ($scope) {
-            //$scope.apply = $scope.apply();
-        }]
+
     };
 }]);
 

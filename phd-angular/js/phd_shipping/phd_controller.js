@@ -1,17 +1,29 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker']);
 
 shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
+
+    $scope.t = moment(Date.now()).format('YYYY-MM-DD');
+
     //check if the ajax call is loading
     $scope.isLoading = true;
     //details for showing sql modal 
     $scope.sqlModal = {};
-    //result for selections
-    $scope.result = {};
-    $scope.result.siteSelection = [];
+
     //options for each chart, in order to plot the chart
     $scope.reports = {};
-
+    $scope.refreshed = Date.now();
+    //defaults
     $scope.defaults = {
+        compare: [
+            "Year",
+            "Site",
+            "None"
+        ],
+        and: [
+            "Year",
+            "Site",
+            "None"
+        ],
         site: [
     "befr.ebay.be",
     "benl.ebay.be",
@@ -34,47 +46,78 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     "ebay.nl",
     "ebay.ph",
     "ebay.pl",
-    "others"],
-        date: {
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        },
-        compare: [
-            'Year',
-            'Site',
-            'None'
+    "others"
         ],
-        and: [
-            'Year',
-            'Site',
-            'None'
-        ]
+        dateRangeConfig: {
+            'minDate': '01/01/2013',
+            'maxDate': moment($scope.refreshed),
+            'showDropDowns': true,
+            'drops': 'down',
+            'opens': 'center',
+            'alwaysShowCalendars': true,
+            'ranges': {
+                'Latest Day': [moment($scope.refreshed), moment($scope.refreshed)],
+                'Last 7 Days': [moment($scope.refreshed).subtract(6, 'days'), moment($scope.refreshed)],
+                'Last 30 Days': [moment($scope.refreshed).subtract(29, 'days'), moment($scope.refreshed)],
+                'This Month': [moment($scope.refreshed).startOf('month'), moment($scope.refreshed)],
+                'Last Month': [moment($scope.refreshed).subtract(1, 'month').startOf('month'), moment($scope.refreshed).subtract(1, 'month').endOf('month')]
+            }
+        }
     };
 
-
-    $scope.date = {
-        startDate: '2014-01-01',
-        endDate: '2014-12-31'
+    //result for selections
+    $scope.result = {
+        compare: "Year",
+        and:"None",
+        siteSelection: [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"
+    ],
+        dateSelection: {
+            'startDate': moment($scope.refreshed).subtract(59, 'days'),
+            'endDate': moment($scope.refreshed)
+        },
+        compareSelected: false
     };
-
-
     //get the selections and refresh the data
     $scope.apply = function () {
         $scope.isLoading = true;
         console.log($scope.result);
         var sites = $scope.result.siteSelection;
+        var dateSelections = $scope.result.dateSelection;
+        var dates = [];
+        for (var index in dateSelections) {
+            //console.log(dateSelections[index]);
+            var date = moment(dateSelections[index]).format('YYYY-MM-DD');
+            console.log(date)
+            dates.push(date);
+        }
         var query = getQuery();
+        query.filter.fields[0].value = dates;
         query.filter.fields[1].value = sites;
         console.log(query);
         getChartConfig(query);
     }
-
 
     //load at the first time
     var query = getQuery();

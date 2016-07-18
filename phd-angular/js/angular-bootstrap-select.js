@@ -55,7 +55,7 @@ angular.module('angular-bootstrap-select', [])
                         }
                         var valuesFn = $parse(match[7]);
 
-                        scope.$watchCollection(valuesFn, function(n, o){
+                        scope.$watch(valuesFn, function(n, o){
                             scope.$evalAsync(function() {
                                 element.selectpicker('refresh');
                             });
@@ -63,7 +63,7 @@ angular.module('angular-bootstrap-select', [])
                     }
 
                     if ( attrs.ngDisabled ) {
-                        scope.$watchCollection(attrs.ngDisabled, function (newVal, oldVal) {
+                        scope.$watch(attrs.ngDisabled, function (newVal, oldVal) {
                             scope.$evalAsync(function () {
                                 element.selectpicker('refresh');
                             });
@@ -74,6 +74,13 @@ angular.module('angular-bootstrap-select', [])
 
                     if ( attrs.multiple ) {
                         scope.$watchCollection(attrs.ngModel, function (newVal, oldVal) {
+                            scope.$evalAsync(function () {
+                                element.selectpicker('refresh');
+                            });
+                        });
+                    }else{
+                        scope.$watch(attrs.ngModel, function (newVal, oldVal) {
+                            if ( newVal == oldVal ) return;
                             scope.$evalAsync(function () {
                                 element.selectpicker('refresh');
                             });
