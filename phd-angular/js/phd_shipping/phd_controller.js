@@ -56,7 +56,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             'maxDate': moment($scope.refreshed),
             'showDropDowns': true,
             'drops': 'down',
-            'opens': 'center',
+            'opens': 'center right',
             'alwaysShowCalendars': true,
             'ranges': {
                 'Latest Day': [moment($scope.refreshed), moment($scope.refreshed)],
@@ -101,16 +101,47 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     "others"
     ],
         dateSelection: {
-            'startDate': moment($scope.refreshed).subtract(59, 'days'),
-            'endDate': moment($scope.refreshed)
+            'startDate': moment($scope.refreshed).subtract(150, 'days'),
+            'endDate': moment($scope.refreshed).subtract(50, 'days')
+        },
+        compareSelected: true,
+    };
+
+
+
+    $scope.ddResult = {
+        compare: true,
+        and: "None",
+        siteSelection: [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"
+    ],
+        dateSelection: {
+            'startDate': moment($scope.refreshed).subtract(150, 'days'),
+            'endDate': moment($scope.refreshed).subtract(50, 'days')
         },
         compareSelected: false
     };
-
-    $scope.ddApply = function () {
-        console.log($scope.result);
-        alert('sad');
-    }
 
 
     //get the selections and refresh the data
@@ -242,8 +273,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             var item = expression.substring(expression.indexOf('(') + 1, expression.length - 1);
             var numerator = record[item.split(',')[0]];
             var denominator = record[item.split(',')[1]];
-            //console.log(numerator);
-            //console.log(denominator);
             if (denominator == 0) {
                 value = 0
             } else {
@@ -258,5 +287,57 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             return record[expression];
         }
     }
+
+
+    //deep dive apply
+    $scope.ddApply = function () {
+        console.log($scope.ddResult);
+        console.log($scope.modal);
+        console.log($scope.modal.dd_id);
+        //alert('sad');
+        var sites = $scope.ddResult.siteSelection;
+        var dateSelections = $scope.ddResult.dateSelection;
+        var dates = [];
+        for (var index in dateSelections) {
+            var date = moment(dateSelections[index]).format('YYYY-MM-DD');
+            console.log(date);
+            dates.push(date);
+        }
+        if ($scope.ddResult.compare == true) {
+            for (var index in dateSelections) {
+                var date = moment(dateSelections[index]);
+                var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
+                dates.push(lastYear);
+            }
+
+        }
+
+        var query = getQuery();
+        query.filter.fields[0].value = dates;
+        query.filter.fields[1].value = sites;
+        console.log(query);
+        refreshDeepDiveDate(query);
+    }
+
+
+    function refreshDeepDiveDate(query) {
+        $http({
+            method: 'POST',
+            url: 'http://localhost:8080/OLAPService/dataquery',
+            data: query,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            var data = response.data;;
+            console.log(data);
+            var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula);
+            var o = getDeepDiveOption();
+            $scope.modal.ddReports.options = o;
+            $scope.modal.ddReports.series = chartData;
+        });
+    };
+
+
 
 }]);

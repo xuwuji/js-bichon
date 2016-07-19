@@ -14,11 +14,7 @@ shipApp.directive('detail', ['$http', function ($http) {
         },
         compile: function () {
             return {
-                pre: function ($scope, iElement, iAttrs) {
-                    //$scope.isLoading = true;
-                    //console.log($scope.modal.dd_id);
-                    //$scope.chartConfig = $scope.ddConfig[$scope.modal.dd_id];
-                },
+                pre: function ($scope, iElement, iAttrs) {},
 
                 post: function ($scope, iElement, iAttrs) {},
             }

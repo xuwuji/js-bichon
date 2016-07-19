@@ -78,6 +78,7 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                     $scope.modal.dd_id = config.chart_id;
                     $scope.modal.dd_title = config.chart_title;
                     $scope.modal.ddReports = $scope.chartConfig;
+                    $scope.modal.dd_formula = config.chart_formula;
                     //console.log($scope.ddReports);
                 });
             }
