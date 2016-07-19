@@ -18,8 +18,8 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
 
                 post: function ($scope, iElement, iAttrs) {
                     $scope.$watch('result.compare', function (newV, oldV) {
-                        console.log('new:' + newV);
-                        console.log('old:' + oldV);
+                        //console.log('new:' + newV);
+                        //console.log('old:' + oldV);
                         if (newV == 'None') {
                             $scope.result.compareSelected = true;
                         } else if (newV == 'Year') {
@@ -44,14 +44,10 @@ shipApp.directive('phdChart', ['$http', function ($http) {
         restrict: 'E',
         templateUrl: '/html/phd_chart.html',
         scope: {
-            chartConfig: "=",
+            chartConfig: "<",
             modal: "=",
-            ddReports: "="
-
         },
         link: function ($scope, element, attrs) {
-            //console.log($scope.chartConfig);
-            //console.log($scope.defautls);
 
             $scope.showSQL = function (chartId) {
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
@@ -66,18 +62,17 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                     $scope.modal.title = config.chart_title;
 
                 });
-
             }
 
             $scope.showDD = function (chartId) {
+
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
-                    //console.log(response.data[chartId]);
+                    var config = $scope.chartConfig;
+                    //console.log(config);
                     var config = response.data[chartId];
-                    var re = new RegExp('\n', 'g');
-                    //console.log($scope.modal.dd_id);
                     $scope.modal.dd_id = config.chart_id;
                     $scope.modal.dd_title = config.chart_title;
-                    $scope.modal.ddReports = $scope.chartConfig;
+                    //$scope.modal.ddReports = $scope.chartConfig;
                     $scope.modal.dd_formula = config.chart_formula;
                     //console.log($scope.ddReports);
                 });

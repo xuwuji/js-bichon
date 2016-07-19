@@ -1,9 +1,6 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker']);
 
 shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
-
-    $scope.t = moment(Date.now()).format('YYYY-MM-DD');
-
     //check if the ajax call is loading
     $scope.isLoading = true;
     //details for showing sql modal 
@@ -15,6 +12,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     $scope.defaults = {};
 
     $scope.refreshed = Date.now();
+
+
     //defaults
     $scope.defaults = {
         compare: [
@@ -67,6 +66,10 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }
     };
+
+
+
+
     //options for deep dive modal
     $scope.modal.ddReports = {};
 
@@ -105,6 +108,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             'endDate': moment($scope.refreshed).subtract(50, 'days')
         },
         compareSelected: true,
+        dmaChecked: false,
     };
 
 
@@ -157,6 +161,15 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             console.log(date)
             dates.push(date);
         }
+
+        if ($scope.result.compare == 'Year') {
+            for (var index in dateSelections) {
+                var date = moment(dateSelections[index]);
+                var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
+                dates.push(lastYear);
+            }
+        }
+
         var query = getQuery();
         query.filter.fields[0].value = dates;
         query.filter.fields[1].value = sites;
@@ -205,7 +218,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }).then(function (response) {
             var data = response.data;;
-            console.log(data);
+            //console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
                 //console.log(item.formula);
@@ -219,7 +232,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                 };
                 $scope.reports[chartId].series = chartData;
             }
-            console.log($scope.reports);
+            //console.log($scope.reports);
             $scope.isLoading = false;
         });
     }
@@ -291,16 +304,16 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
 
     //deep dive apply
     $scope.ddApply = function () {
-        console.log($scope.ddResult);
-        console.log($scope.modal);
-        console.log($scope.modal.dd_id);
+        //console.log($scope.ddResult);
+        //console.log($scope.modal);
+        //console.log($scope.modal.dd_id);
         //alert('sad');
         var sites = $scope.ddResult.siteSelection;
         var dateSelections = $scope.ddResult.dateSelection;
         var dates = [];
         for (var index in dateSelections) {
             var date = moment(dateSelections[index]).format('YYYY-MM-DD');
-            console.log(date);
+            //console.log(date);
             dates.push(date);
         }
         if ($scope.ddResult.compare == true) {
@@ -330,7 +343,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }).then(function (response) {
             var data = response.data;;
-            console.log(data);
+            //console.log(data);
             var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula);
             var o = getDeepDiveOption();
             $scope.modal.ddReports.options = o;

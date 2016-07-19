@@ -85,3 +85,11 @@
     background-color: #fff;
     border: 1px solid #f5f5f5;
 }
+
+.dd_filter {
+    background-color: #e3e3e3;
+}
+
+.dd_filter:hover {
+    background-color: #e3e3e3;
+}

@@ -1,69 +1,111 @@
-.toptitle {
-    font-size: 18px;
-    color: #333;
-    text-align: center;
-    background: #F3F3F3;
-    height: 42px;
-    line-height: 42px;
-    border-right: 1px solid #fff;
-}
-
-.shipping-chart {
-    border: 1px solid #DDD;
-    height: 220px;
-    border-bottom-width: 0;
-}
-
-.shipping-chart:first-child {
-    border-radius: 10px 10px 0 0;
-}
-
-.shipping-chart:last-child {
-    border-radius: 0 0 10px 10px;
-    border-bottom-width: 1px;
-}
-
-.shipping-chart {
-    background: white;
-    position: relative;
-    height: 220px;
-}
-
-.shipping-chart .chart-cntr {
-    height: 255px;
-    width: 97%;
-    padding-left: 7px;
-    text-align: center;
-}
-
-.shipping-chart .chart-cntr .loading {
-    margin-top: 120px;
-}
-
-.phd_filter {
-    background: #F3F3F3;
-    border: 1px solid #DDD;
-    border-radius: 5px;
-}
-
-.highContainer {
-    height: 200px;
-}
-
-.modal-lg {
-    width: 1200px;
-}
-
-.sql-modal-body pre {
-    border: 0px;
-    background: white;
-}
-
-.sql-modal-body code {
-    border: 0px;
-    background: white;
-}
-
-.qtip-bootstrap .qtip-content{
-    font-size: 12px;
-}
+    .toptitle {
+        font-size: 18px;
+        color: #333;
+        text-align: center;
+        background: #F3F3F3;
+        height: 42px;
+        line-height: 42px;
+        border-right: 1px solid #fff;
+    }
+    
+    .shipping-chart {
+        border: 1px solid #DDD;
+        height: 220px;
+        border-bottom-width: 0;
+    }
+    
+    .shipping-chart:first-child {
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .shipping-chart:last-child {
+        border-radius: 0 0 10px 10px;
+        border-bottom-width: 1px;
+    }
+    
+    .shipping-chart {
+        background: white;
+        position: relative;
+        height: 220px;
+    }
+    
+    .shipping-chart .chart-cntr {
+        height: 255px;
+        width: 97%;
+        padding-left: 7px;
+        text-align: center;
+    }
+    
+    .shipping-chart .chart-cntr .loading {
+        margin-top: 120px;
+    }
+    
+    .phd_filter {
+        background: #F3F3F3;
+        border: 1px solid #DDD;
+        border-radius: 5px;
+    }
+    
+    .highContainer {
+        height: 200px;
+    }
+    
+    .modal-lg {
+        width: 1200px;
+    }
+    
+    .sql-modal-body pre {
+        border: 0px;
+        background: white;
+    }
+    
+    .sql-modal-body code {
+        border: 0px;
+        background: white;
+    }
+    
+    .qtip-bootstrap .qtip-content {
+        font-size: 12px;
+    }
+    
+    .dd_filter:hover {
+        background-color: #e3e3e3;
+        display: block;
+    }
+    
+    .dd_filter div:hover {
+        background-color: #e3e3e3;
+    }
+    
+    .dd_filter:hover input {
+        background-color: #e3e3e3;
+        color: #7cb5ec;
+        text-decoration: underline;
+    }
+    
+    .dd_compare {
+        visibility: hidden;
+    }
+    
+    .dma {
+        visibility: hidden;
+    }
+    
+    .dma_checked {
+        visibility: hidden;
+    }
+    
+    .dd_filter:hover .dd_compare {
+        background-color: #e3e3e3;
+        visibility: visible;
+    }
+    
+    .dd_filter:hover .dma {
+        background-color: #e3e3e3;
+        visibility: visible;
+    }
+    
+    .dd_filter:hover .dma_checked {
+        background-color: #e3e3e3;
+        visibility: visible;
+    }

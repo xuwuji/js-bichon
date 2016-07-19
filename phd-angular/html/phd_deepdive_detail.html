@@ -1,8 +1,8 @@
 <div class="dd-modal-body container">
     <!-- filter  -->
-    <div class="row" style="margin-top:10px">
+    <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px">
         <!--    Date    -->
-        <div class="col-lg-4" id="dateSelect">
+        <div class="col-lg-4">
             <form class="form-inline">
                 <div class="form-group">
                     Date Range
@@ -12,30 +12,33 @@
 
         </div>
 
-        <div style=" margin-left: 15px" class="col-lg-2">
+        <div style=" margin-left: 15px" class="col-lg-3">
             compare year over year
-            <input type="checkbox" ng-model="result.compare">
+            <input type="checkbox" ng-model="result.compare" class="dd_compare">
         </div>
 
-        <div style="margin-left: 5px" class="col-lg-2">
-            7DMA
-            <input type="checkbox" ng-model="result.checked">
+        <div class="col-lg-3">
+            <span class="dma">7DMA</span>
+
+            <input type="checkbox" ng-model="result.dmaChecked" class="dma_checked">
         </div>
+
     </div>
 
     <div class="row col-lg-2" style="margin-top:10px">
         <button class="btn btn-primary" ng-click="ddApply()">Apply</button>
+        <h5 class="filter-desc-title">{{modal['dd_title']}}</h5>
     </div>
 
     <!-- highchart   -->
     <div>
-        <!--       <h5 class="filter-desc-title">{{modal['dd_title']}}</h5>-->
+
         <div class="mask" ng-if="isLoading">
             <div id="example_processing" class="dataTables_processing" style="visibility: visible">
                 <img src="img/ajax-loader.gif" width="31" height="31">
             </div>
         </div>
-        <highchart config="ddConfig" style="position: relative; overflow: hidden; width: 1140px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></highchart>
+        <highchart config="modal['ddReports']" style="position: relative; overflow: hidden; width: 1140px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></highchart>
     </div>
 
     <!--  annotation  -->
