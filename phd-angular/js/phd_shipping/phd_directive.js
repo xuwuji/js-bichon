@@ -17,17 +17,29 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
                 pre: function ($scope, iElement, iAttrs) {},
 
                 post: function ($scope, iElement, iAttrs) {
+                    var util = new arrayUtil();
+
+                    //watch the compare selection
                     $scope.$watch('result.compare', function (newV, oldV) {
-                        //console.log('new:' + newV);
-                        //console.log('old:' + oldV);
+                        var values = ['Year', 'Site', 'Device', 'Experience', 'None'];
                         if (newV == 'None') {
                             $scope.result.compareSelected = true;
-                        } else if (newV == 'Year') {
+                        } else {
                             $scope.result.compareSelected = false;
-                            $scope.defaults.and = ['Site', 'None'];
-                        } else if (newV == 'Site') {
-                            $scope.result.compareSelected = false;
-                            $scope.defaults.and = ['Year', 'None'];
+                            values = util.removeItem(values, $scope.result.compare);
+                            $scope.defaults.and1 = values;
+                        }
+                    });
+
+                    //watch the and1 selection
+                    $scope.$watch('result.and1', function (newV, oldV) {
+                        var values = ['Year', 'Site', 'Device', 'Experience', 'None'];
+                        values = util.removeItem(values, $scope.result.compare);
+                        if (newV == 'None') {
+                            $scope.result.and1Selected = true;
+                        } else {
+                            $scope.result.and1Selected = false;
+                            $scope.defaults.and2 = util.removeItem(values, $scope.result.and1);
                         }
                     });
                 }

@@ -13,6 +13,30 @@
                 </select>
             </div>
         </div>
+        <!-- Device -->
+        <div class="col-lg-2" id="siteSelect">
+            <div>
+                <div>
+                    <div style="float: left">Device</div>
+                </div>
+            </div>
+            <div>
+                <select style="width:200px" toggle ng-model="result.deviceSelection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="site for site in defaults.device">
+                </select>
+            </div>
+        </div>
+        <!-- Experience -->
+        <div class="col-lg-2" id="siteSelect">
+            <div>
+                <div>
+                    <div style="float: left">Experience</div>
+                </div>
+            </div>
+            <div>
+                <select style="width:200px" toggle ng-model="result.experienceSelection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="site for site in defaults.experience">
+                </select>
+            </div>
+        </div>
         <!--    Date    -->
         <div class="col-lg-2" id="dateSelect">
 
@@ -35,13 +59,23 @@
             </div>
         </div>
 
-        <!--      and  -->
+        <!--      and1  -->
         <div class="col-lg-2" id="and">
             <div>
                 <div style="float: left">And</div>
             </div>
             <div>
-                <select id="and" selectpicker ng-model="result.and" data-live-search="true" ng-options="a for a in defaults.and" ng-disabled="result.compareSelected">
+                <select selectpicker ng-model="result.and1" data-live-search="true" ng-options="a for a in defaults.and1" ng-disabled="result.compareSelected">
+                </select>
+            </div>
+        </div>
+        <!--      and2  -->
+        <div class="col-lg-2" id="and">
+            <div>
+                <div style="float: left">And</div>
+            </div>
+            <div>
+                <select selectpicker ng-model="result.and2" data-live-search="true" ng-options="a for a in defaults.and2" ng-disabled="result.and1Selected">
                 </select>
             </div>
         </div>

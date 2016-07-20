@@ -384,3 +384,18 @@ function compare(a, b) {
         return 1;
     return 0;
 }
+
+
+function arrayUtil() {
+
+}
+
+arrayUtil.prototype = {
+    removeItem: function (array, value) {
+        var index = array.indexOf(value);
+        if (index >= 0) {
+            array.splice(index, 1);
+        }
+        return array;
+    }
+}

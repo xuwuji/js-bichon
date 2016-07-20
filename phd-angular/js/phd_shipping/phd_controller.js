@@ -19,11 +19,22 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         compare: [
             "Year",
             "Site",
+            "Device",
+            "Experience",
             "None"
         ],
-        and: [
+        and1: [
             "Year",
             "Site",
+            "Device",
+            "Experience",
+            "None"
+        ],
+        and2: [
+            "Year",
+            "Site",
+            "Device",
+            "Experience",
             "None"
         ],
         site: [
@@ -49,6 +60,19 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     "ebay.ph",
     "ebay.pl",
     "others"
+        ],
+        device: [
+            "Mobile",
+            "PC"
+        ],
+        experience: [
+         "Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"
         ],
         dateRangeConfig: {
             'minDate': '01/01/2013',
@@ -78,7 +102,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     //result for selections
     $scope.result = {
         compare: "Year",
-        and: "None",
+        and1: "None",
+        and2: "None",
         siteSelection: [
     "befr.ebay.be",
     "benl.ebay.be",
@@ -103,6 +128,15 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     "ebay.pl",
     "others"
     ],
+        deviceSelection: ["Mobile",
+            "PC"],
+        experienceSelection: ["Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"],
         dateSelection: {
             'startDate': moment($scope.refreshed).subtract(150, 'days'),
             'endDate': moment($scope.refreshed).subtract(50, 'days')
