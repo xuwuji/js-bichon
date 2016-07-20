@@ -3,16 +3,15 @@ var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts
 shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
     //check if the ajax call is loading
     $scope.isLoading = true;
-    //details for showing sql modal 
-    $scope.modal = {};
 
     //options for each chart, in order to plot the chart
     $scope.reports = {};
 
-    $scope.defaults = {};
 
     $scope.refreshed = Date.now();
 
+    //defaults for filter
+    $scope.defaults = {};
 
     //defaults
     $scope.defaults = {
@@ -92,14 +91,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     };
 
 
-
-
-    //options for deep dive modal
-    $scope.modal.ddReports = {};
-
-    $scope.ddReports = {};
-
-    //result for selections
+    //result for filter selections
     $scope.result = {
         compare: "Year",
         and1: "None",
@@ -141,12 +133,21 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             'startDate': moment($scope.refreshed).subtract(150, 'days'),
             'endDate': moment($scope.refreshed).subtract(50, 'days')
         },
-        compareSelected: true,
-        dmaChecked: false,
+        compareNotSelected: true,
+        dma: false,
+        mmd: false,
     };
 
 
 
+    //details for show sql & deep dive modal 
+    $scope.modal = {};
+
+    //chart config for deep dive modal
+    $scope.modal.ddReports = {};
+
+
+    //deep dive filter selection
     $scope.ddResult = {
         compare: true,
         and: "None",
@@ -181,8 +182,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         compareSelected: false
     };
 
+    //load at the first time
+    var query = getQuery();
+    getChartConfig(query);
 
-    //get the selections and refresh the data
+
+
+    //get the filter selections and refresh the data on the dashboard
     $scope.apply = function () {
         $scope.isLoading = true;
         console.log($scope.result);
@@ -192,7 +198,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         for (var index in dateSelections) {
             //console.log(dateSelections[index]);
             var date = moment(dateSelections[index]).format('YYYY-MM-DD');
-            console.log(date)
+            //console.log(date)
             dates.push(date);
         }
 
@@ -210,10 +216,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         console.log(query);
         getChartConfig(query);
     }
-
-    //load at the first time
-    var query = getQuery();
-    getChartConfig(query);
 
     function getChartConfig(query) {
         //1.get configs for this page, it contains each chart's config

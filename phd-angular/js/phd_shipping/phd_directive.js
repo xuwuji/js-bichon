@@ -19,26 +19,26 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
                 post: function ($scope, iElement, iAttrs) {
                     var util = new arrayUtil();
 
-                    //watch the compare selection
+                    //watch the compare selection,change the and1 behavior
                     $scope.$watch('result.compare', function (newV, oldV) {
                         var values = ['Year', 'Site', 'Device', 'Experience', 'None'];
                         if (newV == 'None') {
-                            $scope.result.compareSelected = true;
+                            $scope.result.compareNotSelected = true;
                         } else {
-                            $scope.result.compareSelected = false;
+                            $scope.result.compareNotSelected = false;
                             values = util.removeItem(values, $scope.result.compare);
                             $scope.defaults.and1 = values;
                         }
                     });
 
-                    //watch the and1 selection
+                    //watch the and1 selection, change the and2 behavior
                     $scope.$watch('result.and1', function (newV, oldV) {
                         var values = ['Year', 'Site', 'Device', 'Experience', 'None'];
                         values = util.removeItem(values, $scope.result.compare);
                         if (newV == 'None') {
-                            $scope.result.and1Selected = true;
+                            $scope.result.and1NotSelected = true;
                         } else {
-                            $scope.result.and1Selected = false;
+                            $scope.result.and1NotSelected = false;
                             $scope.defaults.and2 = util.removeItem(values, $scope.result.and1);
                         }
                     });
@@ -90,7 +90,7 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                 });
             }
 
-
+            //qtip for sql and deep dive button
             $(".sqlbtn").qtip({
                 content: {
                     text: 'Show SQL'

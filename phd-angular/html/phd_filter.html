@@ -47,7 +47,10 @@
                 </div>
             </div>
         </div>
+        <!--    separator    -->
+        <div>
 
+        </div>
         <!--      compare  -->
         <div class="col-lg-2">
             <div>
@@ -65,7 +68,7 @@
                 <div style="float: left">And</div>
             </div>
             <div>
-                <select selectpicker ng-model="result.and1" data-live-search="true" ng-options="a for a in defaults.and1" ng-disabled="result.compareSelected">
+                <select selectpicker ng-model="result.and1" data-live-search="true" ng-options="a for a in defaults.and1" ng-disabled="result.compareNotSelected">
                 </select>
             </div>
         </div>
@@ -75,7 +78,7 @@
                 <div style="float: left">And</div>
             </div>
             <div>
-                <select selectpicker ng-model="result.and2" data-live-search="true" ng-options="a for a in defaults.and2" ng-disabled="result.and1Selected">
+                <select selectpicker ng-model="result.and2" data-live-search="true" ng-options="a for a in defaults.and2" ng-disabled="result.and1NotSelected">
                 </select>
             </div>
         </div>
@@ -85,8 +88,13 @@
         </div>
         <!--      7DMA  -->
         <div>
-            <div style="float: left; margin-right: 5px" ng-if="dim.is_optional">
-                <input type="checkbox" ng-model="result.checked"> 7DMA
+            <div style="float: left; margin-right: 5px">
+                <input type="checkbox" ng-model="result.dma"> 7DMA
+            </div>
+        </div>
+        <div>
+            <div style="float: left; margin-right: 5px">
+                <input type="checkbox" ng-model="result.mmd"> MMD
             </div>
         </div>
 
