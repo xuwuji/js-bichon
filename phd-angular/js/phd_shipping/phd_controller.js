@@ -182,9 +182,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         compareSelected: false
     };
 
-    //load at the first time
-    var query = getQuery();
-    getChartConfig(query);
 
 
 
@@ -213,9 +210,16 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         var query = getQuery();
         query.filter.fields[0].value = dates;
         query.filter.fields[1].value = sites;
+        query.dimensions.push('1');
         console.log(query);
         getChartConfig(query);
     }
+
+
+    //load at the first time
+    var query = getQuery();
+    getChartConfig(query);
+
 
     function getChartConfig(query) {
         //1.get configs for this page, it contains each chart's config
@@ -254,11 +258,12 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }).then(function (response) {
             var data = response.data;;
-            //console.log(data);
+            console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
                 //console.log(item.formula);
-                var chartData = getDataByChartId(data, item.id, item.formula);
+                var chartData = getDataByChartId(data, item.id, item.formula, false);
+                console.log(chartData);
                 var o = getOption();
                 o.tooltip.title = item.title;
                 $scope.reports[chartId].id = chartId;
@@ -273,48 +278,116 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         });
     }
 
-    //generate data by chart id
-    function getDataByChartId(data, chartId, expression) {
-        fillData1 = {
-            name: '',
-            data: [],
-            color: '#000000'
-        };
+    function getDataByChartId(jsondata, chartId, expression, isavg) {
 
-        fillData2 = {
-            name: '',
-            data: [],
-            color: '#7cb5ec',
-            dashStyle: 'dot'
-        };
+        //divide
+        var predata = [];
+        for (var rowKey in jsondata) {
+            if (jsondata.hasOwnProperty(rowKey)) {
+                var tuple = jsondata[rowKey];
 
-        // console.log(data);
-        for (var date in data) {
-            //console.log(date);
-            var record = data[date]
-                //console.log();
-            var value = calculate(record, expression);
-            if (date.indexOf('2016') == -1) {
-                var point = [];
-                point[0] = date;
-                point[1] = value;
-                fillData2.data.push(point);
-            } else {
-                var point = [];
-                point[0] = date;
-                point[1] = value;
-                fillData1.data.push(point);
+                var oneResult = calculate(tuple, expression);
+                if (oneResult != '') {
+                    predata.push([rowKey, oneResult]);
+                }
+
             }
         }
-        //console.log(fillData1);
-        var resultData = [];
-        fillData1.data.sort(compare);
-        fillData2.data.sort(compare);
-        resultData.push(fillData1);
-        resultData.push(fillData2);
-        //console.log(resultData);
-        return resultData;
-    };
+        //console.log(predata);
+
+        //deal with group
+        var groupTemp = [];
+        predata.forEach(function (row) {
+            var rowKey = row[0];
+            var groupName = rowKey.substring(11) != "" && rowKey.substring(11) != null ? rowKey.substring(11) : "default";
+            var rowVal = row[1];
+            var resultCluster = [];
+            if (typeof (groupTemp[groupName]) != "undefined") {
+                var resultCluster = groupTemp[groupName];
+            }
+            //resultCluster[rowKey]=rowdata;
+            resultCluster.push([rowKey, rowVal]);
+            groupTemp[groupName] = resultCluster;
+        });
+
+        var rawdata = [];
+        for (var groupName in groupTemp) {
+            rawdata.push([groupName, groupTemp[groupName]]);
+        }
+
+        //parameters
+        var start = $scope.result.dateSelection.startDate; //should be passed through parameters
+        var end = $scope.result.dateSelection.endDate; //should be passed through parameters
+
+
+        //divide results -> data for chart
+        var firstday = moment(start).subtract(1, 'days').format('YYYY-MM-DD');
+        var lastday = end;
+        var llastday = moment(lastday).subtract(363, 'days').format('YYYY-MM-DD');
+
+        var seriesColors = ['#62A6E7', '#f7a35c', '#90ed7d', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#434348'];
+        var colorCount = 0;
+        var chartdata = [];
+        rawdata.forEach(function (group) {
+            var yoydata = [];
+            var yoydata1 = [];
+            group[1].forEach(function (ele) {
+                var date = moment(ele[0].substring(0, 10)).format('YYYY-MM-DD');
+                if (date > firstday) {
+                    yoydata.push(ele)
+                }
+                if (date < llastday) {
+                    yoydata1.push(ele)
+                }
+            });
+            if (isavg) {
+                yoydata = nDayAvg(7, yoydata);
+                yoydata1 = nDayAvg(7, yoydata1);
+            }
+            var groupData = {
+                name: group[0],
+                data: yoydata,
+                color: seriesColors[colorCount]
+            }
+            chartdata.push(groupData);
+            var groupDataYoy = {
+                name: group[0],
+                data: yoydata1,
+                dashStyle: 'dot',
+                color: seriesColors[colorCount]
+            }
+            chartdata.push(groupDataYoy);
+            colorCount++;
+            if (colorCount > 9) colorCount = 0;
+        });
+
+        return chartdata;
+
+    }
+    //7dma
+    function nDayAvg(n, data) {
+        var nDMA = data;
+        for (var dataCount = nDMA.length - 1; dataCount >= 0; dataCount--) {
+            var valBefore = nDMA[dataCount][1];
+            var valAfter = 0;
+            var valSum = 0;
+            if (dataCount >= 7) {
+                for (count = 1; count < n; count++) {
+                    valSum += nDMA[dataCount - count][1];
+                    valAfter = (valSum + valBefore) / n;
+                }
+            } else if (dataCount > 0) {
+                for (count = 1; count < dataCount + 1; count++) {
+                    valSum += nDMA[dataCount - count][1];
+                    valAfter = (valSum + valBefore) / (dataCount + 1);
+                }
+            } else {
+                valAfter = valBefore;
+            }
+            nDMA[dataCount][1] = valAfter;
+        }
+        return nDMA;
+    }
 
     function calculate(record, expression) {
         //console.log(expression);
