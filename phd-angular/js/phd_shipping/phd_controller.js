@@ -258,14 +258,14 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }).then(function (response) {
             var data = response.data;;
-            console.log(data);
+            //console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
                 //console.log(item.formula);
                 var chartData = getDataByChartId(data, item.id, item.formula, false);
-                console.log(chartData);
-                var o = getOption();
-                o.tooltip.title = item.title;
+                //console.log(chartData);
+                var o = getOption(item.title);
+               // o.tooltip.formatter = getFormatter(item.title);
                 $scope.reports[chartId].id = chartId;
                 $scope.reports[chartId].options = o;
                 $scope.reports[chartId].title = {
@@ -273,7 +273,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                 };
                 $scope.reports[chartId].series = chartData;
             }
-            //console.log($scope.reports);
+            console.log($scope.reports);
             $scope.isLoading = false;
         });
     }

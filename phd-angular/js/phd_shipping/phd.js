@@ -140,7 +140,7 @@ function getQuery() {
 
 
 //normal option for each chart
-function getOption() {
+function getOption(tooltipTitle) {
     var Option = {
         chart: {
             renderTo: '',
@@ -227,7 +227,7 @@ function getOption() {
                         return false;
 
                 var point = [];
-                var ret = '<div style="min-width: 150px;white-space:normal; ">' + 'title' + '</div>';
+                var ret = '<div style="min-width: 150px;white-space:normal; ">' + tooltipTitle + '</div>';
                 //collect x/y of this point and push them into one array
                 $.each(this.points, function (idx, p) {
                     var info = {
@@ -240,12 +240,13 @@ function getOption() {
                 });
 
                 $.each(point, function (idx, point) {
+                    //console.log(point);
                     //ret = '';
                     if (point.yValue < 1) {
-                        ret += '<span style="color:' + point.color + '">' + moment(point.xValue).format("YYYY-MM-DD") + '</span>: <b>' + ((point.yValue) * 100).toFixed(2) + '%</b><br/>';
+                        ret += '<span style="color:' + point.color + '">' + (point.xValue) + '</span>: <b>' + ((point.yValue) * 100).toFixed(2) + '%</b><br/>';
 
                     } else {
-                        ret += '<span style="color:' + point.color + '">' + moment(point.xValue).format("YYYY-MM-DD") + '</span>: <b>' + (point.yValue) + '%</b><br/>';
+                        ret += '<span style="color:' + point.color + '">' + (point.xValue) + '</span>: <b>' + (point.yValue) + '%</b><br/>';
                     }
                 });
                 return ret;
@@ -254,7 +255,6 @@ function getOption() {
     };
     return Option;
 }
-
 
 
 //normal deep dive option for each chart
