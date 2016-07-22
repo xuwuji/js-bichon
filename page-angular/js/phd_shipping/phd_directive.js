@@ -51,7 +51,7 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
 
 
 //directive for phd line chart
-shipApp.directive('phdChart', ['$http', function ($http) {
+shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
     return {
         restrict: 'E',
         templateUrl: '/html/phd_chart.html',
@@ -72,21 +72,16 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                     $scope.modal.sql_fomula = config.sql_fomula;
                     $scope.modal.sql_contact = config.sql_contact;
                     $scope.modal.title = config.chart_title;
-
                 });
             }
 
             $scope.showDD = function (chartId) {
-
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
                     var config = $scope.chartConfig;
-                    //console.log(config);
                     var config = response.data[chartId];
                     $scope.modal.dd_id = config.chart_id;
                     $scope.modal.dd_title = config.chart_title;
-                    //$scope.modal.ddReports = $scope.chartConfig;
                     $scope.modal.dd_formula = config.chart_formula;
-                    //console.log($scope.ddReports);
                 });
             }
 
@@ -117,41 +112,54 @@ shipApp.directive('phdChart', ['$http', function ($http) {
 
 
 
-
-            function addChartDesc() {
-                var container = $(this.chart.renderTo).find('.highcharts-container');
-                var titleContainer = container.find('.highcharts-title');
-                var titlePos = titleContainer.position();
-                if (titlePos == null) {
-                    return;
-                }
-                var bbox = titleContainer[0].getBBox();
-                var top = parseInt(bbox.y);
-                var left = parseInt(bbox.x - 5);
-                var width = parseInt(bbox.width + 10);
-                var height = parseInt(bbox.height + 5);
-                var noteMaskDiv = $('<div style="z-index:20;position: absolute;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px;height:' + height + 'px;background-color:white;opacity:0"></div>');
-
-                var descDiv = $('<div>' + this.chartConfig.chart_desc + '</div>');
-
-                var statusDiv = '';
-
-                descDiv.append(statusDiv);
-                container.append(noteMaskDiv);
-
-                noteMaskDiv.qtip({
-                    content: {
-                        title: 'Noted:',
-                        text: descDiv.html(),
-                    },
-                    position: {
-                        target: 'mouse'
-                    },
-                    style: {
-                        classes: 'qtip-bootstrap'
+            //add the chart desc qtip
+            function addChartDesc($scope, element, attrs) {
+                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+                    var config = response.data[$scope.chartConfig.id];
+                    var chart_desc = config.chart_desc;
+                    var container = element.find('.highcharts-container');
+                    var titleContainer = container.find('.highcharts-title');
+                    var titlePos = titleContainer.position();
+                    if (titlePos == null) {
+                        return;
                     }
+                    var bbox = titleContainer[0].getBBox();
+                    $scope.top = parseInt(bbox.y) + "px";
+                    $scope.left = parseInt(bbox.x - 25) + "px";
+                    $scope.width = parseInt(bbox.width + 50) + "px";
+                    $scope.height = parseInt(bbox.height + 25) + "px";
+
+                    var descDiv = $('<div>' + chart_desc + '</div>');
+                    var statusDiv = '';
+
+                    $scope.maskStyle = {
+                        "z-index": 20,
+                        "position": "absolute",
+                        "top": $scope.top,
+                        "left": $scope.left,
+                        "width": $scope.width,
+                        "height": $scope.height,
+                        "background-color": "white",
+                        "opacity": 0
+                    }
+                    var div = element.find('.noteMaskDiv');
+                    div.qtip({
+                        content: {
+                            title: 'Noted:',
+                            text: descDiv.html(),
+                        },
+                        position: {
+                            target: 'mouse'
+                        },
+                        style: {
+                            classes: 'qtip-bootstrap'
+                        }
+                    });
                 });
-            }
+
+            };
+
+            addChartDesc($scope, element, attrs);
 
         },
     }
