@@ -115,6 +115,44 @@ shipApp.directive('phdChart', ['$http', function ($http) {
                 }
             });
 
+
+
+
+            function addChartDesc() {
+                var container = $(this.chart.renderTo).find('.highcharts-container');
+                var titleContainer = container.find('.highcharts-title');
+                var titlePos = titleContainer.position();
+                if (titlePos == null) {
+                    return;
+                }
+                var bbox = titleContainer[0].getBBox();
+                var top = parseInt(bbox.y);
+                var left = parseInt(bbox.x - 5);
+                var width = parseInt(bbox.width + 10);
+                var height = parseInt(bbox.height + 5);
+                var noteMaskDiv = $('<div style="z-index:20;position: absolute;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px;height:' + height + 'px;background-color:white;opacity:0"></div>');
+
+                var descDiv = $('<div>' + this.chartConfig.chart_desc + '</div>');
+
+                var statusDiv = '';
+
+                descDiv.append(statusDiv);
+                container.append(noteMaskDiv);
+
+                noteMaskDiv.qtip({
+                    content: {
+                        title: 'Noted:',
+                        text: descDiv.html(),
+                    },
+                    position: {
+                        target: 'mouse'
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap'
+                    }
+                });
+            }
+
         },
     }
 }]);

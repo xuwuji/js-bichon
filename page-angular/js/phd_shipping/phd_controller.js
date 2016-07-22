@@ -3,17 +3,11 @@ var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts
 shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
     //check if the ajax call is loading
     $scope.isLoading = true;
-
     //options for each chart, in order to plot the chart
     $scope.reports = {};
-
-
+    //today
     $scope.refreshed = Date.now();
-
     //defaults for filter
-    $scope.defaults = {};
-
-    //defaults
     $scope.defaults = {
         compare: [
             "Year",
@@ -146,7 +140,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     //chart config for deep dive modal
     $scope.modal.ddReports = {};
 
-
     //deep dive filter selection
     $scope.ddResult = {
         compare: true,
@@ -184,6 +177,44 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
 
 
 
+    //load at the first time
+    var query = getQuery();
+    getChartConfig(query);
+
+
+
+    function getSelection() {
+        var result = $scope.result;
+        var from = moment(result.dateSelection.startDate).format('YYYY-MM-DD');
+        var to = moment(result.dateSelection.endDate).format('YYYY-MM-DD');
+        var site = result.siteSelection;
+        var device = result.deviceSelection;
+        var experience = result.experienceSelection;
+        var compare = result.compare;
+        var and1 = result.and1;
+        var and2 = result.and2;
+        console.log('-------------------------');
+        console.log(result);
+        console.log(from);
+        console.log(to);
+        console.log(site);
+        console.log(device);
+        console.log(experience);
+        console.log('-------------------------');
+        var url = 'http://localhost:8080/phdService/cc?from={from}&to={to}&site={site}&device={device}&experience={experience}&compare={compare}&and1={and1}&and2={and2}';
+        url = url.replace('{from}', from);
+        url = url.replace('{to}', to);
+        url = url.replace('{site}', site);
+        url = url.replace('{device}', device);
+        url = url.replace('{experience}', experience);
+        url = url.replace('{compare}', compare);
+        url = url.replace('{and1}', and1);
+        url = url.replace('{and2}', and2);
+        console.log(url);
+        return url;
+    }
+
+
 
     //get the filter selections and refresh the data on the dashboard
     $scope.apply = function () {
@@ -199,7 +230,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             dates.push(date);
         }
 
-        if ($scope.result.compare == 'Year') {
+        if ($scope.result.compare == 'Year'|| $scope.result.and1 == 'Year' || $scope.result.and2 == 'Year') {
             for (var index in dateSelections) {
                 var date = moment(dateSelections[index]);
                 var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
@@ -210,15 +241,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         var query = getQuery();
         query.filter.fields[0].value = dates;
         query.filter.fields[1].value = sites;
-        query.dimensions.push('1');
+        if ($scope.result.compare == 'Site' || $scope.result.and1 == 'Site' || $scope.result.and2 == 'Site') {
+            query.dimensions.push('1');
+        }
         console.log(query);
         getChartConfig(query);
     }
 
-
-    //load at the first time
-    var query = getQuery();
-    getChartConfig(query);
 
 
     function getChartConfig(query) {
@@ -265,7 +294,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                 var chartData = getDataByChartId(data, item.id, item.formula, false);
                 //console.log(chartData);
                 var o = getOption(item.title);
-               // o.tooltip.formatter = getFormatter(item.title);
                 $scope.reports[chartId].id = chartId;
                 $scope.reports[chartId].options = o;
                 $scope.reports[chartId].title = {
@@ -340,6 +368,9 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                     yoydata1.push(ele)
                 }
             });
+            //sort the array by date
+            yoydata.sort(compare);
+            yoydata1.sort(compare);
             if (isavg) {
                 yoydata = nDayAvg(7, yoydata);
                 yoydata1 = nDayAvg(7, yoydata1);
