@@ -177,9 +177,11 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
 
 
 
+
+
     //load at the first time
-    var query = getQuery();
-    getChartConfig(query);
+    var defaultUrl = getSelection();
+    getChartConfig(defaultUrl);
 
 
 
@@ -193,15 +195,15 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         var compare = result.compare;
         var and1 = result.and1;
         var and2 = result.and2;
-        console.log('-------------------------');
-        console.log(result);
-        console.log(from);
-        console.log(to);
-        console.log(site);
-        console.log(device);
-        console.log(experience);
-        console.log('-------------------------');
-        var url = 'http://localhost:8080/phdService/cc?from={from}&to={to}&site={site}&device={device}&experience={experience}&compare={compare}&and1={and1}&and2={and2}';
+        //        console.log('-------------------------');
+        //        console.log(result);
+        //        console.log(from);
+        //        console.log(to);
+        //        console.log(site);
+        //        console.log(device);
+        //        console.log(experience);
+        //        console.log('-------------------------');
+        var url = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&site={site}&device={device}&experience={experience}&compare={compare}&and1={and1}&and2={and2}';
         url = url.replace('{from}', from);
         url = url.replace('{to}', to);
         url = url.replace('{site}', site);
@@ -213,42 +215,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         console.log(url);
         return url;
     }
-
-
-
-    //get the filter selections and refresh the data on the dashboard
-    $scope.apply = function () {
-        $scope.isLoading = true;
-        console.log($scope.result);
-        var sites = $scope.result.siteSelection;
-        var dateSelections = $scope.result.dateSelection;
-        var dates = [];
-        for (var index in dateSelections) {
-            //console.log(dateSelections[index]);
-            var date = moment(dateSelections[index]).format('YYYY-MM-DD');
-            //console.log(date)
-            dates.push(date);
-        }
-
-        if ($scope.result.compare == 'Year'|| $scope.result.and1 == 'Year' || $scope.result.and2 == 'Year') {
-            for (var index in dateSelections) {
-                var date = moment(dateSelections[index]);
-                var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
-                dates.push(lastYear);
-            }
-        }
-
-        var query = getQuery();
-        query.filter.fields[0].value = dates;
-        query.filter.fields[1].value = sites;
-        if ($scope.result.compare == 'Site' || $scope.result.and1 == 'Site' || $scope.result.and2 == 'Site') {
-            query.dimensions.push('1');
-        }
-        console.log(query);
-        getChartConfig(query);
-    }
-
-
 
     function getChartConfig(query) {
         //1.get configs for this page, it contains each chart's config
@@ -279,22 +245,18 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
 
     function refreshData(query) {
         $http({
-            method: 'POST',
-            url: 'http://localhost:8080/OLAPService/dataquery',
-            data: query,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            method: 'GET',
+            url: query
         }).then(function (response) {
             var data = response.data;;
-            //console.log(data);
+            console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
                 //console.log(item.formula);
                 var chartData = getDataByChartId(data, item.id, item.formula, false);
                 //console.log(chartData);
                 var o = getOption(item.title);
-                $scope.reports[chartId].id = chartId;
+
                 $scope.reports[chartId].options = o;
                 $scope.reports[chartId].title = {
                     text: item.title
@@ -303,11 +265,12 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
             console.log($scope.reports);
             $scope.isLoading = false;
+        }).then(function () {
+            addAnnotation();
         });
     }
 
     function getDataByChartId(jsondata, chartId, expression, isavg) {
-
         //divide
         var predata = [];
         for (var rowKey in jsondata) {
@@ -441,6 +404,204 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         }
     }
 
+    function addAnnotation() {
+
+        var start = moment($scope.result.dateSelection.startDate).format('YYYY-MM-DD');
+        var end = moment($scope.result.dateSelection.endDate).format('YYYY-MM-DD');
+        //var start = '2015-07-01';
+        //var end = '2015-07-25';
+        $http({
+            method: 'GET',
+            url: 'http://nous.corp.ebay.com/nousfeservice/annotation?end=' + end + '&start=' + start + '&targetId=DemoDD.dream',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            var data = response.data;
+            //$.getJSON('//nous.corp.ebay.com/nousfeservice/annotation?end='+end+'&start='+start+'&targetId=DemoDD.dream', function(data){
+
+            //should be passed through parameters
+
+            var reports = $scope.reports;
+            var tabId = '516'; //513 is for shipping tab
+            //tab id should be added into chart_config
+
+            var wdata = {};
+            //var annotations=sortAnnotations(data);
+            data.forEach(function (ele) {
+                if (!wdata.hasOwnProperty(ele.targetId)) {
+                    wdata[ele.targetId] = [];
+                }
+                wdata[ele.targetId].push(ele);
+            });
+
+            for (var idx in reports) {
+                if (reports.hasOwnProperty(idx)) { //can be ignored?
+                    var curadapter = reports[idx];
+                    //if(curadapter.rpt_type=='highchart'){
+
+                    if (!wdata.hasOwnProperty('DemoDD.dream.' + tabId + '_' + curadapter.id))
+                        continue;
+
+                    var anns = wdata['DemoDD.dream.' + tabId + '_' + curadapter.id];
+
+                    var flagData = [];
+                    anns.forEach(function (elee1) {
+                        var ddate = elee1.startx;
+                        var xx = 0;
+
+                        if (ddate >= start && ddate <= end) {
+                            xx = (new Date(ddate) - new Date(start)) / 1000 / 24 / 3600;
+                        } else
+                            return;
+
+                        flagData.push({
+                            aid: elee1.id,
+                            filterInfo: elee1.filterInfo,
+                            title: " ",
+                            x: xx
+                        });
+                    });
+
+                    //console.log('----------------------------------------------------------------------- report');
+
+                    var siteFilters = $scope.result.siteSelection;
+                    var deviceFilters = $scope.result.deviceSelection;
+                    var experienceFilters = $scope.result.experienceSelection;
+
+
+
+                    var daterange = {
+                        startDate: new Date(start).getTime() + 24 * 3600 * 1000,
+                        endDate: new Date(end).getTime() + 24 * 3600 * 1000
+                    };
+
+                    var thefilters = [];
+                    var orifilter = {};
+                    orifilter['site'] = {
+                        'value': siteFilters
+                    }; //site = ele.dimension??? siteFilters = ele.value;???
+                    orifilter['device'] = {
+                        'value': deviceFilters
+                    };
+                    orifilter['experience'] = {
+                        'value': experienceFilters
+                    };
+
+                    thefilters.push(orifilter);
+
+
+
+
+                    var isyoy = false;
+                    var is7dma = false;
+
+                    if ($scope.result.dmaChecked == true) {
+                        is7dma = true;
+                    }
+
+                    if ($scope.result.compare == 'Year' || $scope.result.and1 == 'Year' || $scope.result.and2 == 'Year') {
+
+                        isyoy = true;
+                    }
+
+                    //              var ssid = $(this).attr('srcid');
+                    var ssid = '488'; //'124';//should be in config file???
+
+                    var secidx = curadapter.id;
+
+                    //var closure=function(secidx){
+                    var ggdata = {
+                        name: 'flag-name',
+                        type: 'flags',
+                        width: 17,
+                        height: 16,
+                        y: -18,
+                        cursor: 'pointer',
+                        showInLegend: false,
+                        shape: 'url(img/icon-annotation.png)', //anno???
+                        data: flagData,
+                        point: {
+                            events: {
+                                click: function (evt) {
+                                    var filterInfo = JSON.parse(this.filterInfo);
+
+                                    var daterange = {};
+                                    var filters_temp = [];
+                                    for (var i = 0; i < filterInfo.reports.length; i++) {
+                                        var report = filterInfo.reports[i];
+                                        var filter = {};
+                                        for (var filterProp in report) {
+                                            if (report.hasOwnProperty(filterProp)) {
+                                                var value = report[filterProp];
+                                                if (filterProp == 'dateRange') {
+                                                    daterange.startDate = value.startDate;
+                                                    daterange.endDate = value.endDate;
+                                                } else if (filterProp == 'aggrindi') {
+                                                    // do nothing
+                                                } else {
+                                                    filter[filterProp] = {};
+                                                    filter[filterProp].value = value;
+                                                }
+                                            }
+                                        }
+
+                                        filters_temp.push(filter);
+                                    }
+
+
+                                    //open deepdive page??
+                                    //if(secidx==19||secidx==20){
+                                    //     ssid = 501;
+                                    //}
+
+                                    $scope.showDeepDive(secidx, filters_temp, daterange, g_page_id, filterInfo.enableYOY, is7dma, ssid);
+                                }
+                            }
+                        }
+                    };
+                    console.log('ggdata:' + ggdata);
+                    //addSeries(idx,ggdata);
+                    $scope.reports[idx].series.push(ggdata);
+                    //addSeries(idx,$scope.reports[idx].series[0]);
+                    //curadapter.series.push(ggdata);
+                    console.log($scope.reports);
+                    //}(secidx);
+
+                    //}
+
+                }
+            }
+
+        });
+    }
+
+
+
+    //get the filter selections and refresh the data on the dashboard
+    $scope.apply = function () {
+        $scope.isLoading = true;
+        console.log($scope.result);
+        var sites = $scope.result.siteSelection;
+        var dateSelections = $scope.result.dateSelection;
+        var dates = [];
+        for (var index in dateSelections) {
+            var date = moment(dateSelections[index]).format('YYYY-MM-DD');
+            dates.push(date);
+        }
+
+        if ($scope.result.compare == 'Year' || $scope.result.and1 == 'Year' || $scope.result.and2 == 'Year') {
+            for (var index in dateSelections) {
+                var date = moment(dateSelections[index]);
+                var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
+                dates.push(lastYear);
+            }
+        }
+
+        var query = getSelection();
+        getChartConfig(query);
+    }
+
 
     //deep dive apply
     $scope.ddApply = function () {
@@ -490,6 +651,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             $scope.modal.ddReports.series = chartData;
         });
     };
+
+
 
 
 

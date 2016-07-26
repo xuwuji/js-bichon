@@ -24,6 +24,7 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
                         var values = ['Year', 'Site', 'Device', 'Experience', 'None'];
                         if (newV == 'None') {
                             $scope.result.compareNotSelected = true;
+                            $scope.result.and1NotSelected = true;
                         } else {
                             $scope.result.compareNotSelected = false;
                             values = util.removeItem(values, $scope.result.compare);
@@ -56,10 +57,12 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
         restrict: 'E',
         templateUrl: '/html/phd_chart.html',
         scope: {
-            chartConfig: "<",
+            chartConfig: "=",
             modal: "=",
         },
         link: function ($scope, element, attrs) {
+
+            //console.log($scope.chartConfig);
 
             $scope.showSQL = function (chartId) {
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
@@ -112,6 +115,11 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
 
 
 
+            //get the latest date of each chart, should call the service
+            function getLatest(chartId) {
+
+            }
+
             //add the chart desc qtip
             function addChartDesc($scope, element, attrs) {
                 $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
@@ -128,9 +136,8 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
                     $scope.left = parseInt(bbox.x - 25) + "px";
                     $scope.width = parseInt(bbox.width + 50) + "px";
                     $scope.height = parseInt(bbox.height + 25) + "px";
-
                     var descDiv = $('<div>' + chart_desc + '</div>');
-                    var statusDiv = '';
+
 
                     $scope.maskStyle = {
                         "z-index": 20,
@@ -158,6 +165,7 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
                 });
 
             };
+
 
             addChartDesc($scope, element, attrs);
 
