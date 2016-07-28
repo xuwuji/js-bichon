@@ -83,7 +83,7 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
 
             $scope.showDD = function (chartId) {
                 $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
-                    var config = $scope.chartConfig;
+                    //var config = $scope.chartConfig;
                     var config = response.data[chartId];
                     $scope.modal.dd_id = config.chart_id;
                     $scope.modal.dd_title = config.chart_title;
@@ -123,8 +123,8 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
             //add the chart desc qtip
             function addChartDesc($scope, element, attrs) {
                 $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
-                    var config = response.data[$scope.chartConfig.id];
-                    getLatestRefresh(response, config.chart_id);
+                    //var config = response.data[$scope.chartConfig.id];
+                    getLatestRefresh(response, $scope.chartConfig.id);
                 });
             };
 

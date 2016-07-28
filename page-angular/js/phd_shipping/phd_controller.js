@@ -178,20 +178,20 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
 
     $scope.$on('phd.filter.toggle7DMA', function (event, _7DMA) {
         //console.log("into 7dma process");
-        var defaultUrl = getSelection();
+        var defaultUrl = getSelection($scope.result);
         getChartConfig(defaultUrl);
     });
 
 
     //load at the first time
-    var defaultUrl = getSelection();
+    var defaultUrl = getSelection($scope.result);
     getChartConfig(defaultUrl);
 
 
     $scope.modal.to = Date.now();
 
-    function getSelection() {
-        var result = $scope.result;
+    function getSelection(result) {
+        //var result = $scope.result;
         var from = moment(result.dateSelection.startDate).format('YYYY-MM-DD');
         var to = moment(result.dateSelection.endDate).format('YYYY-MM-DD');
         var site = result.siteSelection;
@@ -605,51 +605,21 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             }
         }
 
-        var query = getSelection();
+        var query = getSelection($scope.result);
         getChartConfig(query);
     }
 
 
     //deep dive apply
     $scope.ddApply = function () {
-        //console.log($scope.ddResult);
-        //console.log($scope.modal);
-        //console.log($scope.modal.dd_id);
-        //alert('sad');
-        var sites = $scope.ddResult.siteSelection;
-        var dateSelections = $scope.ddResult.dateSelection;
-        var dates = [];
-        for (var index in dateSelections) {
-            var date = moment(dateSelections[index]).format('YYYY-MM-DD');
-            //console.log(date);
-            dates.push(date);
-        }
-        if ($scope.ddResult.compare == true) {
-            for (var index in dateSelections) {
-                var date = moment(dateSelections[index]);
-                var lastYear = moment(date).subtract(365, 'days').format('YYYY-MM-DD');
-                dates.push(lastYear);
-            }
-
-        }
-
-        var query = getQuery();
-        query.filter.fields[0].value = dates;
-        query.filter.fields[1].value = sites;
+        var query = getSelection($scope.ddResult);
         console.log(query);
         refreshDeepDiveDate(query);
     }
 
 
     function refreshDeepDiveDate(query) {
-        $http({
-            method: 'POST',
-            url: 'http://localhost:8080/OLAPService/dataquery',
-            data: query,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
+        $http.get(query).then(function (response) {
             var data = response.data;;
             //console.log(data);
             var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula);
@@ -658,9 +628,5 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             $scope.modal.ddReports.series = chartData;
         });
     };
-
-
-
-
 
 }]);
