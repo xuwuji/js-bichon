@@ -1,11 +1,11 @@
-<div class="container phd_filter">
+<div class="col-md-12 container phd_filter">
 
     <div class="row">
         <!--   Site -->
-        <div class="col-lg-2" id="siteSelect">
+        <div id="siteSelect" class="filterUnit banner-element">
             <div>
                 <div>
-                    <div style="float: left">Site</div>
+                    <div class="filterLabel">Site</div>
                 </div>
             </div>
             <div>
@@ -14,10 +14,10 @@
             </div>
         </div>
         <!-- Device -->
-        <div class="col-lg-2" id="siteSelect">
+        <div id="deviceSelect" class="filterUnit banner-element">
             <div>
                 <div>
-                    <div style="float: left">Device</div>
+                    <div class="filterLabel">Device</div>
                 </div>
             </div>
             <div>
@@ -26,10 +26,10 @@
             </div>
         </div>
         <!-- Experience -->
-        <div class="col-lg-2" id="siteSelect">
+        <div id="expSelect" class="filterUnit banner-element">
             <div>
                 <div>
-                    <div style="float: left">Experience</div>
+                    <div class="filterLabel">Experience</div>
                 </div>
             </div>
             <div>
@@ -38,23 +38,22 @@
             </div>
         </div>
         <!--    Date    -->
-        <div class="col-lg-2" id="dateSelect">
+        <div id="dateSelect" class="filterUnit banner-element">
 
-            <div style="float: left">Date Range</div>
+            <div class="filterLabel">Date Range</div>
             <div>
                 <div style="float: left; margin-right: 5px">
-                    <input date-range-picker class="form-control date-picker" type="text" ng-model="result.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;" id="dateFilter" options="defaults.dateRangeConfig" />
+                    <i class="fa fa-calendar" style="position: absolute;top: 50px;left: 20px;"></i>
+                    <input date-range-picker class="form-control date-picker" type="text" ng-model="result.dateSelection" style="padding-left: 36px; height: 30px; width: 220px; font-size: 14px;" id="dateFilter" options="defaults.dateRangeConfig" />
                 </div>
             </div>
         </div>
         <!--    separator    -->
-        <div>
-
-        </div>
+        <div class="filter-v-border"></div>
         <!--      compare  -->
-        <div class="col-lg-2">
+        <div class="filterUnit banner-element">
             <div>
-                <div style="float: left">Compare</div>
+                <div class="filterLabel">Compare</div>
             </div>
             <div>
                 <select id="compare" class="selectpicker" selectpicker ng-model="result.compare" data-live-search="true" ng-options="c for c in defaults.compare">
@@ -63,9 +62,9 @@
         </div>
 
         <!--      and1  -->
-        <div class="col-lg-2" id="and">
+        <div id="and1" class="filterUnit banner-element">
             <div>
-                <div style="float: left">And</div>
+                <div class="filterLabel">And</div>
             </div>
             <div>
                 <select selectpicker ng-model="result.and1" data-live-search="true" ng-options="a for a in defaults.and1" ng-disabled="result.compareNotSelected">
@@ -73,9 +72,9 @@
             </div>
         </div>
         <!--      and2  -->
-        <div class="col-lg-2" id="and">
+        <div id="and2" class="filterUnit banner-element">
             <div>
-                <div style="float: left">And</div>
+                <div class="filterLabel">And</div>
             </div>
             <div>
                 <select selectpicker ng-model="result.and2" data-live-search="true" ng-options="a for a in defaults.and2" ng-disabled="result.and1NotSelected">
@@ -83,24 +82,26 @@
             </div>
         </div>
         <!--    separator    -->
-        <div>
-
-        </div>
+        <div class="filter-v-border"></div>
         <!--      7DMA  -->
-        <div>
-            <div style="float: left; margin-right: 5px">
-                <input type="checkbox" ng-model="result.dma"> 7DMA
+        <div class="banner-element pull-left">
+            <div class="checkbox v-middle">
+                <div class="checkboxLabel">
+                    <input type="checkbox" ng-model="result.dma"> 7DMA
+                    &nbsp;&nbsp;<a href="http://phd-jenkins-9056.lvs01.dev.ebayc3.com/nousfe/app/#/mmd" target="_new">MMD</a>
+                </div>
+           
             </div>
         </div>
-        <div>
-            <div style="float: left; margin-right: 5px">
-                <a> MMD</a>
+        <br style="clear:both;padding:0;margin:0">
+        <div class="banner-element">
+            <div class="v-middle">
+                <button type="button" ng-click="apply()" class="btn btn-primary">Apply</button>
             </div>
         </div>
 
     </div>
+    
 
-    <div class="row col-lg-2" style="margin-top:10px">
-        <button class="btn btn-primary" ng-click="apply()">Apply</button>
-    </div>
+    
 </div>

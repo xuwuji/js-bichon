@@ -43,6 +43,10 @@ shipApp.directive('phdFilter', ['$timeout', '$http', function ($timeout, $http) 
                             $scope.defaults.and2 = util.removeItem(values, $scope.result.and1);
                         }
                     });
+                    $scope.$watch('result.dma', function (newValue, oldValue) {
+                        if (newValue === oldValue) return;
+                        $scope.$emit('phd.filter.toggle7DMA', newValue);
+                    });
                 }
             }
         },
@@ -62,10 +66,8 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
         },
         link: function ($scope, element, attrs) {
 
-            //console.log($scope.chartConfig);
-
             $scope.showSQL = function (chartId) {
-                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+                $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
                     //console.log(response.data[chartId]);
                     var config = response.data[chartId];
                     var re = new RegExp('\n', 'g');
@@ -75,11 +77,12 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
                     $scope.modal.sql_fomula = config.sql_fomula;
                     $scope.modal.sql_contact = config.sql_contact;
                     $scope.modal.title = config.chart_title;
+                    $scope.modal.downloadLink = "http://localhost:58080/download/sql?pageId=5&chartId=" + config.chart_id;
                 });
             }
 
             $scope.showDD = function (chartId) {
-                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+                $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
                     var config = $scope.chartConfig;
                     var config = response.data[chartId];
                     $scope.modal.dd_id = config.chart_id;
@@ -114,16 +117,24 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
             });
 
 
+            addChartDesc($scope, element, attrs);
 
-            //get the latest date of each chart, should call the service
-            function getLatest(chartId) {
-
-            }
 
             //add the chart desc qtip
             function addChartDesc($scope, element, attrs) {
-                $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+                $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
                     var config = response.data[$scope.chartConfig.id];
+                    getLatestRefresh(response, config.chart_id);
+                });
+            };
+
+            //get the latest date of each chart, should call the service
+            function getLatestRefresh(response, chartId) {
+                var url = 'http://localhost:58080/config/refresh?pageId=5&chartId=' + chartId;
+                //console.log($scope.modal);
+                $http.get(url).then(function (refreshData) {
+                    var refresh = refreshData.data.refresh;
+                    var config = response.data[chartId];
                     var chart_desc = config.chart_desc;
                     var container = element.find('.highcharts-container');
                     var titleContainer = container.find('.highcharts-title');
@@ -136,9 +147,21 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
                     $scope.left = parseInt(bbox.x - 25) + "px";
                     $scope.width = parseInt(bbox.width + 50) + "px";
                     $scope.height = parseInt(bbox.height + 25) + "px";
-                    var descDiv = $('<div>' + chart_desc + '</div>');
 
 
+                    //check if last refresh status
+                    var diff = moment(refresh).diff(moment($scope.modal.to).subtract(2, 'days'),'days');
+                    //console.log(diff);
+                    var status;
+                    if(diff<0){
+                        status='<li style="color: red">';
+                    }else{
+                        status='<li style="color: green">';
+                    }
+                    
+                    var descDiv = $('<div>' + chart_desc + '<hr><p>'+status+'<b style="color:black">Last Refresh : ' + refresh + '</b></li></p></div>');
+                    
+                    
                     $scope.maskStyle = {
                         "z-index": 20,
                         "position": "absolute",
@@ -163,11 +186,8 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
                         }
                     });
                 });
+            }
 
-            };
-
-
-            addChartDesc($scope, element, attrs);
 
         },
     }

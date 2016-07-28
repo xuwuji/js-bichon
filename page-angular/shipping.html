@@ -6,6 +6,7 @@
     <link type="text/css" href="css/daterangepicker.css" rel="stylesheet" />
     <link type="text/css" href="css/font-awesome.min.css" rel="stylesheet" />
     <link type="text/css" href="css/bootstrap-select.min.css" rel="stylesheet" />
+   <!--  <link type="text/css" href="css/phd.css" rel="stylesheet" /> -->
     <link type="text/css" href="css/phd/shipping.css" rel="stylesheet" />
     <link type="text/css" href="css/jquery.qtip.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/daterangepicker.css" />
@@ -31,6 +32,8 @@
     <script src="js/bootstrap-select.min.js" type="text/javascript"></script>
 
     <title>Phd Ship</title>
+   
+   
 </head>
 
 <body ng-app="phdShip">
@@ -44,7 +47,7 @@
 
         <!--       <pre>{{query|json}}</pre>-->
         <div id="charts" class="row" style="width: 100%">
-            <div class="col-lg-3">
+            <div class="col-md-3 group">
                 <div class="toptitle">Tracking</div>
 
                 <div class="charts-cntr">
@@ -71,7 +74,7 @@
             </div>
 
 
-            <div class="col-lg-3">
+            <div class="col-md-3 group">
                 <div class="toptitle">Pick Up Drop Off</div>
                 <div class="charts-cntr">
                     <div class="shipping-chart">
@@ -93,7 +96,7 @@
             </div>
 
 
-            <div class="col-lg-3">
+            <div class="col-md-3 group">
                 <div class="toptitle">Label Adoption & GSP</div>
                 <div class="charts-cntr">
                     <div class="shipping-chart">
@@ -104,7 +107,7 @@
                         </phd-chart>
                     </div>
 
-                    <div class="charts-cntr">
+                   <!--  <div class="charts-cntr"> -->
                         <div class="shipping-chart">
                             <div class="chart-cntr smask" style="" ng-if="isLoading">
                                 <img class="loading" src="img/ajax-loader.gif" />
@@ -112,11 +115,11 @@
                             <phd-chart class="chart-cntr" chart-config="reports['6']" modal="modal">
                             </phd-chart>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-md-3 group">
                 <div class="toptitle">GSP</div>
                 <div class="charts-cntr">
                     <div class="shipping-chart">
@@ -126,7 +129,7 @@
                         <phd-chart class="chart-cntr" chart-config="reports['7']" modal="modal">
                         </phd-chart>
                     </div>
-                    <div class="charts-cntr">
+                   <!--  <div class="charts-cntr"> -->
                         <div class="shipping-chart">
                             <div class="chart-cntr smask" style="" ng-if="isLoading">
                                 <img class="loading" src="img/ajax-loader.gif" />
@@ -134,7 +137,7 @@
                             <phd-chart class="chart-cntr" chart-config="reports['8']" modal="modal">
                             </phd-chart>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>

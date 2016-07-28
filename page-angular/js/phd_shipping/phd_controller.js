@@ -176,7 +176,11 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     };
 
 
-
+    $scope.$on('phd.filter.toggle7DMA', function (event, _7DMA) {
+        //console.log("into 7dma process");
+        var defaultUrl = getSelection();
+        getChartConfig(defaultUrl);
+    });
 
 
     //load at the first time
@@ -184,6 +188,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     getChartConfig(defaultUrl);
 
 
+    $scope.modal.to = Date.now();
 
     function getSelection() {
         var result = $scope.result;
@@ -213,12 +218,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         url = url.replace('{and1}', and1);
         url = url.replace('{and2}', and2);
         console.log(url);
+
         return url;
     }
 
     function getChartConfig(query) {
         //1.get configs for this page, it contains each chart's config
-        $http.get('http://localhost:8080/OLAPService/config/pageConfig/5').then(function (response) {
+        $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
             //console.log(response.data);
             var configs = response.data;
             //console.log(configs);
@@ -252,8 +258,9 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             console.log(data);
             for (var chartId in $scope.reports) {
                 var item = $scope.reports[chartId];
+                var is7dma = $scope.result.dma;
                 //console.log(item.formula);
-                var chartData = getDataByChartId(data, item.id, item.formula, false);
+                var chartData = getDataByChartId(data, item.id, item.formula, is7dma);
                 //console.log(chartData);
                 var o = getOption(item.title);
 
@@ -270,7 +277,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         });
     }
 
-    function getDataByChartId(jsondata, chartId, expression, isavg) {
+    function getDataByChartId(jsondata, chartId, expression, is7dma) {
         //divide
         var predata = [];
         for (var rowKey in jsondata) {
@@ -334,7 +341,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             //sort the array by date
             yoydata.sort(compare);
             yoydata1.sort(compare);
-            if (isavg) {
+            if (is7dma) {
                 yoydata = nDayAvg(7, yoydata);
                 yoydata1 = nDayAvg(7, yoydata1);
             }

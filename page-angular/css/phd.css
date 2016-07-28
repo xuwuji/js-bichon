@@ -220,7 +220,7 @@ filter
 
 .filterUnit{
     position: relative;
-    display:none;
+    /*display:none;*/
     float: left;
     margin-right: 10px;
 }

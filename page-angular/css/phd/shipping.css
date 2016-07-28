@@ -109,3 +109,79 @@
         background-color: #e3e3e3;
         visibility: visible;
     }
+
+    /*filter*/
+    .filterUnit{
+        position: relative;
+        float: left;
+        margin-right: 10px;
+    }
+    .filter-v-border {
+        border-right: 1px solid #ccc;
+        width: 10px;
+        height: 50px;
+        float: left;
+        margin: 20px 10px 0 10px;
+    }
+    .filterLabel {
+        float: left;
+        margin-bottom:3px;
+        line-height:30px
+    }
+    .checkboxLabel {
+        padding-left:20px;
+        margin-bottom: 0;
+        font-weight: 400;
+        cursor:pointer;
+    }
+    .banner-element {
+        padding: 10px 0 0 10px;
+        height: 70px;
+    }
+    .v-middle {
+        -webkit-transform: translateY(50%);
+        -ms-transform: translateY(50%);
+        transform: translateY(50%);
+    }
+    .pull-left {
+        float:left;
+    }
+
+    /*Shipping*/
+#charts .group {
+    padding: 0;
+}
+
+#charts .group .charts-cntr {
+    padding: 10px;
+}
+
+#charts .group .charts-cntr .shipping-chart {
+    border: 1px solid #DDD;
+    height: 270px;
+    border-bottom-width: 0;
+}
+
+#charts .group .charts-cntr .shipping-chart:first-child {
+    border-radius: 10px 10px 0 0;
+
+}
+
+#charts .group .charts-cntr .shipping-chart:last-child {
+    border-radius: 0 0 10px 10px;
+    border-bottom-width: 1px;
+}
+#charts .shipping-chart {
+    background: white;
+    position: relative;
+    height: 270px;
+}
+#charts .shipping-chart  .chart-cntr {
+    height: 255px;
+    width: 97%;
+    padding-left: 7px;
+    text-align: center;
+}
+#charts .shipping-chart  .chart-cntr .loading {
+    margin-top: 120px;
+}

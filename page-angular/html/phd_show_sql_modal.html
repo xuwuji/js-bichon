@@ -13,6 +13,8 @@
                 <hr style="margin: 5px 0;padding: 0;">
                 <p><b>Analyst Contact: </b><span class="ng-binding">{{modal['sql_contact']}}</span></p>
                 <hr style="margin: 5px 0;padding: 0;">
+                <p><b>Backend Date: </b><span class="ng-binding"></span><span class="pull-right"><a ng-href={{modal.downloadLink}}>Download SQL  </a><i class="fa fa-download" aria-hidden="true"></i></span></p>
+                <hr style="margin: 5px 0;padding: 0;">
                 <code style="background:white" hljs class="sql" hljs-source="modal['sql']"></code>
             </div>
             <div class="modal-footer">
