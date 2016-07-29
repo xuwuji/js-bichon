@@ -1,3 +1,7 @@
+shipApp.run(['$templateCache', function ($templateCache) {
+    $templateCache.removeAll();
+}]);
+
 shipApp.controller('shipDeepDiveController', ['$scope', function ($scope) {
 
     $scope.defaults = {

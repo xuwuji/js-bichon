@@ -6,7 +6,7 @@
     <link type="text/css" href="css/daterangepicker.css" rel="stylesheet" />
     <link type="text/css" href="css/font-awesome.min.css" rel="stylesheet" />
     <link type="text/css" href="css/bootstrap-select.min.css" rel="stylesheet" />
-   <!--  <link type="text/css" href="css/phd.css" rel="stylesheet" /> -->
+    <!--  <link type="text/css" href="css/phd.css" rel="stylesheet" /> -->
     <link type="text/css" href="css/phd/shipping.css" rel="stylesheet" />
     <link type="text/css" href="css/jquery.qtip.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/daterangepicker.css" />
@@ -30,10 +30,12 @@
 
     <script src="js/angular-bootstrap-select.js" type="text/javascript"></script>
     <script src="js/bootstrap-select.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/highcharts-buttons.js"></script>
+
 
     <title>Phd Ship</title>
-   
-   
+
+
 </head>
 
 <body ng-app="phdShip">
@@ -43,7 +45,7 @@
         <!--shipping filter-->
         <!--   set defualt value in 'query' and get the filter selection by 'result'     -->
         <phd-filter defaults="defaults" result="result" apply="apply()"></phd-filter>
-<!--<pre>{{result|json}}</pre>-->
+        <!--<pre>{{result|json}}</pre>-->
 
         <!--       <pre>{{query|json}}</pre>-->
         <div id="charts" class="row" style="width: 100%">
@@ -107,14 +109,14 @@
                         </phd-chart>
                     </div>
 
-                   <!--  <div class="charts-cntr"> -->
-                        <div class="shipping-chart">
-                            <div class="chart-cntr smask" style="" ng-if="isLoading">
-                                <img class="loading" src="img/ajax-loader.gif" />
-                            </div>
-                            <phd-chart class="chart-cntr" chart-config="reports['6']" modal="modal">
-                            </phd-chart>
+                    <!--  <div class="charts-cntr"> -->
+                    <div class="shipping-chart">
+                        <div class="chart-cntr smask" style="" ng-if="isLoading">
+                            <img class="loading" src="img/ajax-loader.gif" />
                         </div>
+                        <phd-chart class="chart-cntr" chart-config="reports['6']" modal="modal">
+                        </phd-chart>
+                    </div>
                     <!-- </div> -->
                 </div>
             </div>
@@ -129,14 +131,14 @@
                         <phd-chart class="chart-cntr" chart-config="reports['7']" modal="modal">
                         </phd-chart>
                     </div>
-                   <!--  <div class="charts-cntr"> -->
-                        <div class="shipping-chart">
-                            <div class="chart-cntr smask" style="" ng-if="isLoading">
-                                <img class="loading" src="img/ajax-loader.gif" />
-                            </div>
-                            <phd-chart class="chart-cntr" chart-config="reports['8']" modal="modal">
-                            </phd-chart>
+                    <!--  <div class="charts-cntr"> -->
+                    <div class="shipping-chart">
+                        <div class="chart-cntr smask" style="" ng-if="isLoading">
+                            <img class="loading" src="img/ajax-loader.gif" />
                         </div>
+                        <phd-chart class="chart-cntr" chart-config="reports['8']" modal="modal">
+                        </phd-chart>
+                    </div>
                     <!-- </div> -->
                 </div>
             </div>

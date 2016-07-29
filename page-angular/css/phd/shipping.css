@@ -1,187 +1,288 @@
-    .toptitle {
-        font-size: 18px;
-        color: #333;
-        text-align: center;
-        background: #F3F3F3;
-        height: 42px;
-        line-height: 42px;
-        border-right: 1px solid #fff;
-    }
-    
-    .shipping-chart {
-        border: 1px solid #DDD;
-        height: 220px;
-        border-bottom-width: 0;
-    }
-    
-    .shipping-chart:first-child {
-        border-radius: 10px 10px 0 0;
-    }
-    
-    .shipping-chart:last-child {
-        border-radius: 0 0 10px 10px;
-        border-bottom-width: 1px;
-    }
-    
-    .shipping-chart {
-        background: white;
-        position: relative;
-        height: 220px;
-    }
-    
-    .shipping-chart .chart-cntr {
-        height: 255px;
-        width: 97%;
-        padding-left: 7px;
-        text-align: center;
-    }
-    
-    .shipping-chart .chart-cntr .loading {
-        margin-top: 120px;
-    }
-    
-    .phd_filter {
-        background: #F3F3F3;
-        border: 1px solid #DDD;
-        border-radius: 5px;
-    }
-    
-    .highContainer {
-        height: 200px;
-    }
-    
-    .modal-lg {
-        width: 1200px;
-    }
-    
-    .sql-modal-body pre {
-        border: 0px;
-        background: white;
-    }
-    
-    .sql-modal-body code {
-        border: 0px;
-        background: white;
-    }
-    
-    .qtip-bootstrap .qtip-content {
-        font-size: 12px;
-    }
-    
-    .dd_filter:hover {
-        background-color: #e3e3e3;
-        display: block;
-    }
-    
-    .dd_filter div:hover {
-        background-color: #e3e3e3;
-    }
-    
-    .dd_filter:hover input {
-        background-color: #e3e3e3;
-        color: #7cb5ec;
-        text-decoration: underline;
-    }
-    
-    .dd_compare {
-        visibility: hidden;
-    }
-    
-    .dma {
-        visibility: hidden;
-    }
-    
-    .dma_checked {
-        visibility: hidden;
-    }
-    
-    .dd_filter:hover .dd_compare {
-        background-color: #e3e3e3;
-        visibility: visible;
-    }
-    
-    .dd_filter:hover .dma {
-        background-color: #e3e3e3;
-        visibility: visible;
-    }
-    
-    .dd_filter:hover .dma_checked {
-        background-color: #e3e3e3;
-        visibility: visible;
-    }
-
-    /*filter*/
-    .filterUnit{
-        position: relative;
-        float: left;
-        margin-right: 10px;
-    }
-    .filter-v-border {
-        border-right: 1px solid #ccc;
-        width: 10px;
-        height: 50px;
-        float: left;
-        margin: 20px 10px 0 10px;
-    }
-    .filterLabel {
-        float: left;
-        margin-bottom:3px;
-        line-height:30px
-    }
-    .checkboxLabel {
-        padding-left:20px;
-        margin-bottom: 0;
-        font-weight: 400;
-        cursor:pointer;
-    }
-    .banner-element {
-        padding: 10px 0 0 10px;
-        height: 70px;
-    }
-    .v-middle {
-        -webkit-transform: translateY(50%);
-        -ms-transform: translateY(50%);
-        transform: translateY(50%);
-    }
-    .pull-left {
-        float:left;
-    }
-
-    /*Shipping*/
-#charts .group {
-    padding: 0;
-}
-
-#charts .group .charts-cntr {
-    padding: 10px;
-}
-
-#charts .group .charts-cntr .shipping-chart {
-    border: 1px solid #DDD;
-    height: 270px;
-    border-bottom-width: 0;
-}
-
-#charts .group .charts-cntr .shipping-chart:first-child {
-    border-radius: 10px 10px 0 0;
-
-}
-
-#charts .group .charts-cntr .shipping-chart:last-child {
-    border-radius: 0 0 10px 10px;
-    border-bottom-width: 1px;
-}
-#charts .shipping-chart {
-    background: white;
-    position: relative;
-    height: 270px;
-}
-#charts .shipping-chart  .chart-cntr {
-    height: 255px;
-    width: 97%;
-    padding-left: 7px;
-    text-align: center;
-}
-#charts .shipping-chart  .chart-cntr .loading {
-    margin-top: 120px;
-}
+         .toptitle {
+             font-size: 18px;
+             color: #333;
+             text-align: center;
+             background: #F3F3F3;
+             height: 42px;
+             line-height: 42px;
+             border-right: 1px solid #fff;
+         }
+         
+         .shipping-chart {
+             border: 1px solid #DDD;
+             height: 220px;
+             border-bottom-width: 0;
+         }
+         
+         .shipping-chart:first-child {
+             border-radius: 10px 10px 0 0;
+         }
+         
+         .shipping-chart:last-child {
+             border-radius: 0 0 10px 10px;
+             border-bottom-width: 1px;
+         }
+         
+         .shipping-chart {
+             background: white;
+             position: relative;
+             height: 220px;
+         }
+         
+         .shipping-chart .chart-cntr {
+             height: 255px;
+             width: 97%;
+             padding-left: 7px;
+             text-align: center;
+         }
+         
+         .shipping-chart .chart-cntr .loading {
+             margin-top: 120px;
+         }
+         
+         .phd_filter {
+             background: #F3F3F3;
+             border: 1px solid #DDD;
+             border-radius: 5px;
+         }
+         
+         .highContainer {
+             height: 200px;
+         }
+         
+         .modal-lg {
+             width: 1200px;
+         }
+         
+         .sql-modal-body pre {
+             border: 0px;
+             background: white;
+         }
+         
+         .sql-modal-body code {
+             border: 0px;
+             background: white;
+         }
+         
+         .qtip-bootstrap .qtip-content {
+             font-size: 12px;
+         }
+         
+         .dd_filter:hover {
+             background-color: #e3e3e3;
+             display: block;
+         }
+         
+         .dd_filter div:hover {
+             background-color: #e3e3e3;
+         }
+         
+         .dd_filter:hover input {
+             background-color: #e3e3e3;
+             color: #7cb5ec;
+             text-decoration: underline;
+         }
+         
+         .dd_compare {
+             visibility: hidden;
+         }
+         
+         .dma {
+             visibility: hidden;
+         }
+         
+         .dma_checked {
+             visibility: hidden;
+         }
+         
+         .dd_filter:hover .dd_compare {
+             background-color: #e3e3e3;
+             visibility: visible;
+         }
+         
+         .dd_filter:hover .dma {
+             background-color: #e3e3e3;
+             visibility: visible;
+         }
+         
+         .dd_filter:hover .dma_checked {
+             background-color: #e3e3e3;
+             visibility: visible;
+         }
+         
+         .dd_filter .banner-element {
+             text-align: left;
+             float: left;
+             margin-right: 10px;
+             margin-left: 40px;
+         }
+         
+         .dd_filter .banner-element .filter-label {
+             float: left;
+             line-height: 40px;
+         }
+         
+         .dd_filter .banner-element .filter-element {
+             float: left;
+             padding-left: 10px;
+             margin-top: 5px;
+         }
+         
+         .dd_filter .banner-element .filter-element i {
+             color: #418bca;
+         }
+         
+         .detail_chart {
+             z-index: 1;
+             margin-left: 40px !important;
+             margin-right: 30px !important;
+             position: relative;
+             overflow: hidden;
+         }
+         
+         .detail_chart .bootstrap-select {
+             width: 50px !important;
+         }
+         
+         .detail_chart .bootstrap-select .dropdown-toggle {
+             width: 50px !important;
+         }
+         
+         .detail_coms_body {
+             width: 100%;
+             float: left;
+             padding: 10px;
+         }
+         /*filter*/
+         
+         .filterUnit {
+             position: relative;
+             float: left;
+             margin-right: 10px;
+         }
+         
+         .filter-v-border {
+             border-right: 1px solid #ccc;
+             width: 10px;
+             height: 50px;
+             float: left;
+             margin: 20px 10px 0 10px;
+         }
+         
+         .filterLabel {
+             float: left;
+             margin-bottom: 3px;
+             line-height: 30px
+         }
+         
+         .checkboxLabel {
+             padding-left: 20px;
+             margin-bottom: 0;
+             font-weight: 400;
+             cursor: pointer;
+         }
+         
+         .banner-element {
+             padding: 10px 0 0 10px;
+             height: 70px;
+         }
+         
+         .v-middle {
+             -webkit-transform: translateY(50%);
+             -ms-transform: translateY(50%);
+             transform: translateY(50%);
+         }
+         
+         .pull-left {
+             float: left;
+         }
+         /*Shipping*/
+         
+         #charts .group {
+             padding: 0;
+         }
+         
+         #charts .group:nth-child(even) {
+             background: #F8F8F8;
+         }
+         
+         #charts .group .charts-cntr {
+             padding: 10px;
+         }
+         
+         #charts .group .charts-cntr .shipping-chart {
+             border: 1px solid #DDD;
+             height: 270px;
+             border-bottom-width: 0;
+         }
+         
+         #charts .group .charts-cntr .shipping-chart:first-child {
+             border-radius: 10px 10px 0 0;
+         }
+         
+         #charts .group .charts-cntr .shipping-chart:last-child {
+             border-radius: 0 0 10px 10px;
+             border-bottom-width: 1px;
+         }
+         
+         #charts .shipping-chart {
+             background: white;
+             position: relative;
+             height: 270px;
+         }
+         
+         #charts .shipping-chart .chart-cntr {
+             height: 255px;
+             width: 97%;
+             padding-left: 7px;
+             text-align: center;
+         }
+         
+         #charts .shipping-chart .chart-cntr .loading {
+             margin-top: 120px;
+         }
+         
+         .charticon:hover {
+             visibility: visible;
+         }
+         
+         .charticon {
+             transition: all .5s;
+             color: #aaa;
+             cursor: pointer;
+             width: 15px;
+             height: 20px;
+             margin: 0 5px 5px 5px;
+             background-image: none;
+             position: absolute;
+             z-index: 20;
+             bottom: -2px;
+             opacity: 1;
+             visibility: hidden;
+             display: block;
+             transition: all .5s;
+         }
+         
+         .charticon:hover {
+             color: #428bca;
+         }
+         
+         .detail_dim_value {
+             color: #4d90cc;
+             font-weight: 700;
+             text-decoration: underline;
+             cursor: pointer;
+         }
+         
+         .mark_plus {
+             cursor: pointer;
+             font-size: 16px;
+             color: #000000;
+             font-weight: bolder;
+             /* background-color: #dededf; */
+             /* border-radius: 10px; */
+             width: 20px;
+             padding-left: 5px;
+             float: left;
+             margin-top: 25px;
+         }

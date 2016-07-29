@@ -124,6 +124,7 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
             function addChartDesc($scope, element, attrs) {
                 $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
                     //var config = response.data[$scope.chartConfig.id];
+                    //console.log( response);
                     getLatestRefresh(response, $scope.chartConfig.id);
                 });
             };
@@ -150,18 +151,18 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
 
 
                     //check if last refresh status
-                    var diff = moment(refresh).diff(moment($scope.modal.to).subtract(2, 'days'),'days');
+                    var diff = moment(refresh).diff(moment($scope.modal.to).subtract(2, 'days'), 'days');
                     //console.log(diff);
                     var status;
-                    if(diff<0){
-                        status='<li style="color: red">';
-                    }else{
-                        status='<li style="color: green">';
+                    if (diff < 0) {
+                        status = '<li style="color: red">';
+                    } else {
+                        status = '<li style="color: green">';
                     }
-                    
-                    var descDiv = $('<div>' + chart_desc + '<hr><p>'+status+'<b style="color:black">Last Refresh : ' + refresh + '</b></li></p></div>');
-                    
-                    
+
+                    var descDiv = $('<div>' + chart_desc + '<hr><p>' + status + '<b style="color:black">Last Refresh : ' + refresh + '</b></li></p></div>');
+
+
                     $scope.maskStyle = {
                         "z-index": 20,
                         "position": "absolute",

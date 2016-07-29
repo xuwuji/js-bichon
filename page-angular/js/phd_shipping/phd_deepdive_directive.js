@@ -7,24 +7,16 @@ shipApp.directive('detail', ['$http', function ($http) {
         transclude: false,
         scope: {
             defaults: '=',
-            result: '=',
+            ddResult: '=',
             ddApply: "&",
             modal: '<',
+            pushCompare: "&",
         },
         compile: function () {
             return {
                 pre: function ($scope, iElement, iAttrs) {},
 
                 post: function ($scope, iElement, iAttrs) {
-                    $scope.$watch('result.dmaChecked', function (newV, oldV) {
-                        //console.log(newV);
-                        //console.log(oldV);
-                        if (newV == true) {
-                            $('.dma').css({
-                                "visibility": "visible"
-                            });
-                        }
-                    });
                 },
             }
         },

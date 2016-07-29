@@ -2,43 +2,61 @@
     <!-- filter  -->
     <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px">
         <!--    Date    -->
-        <div class="col-lg-4">
+        <div class="banner-element">
             <form class="form-inline">
                 <div class="form-group">
                     Date Range
-                    <input date-range-picker type="text" ng-model="result.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;border:0px" options="defaults.dateRangeConfig" />
+                    <input date-range-picker type="text" ng-model="ddResult.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;border:0px" options="defaults.dateRangeConfig" />
                 </div>
             </form>
 
         </div>
 
-        <div style=" margin-left: 15px" class="col-lg-3">
+        <div style=" margin-left: 15px" class="banner-element">
             compare year over year
-            <input type="checkbox" ng-model="result.compare" class="dd_compare">
+            <input type="checkbox" ng-model="ddResult.compareSelected">
         </div>
 
-        <div class="col-lg-3">
-            <span class="dma">7DMA</span>
-
-            <input type="checkbox" ng-model="result.dmaChecked" class="dma_checked">
+        <div class="banner-element">
+            <span>7DMA</span>
+            <input type="checkbox" ng-model="ddResult.dma">
         </div>
 
     </div>
 
-    <div class="row col-lg-2" style="margin-top:10px">
-        <button class="btn btn-primary" ng-click="ddApply()">Apply</button>
-        <h5 class="filter-desc-title">{{modal['dd_title']}}</h5>
+    <div class="mark_plus" ng-click="pushCompare()"><img src="http://nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-add.png"></div>
+    <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px" ng-repeat="filter in ddResult.filters">
+        <div class="banner-element" ng-repeat="dim in filter">
+            <form class="form-inline">
+                <div class="form-group">
+                    {{dim.name}}
+                    <span class="detail_dim_value">
+                    <select style="width:200px" toggle ng-model="dim.selection" selectpicker data-live-search="true" multiple data-actions-box="true" ng-options="site for site in dim.option">
+                    </select>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="row" style="margin-top:10px">
+        <div class="detail_coms_body">
+            <button class="btn btn-primary" ng-click="ddApply()">Apply</button>
+        </div>
     </div>
 
     <!-- highchart   -->
-    <div>
+    <div class="detail_chart row">
 
         <div class="mask" ng-if="isLoading">
             <div id="example_processing" class="dataTables_processing" style="visibility: visible">
                 <img src="img/ajax-loader.gif" width="31" height="31">
             </div>
         </div>
-        <highchart config="modal['ddReports']" style="position: relative; overflow: hidden; width: 1140px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></highchart>
+        <h5 class="filter-desc-title">{{modal['dd_title']}}</h5>
+        <highchart config="modal['ddReports']" style="position: relative; overflow: hidden; width: 100%; height: 100%; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></highchart>
     </div>
 
     <!--  annotation  -->

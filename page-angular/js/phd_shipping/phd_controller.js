@@ -1,6 +1,6 @@
 var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker']);
 
-shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
+shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', function ($scope, $http, $log, $q) {
     //check if the ajax call is loading
     $scope.isLoading = true;
     //options for each chart, in order to plot the chart
@@ -200,6 +200,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         var compare = result.compare;
         var and1 = result.and1;
         var and2 = result.and2;
+        var dma = result.dma;
         //        console.log('-------------------------');
         //        console.log(result);
         //        console.log(from);
@@ -208,7 +209,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         //        console.log(device);
         //        console.log(experience);
         //        console.log('-------------------------');
-        var url = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&site={site}&device={device}&experience={experience}&compare={compare}&and1={and1}&and2={and2}';
+        var url = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&site={site}&device={device}&experience={experience}&compare={compare}&and1={and1}&and2={and2}&dma={dma}';
         url = url.replace('{from}', from);
         url = url.replace('{to}', to);
         url = url.replace('{site}', site);
@@ -217,6 +218,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         url = url.replace('{compare}', compare);
         url = url.replace('{and1}', and1);
         url = url.replace('{and2}', and2);
+        url = url.replace('{dma}', dma);
         console.log(url);
 
         return url;
@@ -260,7 +262,14 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                 var item = $scope.reports[chartId];
                 var is7dma = $scope.result.dma;
                 //console.log(item.formula);
-                var chartData = getDataByChartId(data, item.id, item.formula, is7dma);
+                var isyoy = true;
+                var compare = $scope.result.compare;
+                var and1 = $scope.result.and1;
+                var and2 = $scope.result.and2;
+                if (compare != 'Year' && and1 != 'Year' && and2 != 'Year') {
+                    isyoy = false;
+                }
+                var chartData = getDataByChartId(data, item.id, item.formula, is7dma, isyoy);
                 //console.log(chartData);
                 var o = getOption(item.title);
 
@@ -277,7 +286,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         });
     }
 
-    function getDataByChartId(jsondata, chartId, expression, is7dma) {
+    function getDataByChartId(jsondata, chartId, expression, is7dma, isyoy) {
         //divide
         var predata = [];
         for (var rowKey in jsondata) {
@@ -317,50 +326,84 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
         var start = $scope.result.dateSelection.startDate; //should be passed through parameters
         var end = $scope.result.dateSelection.endDate; //should be passed through parameters
 
-
-        //divide results -> data for chart
-        var firstday = moment(start).subtract(1, 'days').format('YYYY-MM-DD');
-        var lastday = end;
-        var llastday = moment(lastday).subtract(363, 'days').format('YYYY-MM-DD');
-
         var seriesColors = ['#62A6E7', '#f7a35c', '#90ed7d', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#434348'];
         var colorCount = 0;
         var chartdata = [];
-        rawdata.forEach(function (group) {
-            var yoydata = [];
-            var yoydata1 = [];
-            group[1].forEach(function (ele) {
-                var date = moment(ele[0].substring(0, 10)).format('YYYY-MM-DD');
-                if (date > firstday) {
-                    yoydata.push(ele)
+
+        if (isyoy) {
+            //divide results -> data for chart
+            var firstday = moment(start).subtract(1, 'days').format('YYYY-MM-DD');
+            var lastday = end;
+            var llastday = moment(lastday).subtract(363, 'days').format('YYYY-MM-DD');
+
+
+            rawdata.forEach(function (group) {
+                var yoydata = [];
+                var yoydata1 = [];
+                group[1].forEach(function (ele) {
+                    var date = moment(ele[0].substring(0, 10)).format('YYYY-MM-DD');
+                    // if (date > firstday) {
+                    //     yoydata.push(ele)
+                    // }
+                    if (date < llastday) {
+                        yoydata1.push(ele);
+                    } else {
+                        yoydata.push(ele);
+                    }
+                });
+                //sort the array by date
+                yoydata.sort(compare);
+                yoydata1.sort(compare);
+                if (is7dma) {
+                    yoydata = nDayAvg(7, yoydata);
+                    if (yoydata.length >= 6) {
+                        yoydata = yoydata.slice(6); // start from index 7
+                    }
+                    yoydata1 = nDayAvg(7, yoydata1);
+                    if (yoydata1.length >= 6) {
+                        yoydata1 = yoydata1.slice(6);
+                    }
                 }
-                if (date < llastday) {
-                    yoydata1.push(ele)
+
+                var groupData = {
+                    name: group[0],
+                    data: yoydata,
+                    color: seriesColors[colorCount]
                 }
+                chartdata.push(groupData);
+                var groupDataYoy = {
+                    name: group[0],
+                    data: yoydata1,
+                    dashStyle: 'dot',
+                    color: seriesColors[colorCount]
+                }
+                chartdata.push(groupDataYoy);
+                colorCount++;
+                if (colorCount > 9) colorCount = 0;
             });
-            //sort the array by date
-            yoydata.sort(compare);
-            yoydata1.sort(compare);
-            if (is7dma) {
-                yoydata = nDayAvg(7, yoydata);
-                yoydata1 = nDayAvg(7, yoydata1);
-            }
-            var groupData = {
-                name: group[0],
-                data: yoydata,
-                color: seriesColors[colorCount]
-            }
-            chartdata.push(groupData);
-            var groupDataYoy = {
-                name: group[0],
-                data: yoydata1,
-                dashStyle: 'dot',
-                color: seriesColors[colorCount]
-            }
-            chartdata.push(groupDataYoy);
-            colorCount++;
-            if (colorCount > 9) colorCount = 0;
-        });
+        } else {
+            rawdata.forEach(function (group) {
+                var yoydata = [];
+                group[1].forEach(function (ele) {
+                    yoydata.push(ele)
+                });
+                yoydata.sort(compare);
+                if (is7dma) {
+                    yoydata = nDayAvg(7, yoydata);
+                    if (yoydata.length >= 6) {
+                        yoydata = yoydata.slice(6); // start from index 7
+                    }
+                }
+                var groupData = {
+                    name: group[0],
+                    data: yoydata,
+                    color: seriesColors[colorCount]
+                }
+                chartdata.push(groupData);
+                colorCount++;
+                if (colorCount > 9) colorCount = 0;
+            });
+        }
 
         return chartdata;
 
@@ -372,7 +415,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
             var valBefore = nDMA[dataCount][1];
             var valAfter = 0;
             var valSum = 0;
-            if (dataCount >= 7) {
+            if (dataCount >= n) {
                 for (count = 1; count < n; count++) {
                     valSum += nDMA[dataCount - count][1];
                     valAfter = (valSum + valBefore) / n;
@@ -567,12 +610,12 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
                             }
                         }
                     };
-                    console.log('ggdata:' + ggdata);
+                    //console.log('ggdata:' + ggdata);
                     //addSeries(idx,ggdata);
                     $scope.reports[idx].series.push(ggdata);
                     //addSeries(idx,$scope.reports[idx].series[0]);
                     //curadapter.series.push(ggdata);
-                    console.log($scope.reports);
+                    //console.log($scope.reports);
                     //}(secidx);
 
                     //}
@@ -610,23 +653,283 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', function ($s
     }
 
 
-    //deep dive apply
-    $scope.ddApply = function () {
-        var query = getSelection($scope.ddResult);
-        console.log(query);
-        refreshDeepDiveDate(query);
-    }
+    //deep dive filter selection
+    $scope.ddResult = {
+        compare: "Year",
+        and1: "None",
+        and2: "None",
+        siteSelection: [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"
+    ],
+        deviceSelection: ["Mobile",
+            "PC"],
+        experienceSelection: ["Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"],
+        dateSelection: {
+            'startDate': moment($scope.refreshed).subtract(150, 'days'),
+            'endDate': moment($scope.refreshed).subtract(50, 'days')
+        },
+        compareSelected: true,
+        dma: false,
+        mmd: false,
+        filters: [
+            [{
+                "name": "Site",
+                "type": "multiple",
+                "option": [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"],
+                "selection": [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"]
+                }, {
+                "name": "Device",
+                "type": "multiple",
+                "option": [
+    "Mobile",
+    "PC"],
+                "selection": [
+    "Mobile",
+    "PC"]
+                }, {
+                "name": "Experience",
+                "type": "multiple",
+                "option": [
+    "Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"],
+                "selection": [
+    "Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"]
+                }],
 
+            ],
 
-    function refreshDeepDiveDate(query) {
-        $http.get(query).then(function (response) {
-            var data = response.data;;
-            //console.log(data);
-            var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula);
-            var o = getDeepDiveOption();
-            $scope.modal.ddReports.options = o;
-            $scope.modal.ddReports.series = chartData;
-        });
     };
 
+
+    function getDDFilter() {
+        var filter = [{
+            "name": "Site",
+            "type": "multiple",
+            "option": [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"],
+            "selection": [
+    "befr.ebay.be",
+    "benl.ebay.be",
+    "cafr.ebay.ca",
+    "ebay.at",
+    "ebay.ca",
+    "ebay.ch",
+    "ebay.co.uk",
+    "ebay.com",
+    "ebay.com.au",
+    "ebay.com.hk",
+    "ebay.com.my",
+    "ebay.com.sg",
+    "ebay.de",
+    "ebay.es",
+    "ebay.fr",
+    "ebay.ie",
+    "ebay.in",
+    "ebay.it",
+    "ebay.nl",
+    "ebay.ph",
+    "ebay.pl",
+    "others"]
+                }, {
+            "name": "Device",
+            "type": "multiple",
+            "option": [
+    "Mobile",
+    "PC"],
+            "selection": [
+    "Mobile",
+    "PC"]
+                }, {
+            "name": "Experience",
+            "type": "multiple",
+            "option": [
+    "Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"],
+            "selection": [
+    "Unknown", "Apps: Android",
+    "Apps: Other",
+    "Apps: Windows Phone",
+    "Apps: iPad",
+    "Apps: iPhone",
+    "Browser: Core Site",
+    "Browser: mWeb"]
+                }];
+
+        return filter;
+    }
+
+    $scope.pushCompare = function () {
+        $scope.ddResult.filters.push(getDDFilter());
+    }
+
+    function getDDSelection(result) {
+        console.log(result);
+        var from = moment(result.dateSelection.startDate).format('YYYY-MM-DD');
+        var to = moment(result.dateSelection.endDate).format('YYYY-MM-DD');
+        var basicUrl = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&compare={compare}&and1={and1}&and2={and2}';
+        basicUrl = basicUrl.replace('{from}', from).replace('{to}', to).replace('{compare}', result.compare);
+        var queries = [];
+        for (var index in result.filters) {
+            var filter = result.filters[index];
+            var url = basicUrl
+            for (var i in filter) {
+                var dim = filter[i];
+                //console.log(dim);
+                if (dim.name != undefined) {
+                    var url = url + '&' + dim.name.toLowerCase() + '=' + dim.selection;
+                }
+
+            }
+            //console.log(url);
+            queries.push(url);
+        }
+        return queries;
+    }
+
+    //deep dive apply
+    $scope.ddApply = function () {
+        if ($scope.ddResult.compareSelected == true) {
+            $scope.ddResult.compare = 'Year';
+        } else {
+            $scope.ddResult.compare = 'None';
+        }
+        var queries = getDDSelection($scope.ddResult);
+        console.log(queries);
+        var promises = [];
+        for (var index in queries) {
+            var query = queries[index];
+            var promise = $http.get(query);
+            promises.push(promise);
+        }
+        refreshDeepDiveDate(promises);
+    }
+
+    function refreshDeepDiveDate(promises) {
+        var result = [];
+        $q.all(promises).then(function (allData) {
+            console.log(allData);
+            for (var index in allData) {
+                var data = allData[index].data;
+                var is7dma = $scope.ddResult.dma;
+                //console.log(is7dma);
+                var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula, is7dma);
+                var o = getDeepDiveOption();
+                $scope.modal.ddReports.options = o;
+                //console.log(chartData);
+                for (var i in chartData) {
+                    result.push(chartData[i]);
+                }
+            }
+            console.log(result);
+            $scope.modal.ddReports.series = result;
+        });
+    };
 }]);
