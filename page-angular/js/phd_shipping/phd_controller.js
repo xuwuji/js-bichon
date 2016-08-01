@@ -835,7 +835,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
 
     $scope.pushCompare = function () {
         var filter = $scope.modal.ddResult.filters[0];
-        //console.log(filter);
         $scope.modal.ddResult.filters.push(angular.copy(filter));
         //console.log($scope.modal.ddResult.filters);
         //$scope.modal.ddResult.filters.push(getDDFilter());
@@ -846,6 +845,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
     }
 
     $scope.cancel = function () {
+        $scope.modal.ddResult.filters = [];
+        $scope.modal.ddResult.filters.push(getDDFilter());
         $scope.modal.ddReports = {};
     }
 
