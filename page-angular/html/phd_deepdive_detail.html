@@ -25,7 +25,8 @@
     </div>
 
     <div class="mark_plus" ng-click="pushCompare()"><img src="http://nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-add.png"></div>
-    <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px" ng-repeat="filter in ddResult.filters">
+    <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px" ng-repeat="filter in modal.ddResult.filters track by $index">
+        <div style="margin-top:20px;margin-left:30px" ng-click="deleteCompare({index:$index})"><img src="//nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-delete.png"></div>
         <div class="banner-element" ng-repeat="dim in filter">
             <form class="form-inline">
                 <div class="form-group">
@@ -41,7 +42,7 @@
 
 
 
-    <div class="row" style="margin-top:10px">
+    <div class="row" style="margin-top:10px;text-align:center">
         <div class="detail_coms_body">
             <button class="btn btn-primary" ng-click="ddApply()">Apply</button>
         </div>

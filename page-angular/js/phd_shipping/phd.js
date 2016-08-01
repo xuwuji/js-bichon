@@ -117,7 +117,7 @@ function getOption(tooltipTitle) {
 
 
 //normal deep dive option for each chart
-function getDeepDiveOption() {
+function getDeepDiveOption(tooltipTitle) {
     var Option = {
         chart: {
             renderTo: '',
@@ -204,7 +204,7 @@ function getDeepDiveOption() {
                         return false;
 
                 var point = [];
-                var ret = '<div style="min-width: 150px;white-space:normal; ">' + 'title' + '</div>';
+                var ret = '<div style="min-width: 150px;white-space:normal; ">' + tooltipTitle + '</div>';
                 //collect x/y of this point and push them into one array
                 $.each(this.points, function (idx, p) {
                     var info = {

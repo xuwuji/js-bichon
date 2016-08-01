@@ -7,21 +7,25 @@ shipApp.directive('detail', ['$http', function ($http) {
         transclude: false,
         scope: {
             defaults: '=',
-            ddResult: '=',
             ddApply: "&",
-            modal: '<',
+            modal: '=',
             pushCompare: "&",
+            deleteCompare: "&",
         },
         compile: function () {
             return {
                 pre: function ($scope, iElement, iAttrs) {},
 
                 post: function ($scope, iElement, iAttrs) {
+                    
                 },
             }
         },
 
         link: function ($scope, element, attrs) {
+            $scope.test = function () {
+                alert('asdasd');
+            }
         }
     }
 }]);

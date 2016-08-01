@@ -132,6 +132,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
         mmd: false,
     };
 
+    $scope.seriesColors = ['#62A6E7', '#f7a35c', '#90ed7d', '#8085e9',
+    '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#434348'];
 
 
     //details for show sql & deep dive modal 
@@ -139,42 +141,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
 
     //chart config for deep dive modal
     $scope.modal.ddReports = {};
-
-    //deep dive filter selection
-    $scope.ddResult = {
-        compare: true,
-        and: "None",
-        siteSelection: [
-    "befr.ebay.be",
-    "benl.ebay.be",
-    "cafr.ebay.ca",
-    "ebay.at",
-    "ebay.ca",
-    "ebay.ch",
-    "ebay.co.uk",
-    "ebay.com",
-    "ebay.com.au",
-    "ebay.com.hk",
-    "ebay.com.my",
-    "ebay.com.sg",
-    "ebay.de",
-    "ebay.es",
-    "ebay.fr",
-    "ebay.ie",
-    "ebay.in",
-    "ebay.it",
-    "ebay.nl",
-    "ebay.ph",
-    "ebay.pl",
-    "others"
-    ],
-        dateSelection: {
-            'startDate': moment($scope.refreshed).subtract(150, 'days'),
-            'endDate': moment($scope.refreshed).subtract(50, 'days')
-        },
-        compareSelected: false
-    };
-
 
     $scope.$on('phd.filter.toggle7DMA', function (event, _7DMA) {
         //console.log("into 7dma process");
@@ -269,7 +235,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 if (compare != 'Year' && and1 != 'Year' && and2 != 'Year') {
                     isyoy = false;
                 }
-                var chartData = getDataByChartId(data, item.id, item.formula, is7dma, isyoy);
+                var colorCount = 0;
+                var chartData = getDataByChartId(data, item.id, item.formula, is7dma, isyoy, colorCount);
                 //console.log(chartData);
                 var o = getOption(item.title);
 
@@ -286,7 +253,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
         });
     }
 
-    function getDataByChartId(jsondata, chartId, expression, is7dma, isyoy) {
+    function getDataByChartId(jsondata, chartId, expression, is7dma, isyoy, colorCount) {
         //divide
         var predata = [];
         for (var rowKey in jsondata) {
@@ -326,8 +293,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
         var start = $scope.result.dateSelection.startDate; //should be passed through parameters
         var end = $scope.result.dateSelection.endDate; //should be passed through parameters
 
-        var seriesColors = ['#62A6E7', '#f7a35c', '#90ed7d', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#434348'];
-        var colorCount = 0;
+        //var seriesColors = ['#62A6E7', '#f7a35c', '#90ed7d', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#434348'];
+        //var colorCount = 0;
         var chartdata = [];
 
         if (isyoy) {
@@ -368,14 +335,14 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 var groupData = {
                     name: group[0],
                     data: yoydata,
-                    color: seriesColors[colorCount]
+                    color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupData);
                 var groupDataYoy = {
                     name: group[0],
                     data: yoydata1,
                     dashStyle: 'dot',
-                    color: seriesColors[colorCount]
+                    color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupDataYoy);
                 colorCount++;
@@ -397,7 +364,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 var groupData = {
                     name: group[0],
                     data: yoydata,
-                    color: seriesColors[colorCount]
+                    color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupData);
                 colorCount++;
@@ -654,7 +621,7 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
 
 
     //deep dive filter selection
-    $scope.ddResult = {
+    $scope.modal.ddResult = {
         compare: "Year",
         and1: "None",
         and2: "None",
@@ -867,15 +834,28 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
     }
 
     $scope.pushCompare = function () {
-        $scope.ddResult.filters.push(getDDFilter());
+        var filter = $scope.modal.ddResult.filters[0];
+        //console.log(filter);
+        $scope.modal.ddResult.filters.push(angular.copy(filter));
+        //console.log($scope.modal.ddResult.filters);
+        //$scope.modal.ddResult.filters.push(getDDFilter());
     }
+
+    $scope.deleteCompare = function (index) {
+        $scope.modal.ddResult.filters.splice(index, 1);
+    }
+
+    $scope.cancel = function () {
+        $scope.modal.ddReports = {};
+    }
+
 
     function getDDSelection(result) {
         console.log(result);
         var from = moment(result.dateSelection.startDate).format('YYYY-MM-DD');
         var to = moment(result.dateSelection.endDate).format('YYYY-MM-DD');
-        var basicUrl = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&compare={compare}&and1={and1}&and2={and2}';
-        basicUrl = basicUrl.replace('{from}', from).replace('{to}', to).replace('{compare}', result.compare);
+        var basicUrl = 'http://localhost:58080/phdService/dashboard/cc?from={from}&to={to}&compare={compare}&and1={and1}&and2={and2}&dma={dma}';
+        basicUrl = basicUrl.replace('{from}', from).replace('{to}', to).replace('{compare}', result.compare).replace('{dma}', result.dma);
         var queries = [];
         for (var index in result.filters) {
             var filter = result.filters[index];
@@ -888,7 +868,6 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 }
 
             }
-            //console.log(url);
             queries.push(url);
         }
         return queries;
@@ -896,12 +875,12 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
 
     //deep dive apply
     $scope.ddApply = function () {
-        if ($scope.ddResult.compareSelected == true) {
-            $scope.ddResult.compare = 'Year';
+        if ($scope.modal.ddResult.compareSelected == true) {
+            $scope.modal.ddResult.compare = 'Year';
         } else {
-            $scope.ddResult.compare = 'None';
+            $scope.modal.ddResult.compare = 'None';
         }
-        var queries = getDDSelection($scope.ddResult);
+        var queries = getDDSelection($scope.modal.ddResult);
         console.log(queries);
         var promises = [];
         for (var index in queries) {
@@ -912,24 +891,46 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
         refreshDeepDiveDate(promises);
     }
 
+
+
+
+
     function refreshDeepDiveDate(promises) {
         var result = [];
         $q.all(promises).then(function (allData) {
             console.log(allData);
+            var colorCount = 0;
             for (var index in allData) {
                 var data = allData[index].data;
-                var is7dma = $scope.ddResult.dma;
+                var is7dma = $scope.modal.ddResult.dma;
+                var isyoy = true;
+                var compare = $scope.modal.ddResult.compare;
+                var and1 = $scope.modal.ddResult.and1;
+                var and2 = $scope.modal.ddResult.and2;
+                if (compare != 'Year' && and1 != 'Year' && and2 != 'Year') {
+                    isyoy = false;
+                }
                 //console.log(is7dma);
-                var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula, is7dma);
-                var o = getDeepDiveOption();
+                var chartData = getDataByChartId(data, $scope.modal.dd_id, $scope.modal.dd_formula, is7dma, isyoy, colorCount);
+                var o = getDeepDiveOption($scope.modal.dd_title);
                 $scope.modal.ddReports.options = o;
                 //console.log(chartData);
                 for (var i in chartData) {
                     result.push(chartData[i]);
                 }
+                colorCount++;
+                if (colorCount > 9) colorCount = 0;
             }
             console.log(result);
+
+            // for display raw data and report data buttons
+            $scope.modal.ddReports.title = {
+                text: ' '
+            };
+
             $scope.modal.ddReports.series = result;
         });
     };
+
+
 }]);

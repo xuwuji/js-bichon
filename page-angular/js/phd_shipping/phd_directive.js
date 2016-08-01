@@ -83,12 +83,36 @@ shipApp.directive('phdChart', ['$http', '$compile', function ($http, $compile) {
 
             $scope.showDD = function (chartId) {
                 $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
-                    //var config = $scope.chartConfig;
-                    var config = response.data[chartId];
-                    $scope.modal.dd_id = config.chart_id;
-                    $scope.modal.dd_title = config.chart_title;
-                    $scope.modal.dd_formula = config.chart_formula;
-                });
+                        //var config = $scope.chartConfig;
+                        //$scope.modal.ddReports = $scope.chartConfig;
+                        var config = response.data[chartId];
+                        $scope.modal.dd_id = config.chart_id;
+                        $scope.modal.dd_title = config.chart_title;
+                        $scope.modal.dd_formula = config.chart_formula;
+                    })
+                    //apply the deepdive filter
+                    .then(function () {
+                        $http.get('http://localhost:58080/config/pageConfig/5').then(function (response) {
+                            var deepdive = response.data[chartId].chart_deepdive;
+                            console.log(deepdive);
+                            var dd_filters = deepdive.split(',');
+                            for (var index in dd_filters) {
+                                console.log(dd_filters[index]);
+                                var name = dd_filters[index];
+                                //option and selection should hardcode or get from service
+                                var option = ['a', 'b', 'c'];
+                                var selection = ['a', 'b', 'c'];
+                                var filter = {
+                                    "name": name,
+                                    "type": "multiple",
+                                    "option": option,
+                                    "selection": selection
+                                };
+                                $scope.modal.ddResult.filters[0].push(filter);
+                            }
+                            // console.log($scope.modal.ddResult.filters);
+                        });
+                    });
             }
 
             //qtip for sql and deep dive button

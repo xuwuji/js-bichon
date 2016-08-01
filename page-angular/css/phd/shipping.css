@@ -258,7 +258,8 @@
              z-index: 20;
              bottom: -2px;
              opacity: 1;
-             visibility: hidden;
+             /*visibility: hidden;*/
+             visibility: visible;
              display: block;
              transition: all .5s;
          }

@@ -54,7 +54,7 @@
                 var btnDiv = $('<div class="charticon"></div>');
                 btnDiv.html(this.icon);
 
-                if(_.isObject(this.position)){//TODO need enhance
+                if(angular.isObject(this.position)){//TODO need enhance
                     btnDiv.css('right' ,(this.position.right || '5')+'px');
                     btnDiv.css('top' ,(this.position.top || '10')+'px');
                     btnDiv.css('visibility','visible');
