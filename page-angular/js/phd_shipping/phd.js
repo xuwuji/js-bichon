@@ -314,7 +314,7 @@ function getDeepDiveOption(tooltipTitle) {
 
                             //                  yanjtitle += ","+name;
                             metrics.forEach(function(ele){
-                                yanjtitle += ","+name+"/"+g_meta['val_colidx_name_map'][ele];
+                                //yanjtitle += ","+name+"/"+g_meta['val_colidx_name_map'][ele];
                             });
 
                             //yanjtmp

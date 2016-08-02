@@ -284,6 +284,143 @@
              /* border-radius: 10px; */
              width: 20px;
              padding-left: 5px;
-             float: left;
+/*             float: left;*/
              margin-top: 25px;
+         }
+         /*annotation*/
+         
+         .detail_annotation {
+             /*margin-left:80px;*/
+             margin-left: 5%;
+             margin-right: 5%;
+         }
+         
+         .detail_annotation hr {
+             margin-top: 5px;
+         }
+         
+         .detail_annotation .annotation_view {
+             min-height: 60px;
+         }
+         
+         .detail_annotation .annotation_view_empty {
+             min-height: 60px;
+             text-align: center;
+             margin-bottom: 0;
+             padding-top: 10px;
+             color: gray;
+         }
+         
+         .detail_annotation .annotation_add {
+             position: relative;
+             min-height: 60px;
+         }
+         
+         .detail_annotation .annotation_list_container {
+             height: 180px;
+             position: relative;
+             overflow-y: scroll;
+         }
+         
+         .detail_annotation a {
+             cursor: pointer;
+         }
+         
+         .actions a {
+             margin-left: 6px;
+         }
+         
+         .detail_annotation a:hover {
+             text-decoration: none;
+         }
+         
+         .addCom {
+             color: black;
+         }
+         
+         .addCom:hover {
+             color: #418bca;
+         }
+         
+         .detail_annotation .profile_image {
+             width: 50px;
+             height: 50px;
+             margin-right: 10px;
+             float: left;
+         }
+         
+         .detail_annotation .annotation_title {
+             width: 16px;
+             height: 32px;
+             margin-right: 10px;
+             float: left;
+         }
+         
+         .detail_annotation .profile_image img {
+             width: 100%;
+             height: 100%;
+         }
+         
+         .detail_annotation .annotation_container {
+             margin-left: 60px;
+         }
+         
+         .detail_annotation .annotation_container .author,
+         .detail_annotation .annotation_container .author a {
+             color: #777;
+         }
+         
+         .detail_annotation ul.annotation_list {
+             padding-left: 0;
+         }
+         
+         .detail_annotation ul.annotation_list li.annotation_list_item {
+             min-height: 60px;
+             display: block;
+         }
+         
+         .detail_annotation .annotation_container .author {
+             float: left;
+         }
+         
+         .detail_annotation .annotation_container .actions {
+             float: left;
+         }
+         
+         .detail_annotation .annotation_container .text {
+             padding-top: 20px;
+         }
+         
+         .detail_addTostoryBoard {
+             /*text-align: right;*/
+             padding-left: calc(5% - 15px);
+         }
+         
+         .report_color {
+             padding-left: 0px;
+             padding-top: 15px;
+             padding-right: 10px;
+             width: 40px;
+             float: left;
+             height: 20px;
+             cursor: pointer;
+         }
+         
+         .mark_close {
+             float: left;
+             font-size: 15px;
+             display: inline-block;
+             
+             width: 14px;
+             height: 14px;
+             padding-left: 3px;
+             padding-top: 3px;
+             color: white;
+             padding-top: 1px;
+             line-height: 0.6;
+             border-radius: 10px;
+             cursor: pointer;
+             margin-top: 18px;
+             margin-right: 10px;
+             margin-left: 10px;
          }

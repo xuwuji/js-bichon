@@ -1,6 +1,6 @@
-var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker']);
+var shipApp = angular.module('phdShip', ['angular-bootstrap-select', "highcharts-ng", 'ngSanitize', 'hljs', 'daterangepicker', 'nous.annotation']);
 
-shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', function ($scope, $http, $log, $q) {
+shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', '$location', 'annotationOptions', function ($scope, $http, $log, $q, $location, annotationOptions) {
     //check if the ajax call is loading
     $scope.isLoading = true;
     //options for each chart, in order to plot the chart
@@ -256,10 +256,11 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
     function getDataByChartId(jsondata, chartId, expression, is7dma, isyoy, colorCount) {
         //divide
         var predata = [];
+        var jsondata_array = [];
         for (var rowKey in jsondata) {
             if (jsondata.hasOwnProperty(rowKey)) {
                 var tuple = jsondata[rowKey];
-
+                jsondata_array.push(tuple);
                 var oneResult = calculate(tuple, expression);
                 if (oneResult != '') {
                     predata.push([rowKey, oneResult]);
@@ -335,6 +336,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 var groupData = {
                     name: group[0],
                     data: yoydata,
+                    rawData: jsondata_array, //should be match one series
+                    aggr: expression,
                     color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupData);
@@ -342,6 +345,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                     name: group[0],
                     data: yoydata1,
                     dashStyle: 'dot',
+                    rawData: jsondata_array, //should be match one series
+                    aggr: expression,
                     color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupDataYoy);
@@ -364,6 +369,8 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 var groupData = {
                     name: group[0],
                     data: yoydata,
+                    rawData: jsondata_array, //should be match one series
+                    aggr: expression,
                     color: $scope.seriesColors[colorCount]
                 }
                 chartdata.push(groupData);
@@ -746,8 +753,13 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
                 }],
 
             ],
+        colorCount: [0],
+        seriesColor: ['#62A6E7'],
+        defaultFilter: [],
 
     };
+
+
 
 
     function getDDFilter() {
@@ -834,10 +846,15 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
     }
 
     $scope.pushCompare = function () {
-        var filter = $scope.modal.ddResult.filters[0];
-        $scope.modal.ddResult.filters.push(angular.copy(filter));
-        //console.log($scope.modal.ddResult.filters);
-        //$scope.modal.ddResult.filters.push(getDDFilter());
+        if ($scope.modal.ddResult.filters.length == 0) {
+            $scope.modal.ddResult.filters.push($scope.modal.ddResult.defaultFilter);
+        } else {
+            var filter = $scope.modal.ddResult.filters[0];
+            var length = $scope.modal.ddResult.colorCount.length
+            $scope.modal.ddResult.seriesColor.push($scope.seriesColors[length]);
+            $scope.modal.ddResult.colorCount.push(length);
+            $scope.modal.ddResult.filters.push(angular.copy(filter));
+        }
     }
 
     $scope.deleteCompare = function (index) {
@@ -930,8 +947,763 @@ shipApp.controller('phdShipController', ['$scope', '$http', '$log', '$q', functi
             };
 
             $scope.modal.ddReports.series = result;
+            addAnnotationForDD();
         });
     };
 
+    var getCookie = function (e) {
+        if (document.cookie.length > 0) {
+            var c_start = document.cookie.indexOf(e + "=");
+            if (c_start != -1) {
+                c_start = c_start + e.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start, c_end))
+            }
+        }
+        return ""
+    };
+    $scope.annotation = {};
+
+    function addAnnotationForDD() {
+        annotationOptions.service_base = '//nous.corp.ebay.com/nousfeservice/annotation';
+        var username = 'yeqli'; //getCookie("nous-user");//scope.username = getCookie("nous-user");
+        //scope.annotation = scope.annotation || {};
+
+        var annotation = $scope.annotation; //scope.annotation;
+
+        annotation.seriesIdMap = {};
+        annotation.singleAnnoId = $location.search().annoId;
+        if (!annotation.previousAnnId)
+            annotation.previousAnnId = ""; //scope.selectannid;
+        //scope.selectannid = undefined;
+        if ($location.path() == '/deepdive' && annotation.singleAnnoId) {
+            annotation.singleMode = true;
+        }
+        annotation.author = username; //scope.username;//getCookie("nous-user");
+        annotation.access = annotationOptions.access;
+        annotation.allowAdd = true;
+
+        if (annotation.access.add.indexOf(annotation.author) < 0) {
+            annotation.allowAdd = false;
+        }
+        if (annotation.singleMode) {
+            annotation.allowAdd = false;
+        }
+
+
+        //add click event for annotation add in series
+        //_.each(scope.highchartConfig.series, function(series){
+        _.each($scope.modal.ddReports.series, function (series) {
+            if (annotation.allowAdd) {
+                angular.extend(series, {
+                    events: {
+                        click: function (evt) {
+                            var series = evt.point.series,
+                                seriesId = series.options.id,
+                                seriesName = series.options.name,
+                                isYOY = /^1\d$/.test(seriesId),
+                                date = isYOY ? moment(evt.point.x).subtract(364, 'day').format('YYYY-MM-DD') : moment(evt.point.x).format('YYYY-MM-DD');
+                            var _filterInfo = $.extend(true, {
+                                filter: seriesName
+                            }, filterInfo);
+
+                            _.each(_filterInfo.reports, function (r) {
+
+                                r.dateRange = {
+                                    startDate: r.dateRange.startDate.valueOf(),
+                                    endDate: r.dateRange.endDate.valueOf()
+                                }
+
+
+                            });
+
+                            $scope.$apply(function () {
+                                $scope.annotation.popoverAdd = {
+                                    date: date,
+                                    filterInfo: JSON.stringify(_filterInfo),
+                                    isYOY: isYOY
+                                };
+                                $scope.annotation.saveButtonClicked = false;
+                            });
+
+                            var $addAnnotationDiv = $('.modal-dialog #addAnnotationDiv');
+                            var dhoffset = $('.modal-dialog #detail-highchart').offset();
+                            var aadpoffset = $addAnnotationDiv.parent().offsetParent().offset();
+
+                            var x = evt.point.plotX + evt.point.series.getPlotBox().translateX - $addAnnotationDiv.width() / 2 + dhoffset.left - aadpoffset.left - 2;
+                            var y = evt.point.plotY + evt.point.series.getPlotBox().translateY - $addAnnotationDiv.height() + dhoffset.top - aadpoffset.top - 8;
+                            $addAnnotationDiv.css({
+                                top: y,
+                                left: x
+                            }).css('display', 'block');
+                            $addAnnotationDiv.find('textarea').focus();
+
+
+
+                        }
+                    }
+                });
+            }
+
+            $(document).mouseup(function (e) {
+                var container = $(".modal-dialog #addAnnotationDiv");
+
+                if (!container.is(e.target) // if the target of the click isn't the container...
+                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                {
+                    container.hide();
+                }
+            });
+
+            var isYOY = false; ///^1\d$/.test(series.id);//false
+            //var key = isYOY ? series.name+'YOY' : series.name;
+            var key = "ebay.com/ebay.de/ebay.co.uk/befr.ebay.be/benl.ebay.be/cafr.ebay.ca/ebay.at/ebay.ca/ebay.ch/ebay.com.au/ebay.com.hk/ebay.com.my/ebay.com.sg/ebay.es/ebay.fr/ebay.ie/ebay.in/ebay.it/ebay.nl/ebay.ph/ebay.pl/others_Mobile/PC_Apps: Android/Apps: iPad/Apps: iPhone/Apps: Other/Apps: Windows Phone/Browser: Core Site/Browser: mWeb_edream-all/Geo/Non-Geo_edream-all/CIS/GC/LATAM/Other EM/Sited_edream-all/Africa/Australia/Austria/Belarus/Belgium/Brazil/Canada/China/France/Germany/Hong Kong/India/Ireland/Israel/Italy/Kazakhstan/Malaysia/Mexico/Middle East/Netherlands/Others/Philippines/Poland/Rest of Latin Amer./Rest Of Unsited Asia/Rest Of Unsited Europe/Russia/Singapore/Spain/Switzerland/Taiwan/Ukraine/United Kingdom/United States_"
+            annotation.seriesIdMap[key] = series.id; //1
+        });
+
+        //var config = reportsL[0].config,
+        reportId = "2"; //config.id;
+        var filterInfo = {
+            enableYOY: true, //scope.status.enableYOY,
+            reports: {}
+            // reports: _.map(_.pluck(scope.status.reports, 'filters'), function(val){
+            //     return _.mapValues(val,'value');
+            // })
+        };
+
+        annotation.reportId = '516_2'; //attrs.pageid+"_"+reportId;//518_5
+        annotation.serviceName = 'DemoDD'; //attrs.service;//DemoDD
+        annotation.appName = 'dream' //attrs.app;//dream
+            //                                    annotation.shareLink = location.origin+location.pathname+'#/deepdive?service='+annotation.serviceName+'&app='+annotation.appName+'&annoId=';
+        annotation.shareLink = 'http://nous-qa.corp.ebay.com/nousfe/#/deepdive?service=' + annotation.serviceName + '&app=' + annotation.appName + '&annoId=';
+        var minDate = Infinity,
+            maxDate = 0,
+            enableAnnotation = false;
+        var left_series = $scope.modal.ddReports.series;
+        _.each(left_series, function (series) {
+            var data = series.data;
+            if (data && data.length > 0) {
+                data[0] && data[0].x < minDate ? minDate = data[0].x : 0;
+                data[data.length - 1] && data[data.length - 1].x > maxDate ? maxDate = data[data.length - 1].x : 0;
+                enableAnnotation = true;
+            }
+        });
+        annotation.textLimit = 256;
+        annotation.readMore = function (num) {
+            annotation.textLimit = num;
+        };
+        annotation.setHover = function (point) {
+            point.shape = 'url(img/icon-annotation-hover.png)';
+            point.graphic.element.firstElementChild.setAttribute('href', 'img/icon-annotation-hover.png');
+        };
+        annotation.setSelected = function (point) {
+            point.shape = 'url(img/icon-annotation-selected.png)';
+
+            point.graphic.element.firstElementChild.setAttribute('href', 'img/icon-annotation-selected.png');
+        };
+        annotation.setNormal = function (point) {
+            point.shape = 'url(img/icon-annotation.png)';
+
+            point.graphic.element.firstElementChild.setAttribute('href', 'img/icon-annotation.png');
+        };
+        if (enableAnnotation) {
+            annotation.minDate = moment($scope.result.dateSelection.startDate).format('YYYY-MM-DD'); //moment(minDate).format('YYYY-MM-DD');
+            annotation.maxDate = moment($scope.result.dateSelection.endDate).format('YYYY-MM-DD'); //moment(maxDate).format('YYYY-MM-DD');
+            annotation.YOYMinDate = moment(minDate).subtract(364, 'day').format('YYYY-MM-DD');
+            annotation.YOYMaxDate = moment(maxDate).subtract(364, 'day').format('YYYY-MM-DD');
+            annotation.options = {
+
+            };
+            annotation.dateOptions = {
+                formatYear: 'yy',
+                startingDay: 1,
+                showButtonBar: false
+            };
+            annotation.showDatePicker = function () {
+                annotation.options.showDatePicker = true;
+            };
+            annotation.open = function ($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                annotation.opened = true;
+            };
+            annotation.format = 'yyyy-MM-dd';
+
+            annotation.seriesMap = {};
+
+            _.each(annotation.seriesIdMap, function (val, key) {
+                annotation.seriesMap[key] = {
+                    type: 'flags',
+                    onSeries: val,
+                    shape: 'url(img/icon-annotation.png)',
+                    width: 17,
+                    height: 16,
+                    y: -18,
+                    shadow: false,
+                    allowPointSelect: true,
+                    data: [],
+                    showInLegend: false,
+                    states: {
+                        hover: {
+                            fillColor: '#cde6c7' // darker
+                        }
+                    },
+                    tooltip: {
+                        shared: false,
+                        shape: 'callout'
+                    },
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            select: function (evt) {
+                                if (annotation.context.status != 'view') {
+                                    return false;
+                                }
+
+                                var point = this,
+                                    seriesData = point.series.data,
+                                    options = point.options,
+                                    aid = options.aid,
+                                    chart = point.series.chart;
+                                var thisAnn = _.find(seriesData, {
+                                    aid: aid
+                                });
+                                annotation.setSelected(point);
+
+                                $scope.$apply(function () {
+                                    annotation.context = {
+                                        status: 'view',
+                                        ann: thisAnn
+                                    };
+                                    annotation.textLimit = 256;
+
+                                });
+                            },
+                            unselect: function (evt) {
+                                if (evt.accumulate === false) {
+                                    annotation.context = {
+                                        status: 'view'
+                                    }
+                                }
+                                var point = this,
+                                    seriesData = point.series.data,
+                                    options = point.options,
+                                    aid = options.aid,
+                                    chart = point.series.chart;
+
+                                annotation.setNormal(point);
+
+                            },
+                            mouseOver: function (evt) {
+                                if (annotation.context.status != 'view') {
+                                    return false;
+                                }
+                                var point = this,
+                                    seriesData = point.series.data,
+                                    options = point.options,
+                                    aid = options.aid,
+                                    chart = point.series.chart;
+
+                                if (point.selected) return false;
+
+                                annotation.setHover(point);
+
+                                $scope.$apply(function () {
+                                    var thisAnn = _.find(seriesData, {
+                                        aid: aid
+                                    });
+                                    var selectedAnn = _.find(seriesData, {
+                                        selected: true
+                                    });
+
+                                    annotation.context = {
+                                        status: 'view',
+                                        ann: thisAnn
+                                    };
+
+                                });
+
+
+                            },
+                            mouseOut: function (evt) {
+                                if (annotation.context.status != 'view') {
+                                    return false;
+                                }
+                                var point = this,
+                                    seriesData = point.series.data,
+                                    options = point.options,
+                                    aid = options.aid,
+                                    chart = point.series.chart;
+                                if (point.selected) return false;
+
+                                annotation.setNormal(point);
+
+                                $timeout(function () {
+                                    var selectedAnns = annotation.findSelectedAnn();
+                                    if (selectedAnns.length > 0) {
+                                        var selectedAnn = selectedAnns[0];
+                                        annotation.context = {
+                                            status: 'view',
+                                            ann: selectedAnn
+                                        };
+                                    }
+
+                                }, 0);
+                            }
+                        }
+                    }
+                }
+            });
+
+            annotation.series = {
+                type: 'flags',
+                shape: 'url(img/icon-annotation.png)',
+                width: 17,
+                height: 16,
+                y: -18,
+                shadow: false,
+                allowPointSelect: true,
+                data: [],
+                showInLegend: false,
+                states: {
+                    hover: {
+                        fillColor: '#cde6c7' // darker
+                    }
+                },
+                tooltip: {
+                    shared: false,
+                    shape: 'callout'
+                },
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        select: function (evt) {
+                            if (annotation.context.status != 'view') {
+                                return false;
+                            }
+
+                            var point = this,
+                                seriesData = point.series.data,
+                                options = point.options,
+                                aid = options.aid,
+                                chart = point.series.chart;
+                            var thisAnn = _.find(seriesData, {
+                                aid: aid
+                            });
+
+                            annotation.setSelected(point);
+
+                            $scope.$apply(function () {
+                                annotation.context = {
+                                    status: 'view',
+                                    ann: thisAnn
+                                };
+                                annotation.textLimit = 256;
+
+                            });
+                        },
+                        unselect: function (evt) {
+                            if (evt.accumulate === false) {
+                                annotation.context = {
+                                    status: 'view'
+                                }
+                            }
+                            var point = this,
+                                seriesData = point.series.data,
+                                options = point.options,
+                                aid = options.aid,
+                                chart = point.series.chart;
+
+                            annotation.setNormal(point);
+                        },
+                        mouseOver: function (evt) {
+                            if (annotation.context.status != 'view') {
+                                return false;
+                            }
+                            var point = this,
+                                seriesData = point.series.data,
+                                options = point.options,
+                                aid = options.aid,
+                                chart = point.series.chart;
+
+                            if (point.selected) return false;
+
+                            annotation.setHover(point);
+
+                            $scope.$apply(function () {
+                                var thisAnn = _.find(seriesData, {
+                                    aid: aid
+                                });
+
+                                annotation.context = {
+                                    status: 'view',
+                                    ann: thisAnn
+                                };
+
+                            });
+
+                        },
+                        mouseOut: function (evt) {
+                            if (annotation.context.status != 'view') {
+                                return false;
+                            }
+                            var point = this,
+                                seriesData = point.series.data,
+                                options = point.options,
+                                aid = options.aid,
+                                chart = point.series.chart;
+                            if (point.selected) return false;
+
+                            annotation.setNormal(point);
+
+                            $timeout(function () {
+
+                                var selectedAnns = annotation.findSelectedAnn();
+                                if (selectedAnns.length > 0) {
+                                    var selectedAnn = selectedAnns[0];
+                                    annotation.context = {
+                                        status: 'view',
+                                        ann: selectedAnn
+                                    };
+                                }
+
+
+
+                            }, 0);
+                        }
+                    }
+                }
+            };
+            annotation.count = 0;
+            annotation.isShownAnn = true;
+            annotation.context = {
+                status: 'view'
+            };
+            annotation.filterInfo = JSON.stringify(filterInfo);
+            _.remove($scope.modal.ddReports.series, function (val) {
+                return 'flags' == val.type
+            }); //scope.highchartConfig.series
+            $scope.modal.ddReports.series.push(annotation.series);
+            _.forOwn(annotation.seriesMap, function (val) {
+                $scope.modal.ddReports.series.push(val);
+            });
+            annotation.series.data = [];
+            annotation.count = 0;
+
+            if (annotation.singleMode) {
+                $http.get(annotationOptions.service_base + '/find/id/' + annotation.singleAnnoId)
+                    .success(function (data) {
+
+                        annotation.defautStatus = scope.status;
+                        annotation.previousAnnId = annotation.singleAnnoId;
+                        addAnnToFlags(data, annotation);
+                        //                                                    annotation.previousAnnId=annotation.singleAnnoId;
+                        //                                                    addAnnToFlags(data,annotation,true,true);
+
+                    });
+            } else {
+
+
+
+                // $http.get(annotationOptions.service_base + '/find/targetid/'+annotation.reportId+'/between?start='+annotation.minDate+'&end='+annotation.maxDate)
+                //     .success(function(data){
+
+                //         annotation.defautStatus = scope.status;
+                //         _.each(data,function(ann){
+                //             addAnnToFlags(ann,annotation);
+                //         });
+                //     });
+                // $http.get(annotationOptions.service_base + '/find/targetid/'+annotation.reportId+'/between?start='+annotation.YOYMinDate+'&end='+annotation.YOYMaxDate)
+                //     .success(function(data){
+
+
+                //         annotation.defautStatus = scope.status;
+                //         _.each(data,function(ann){
+                //             addAnnToFlags(ann,annotation,true,true);
+                //         });
+                //     });
+                $http.get(annotationOptions.service_base + '/find/targetid/' + annotation.serviceName + '.' + annotation.appName + '.' + annotation.reportId + '/between?start=' + annotation.minDate + '&end=' + annotation.maxDate)
+                    .success(function (data) {
+                        console.log("anno1:" + data);
+                        //annotation.defautStatus = scope.status;
+                        _.each(data, function (ann) {
+                            addAnnToFlags(ann, annotation);
+                        });
+                    });
+                $http.get(annotationOptions.service_base + '/find/targetid/' + annotation.serviceName + '.' + annotation.appName + '.' + annotation.reportId + '/between?start=' + annotation.YOYMinDate + '&end=' + annotation.YOYMaxDate)
+                    .success(function (data) {
+
+                        console.log("anno2:" + data);
+                        //annotation.defautStatus = scope.status;
+                        _.each(data, function (ann) {
+                            addAnnToFlags(ann, annotation, true, true);
+                        });
+                    });
+            }
+        }
+
+        function addAnnToFlags(ann, annotation, isAdd, isYOY) {
+            var offset = new Date().getTimezoneOffset();
+            var flag = {
+                x: moment.utc(ann.startx, 'YYYY-MM-DD').valueOf() + offset * 60 * 1000,
+                startx: moment.utc(ann.startx, 'YYYY-MM-DD').valueOf(),
+                text: ann.content,
+                author: ann.userId,
+                //title: String.fromCharCode(annotation.count + 65),
+                title: ' ',
+                aid: ann.id,
+                filterInfo: ann.filterInfo
+            };
+            if (annotation.previousAnnId == ann.id) {
+                flag.selected = true;
+                flag.shape = 'url(img/icon-annotation-selected.png)';
+
+                annotation.context.ann = flag;
+                annotation.previousAnnId = null;
+            }
+            try {
+                var filterInfo = JSON.parse(ann.filterInfo);
+            } catch (err) {
+                return;
+            }
+            var series = annotation.series;
+            var filterKey = filterInfo.filter;
+            if (angular.isString(filterKey)) {
+                flag.filterDisplay = _.compact(filterKey.split('_')).join(',');
+            }
+            if (isYOY) {
+                filterKey = filterKey + 'YOY';
+                flag.x = moment.utc(ann.startx, 'YYYY-MM-DD').add(364, 'day').valueOf();
+            }
+            if (filterInfo.filter && annotation.seriesMap[filterKey]) {
+                series = annotation.seriesMap[filterKey];
+            }
+            var daterange = {
+                startDate: $scope.result.dateSelection.startDate.valueOf(), //scope.status.dateRange.startDate.valueOf(),
+                endDate: $scope.result.dateSelection.endDate.valueOf() //scope.status.dateRange.endDate.valueOf()
+            };
+            flag.x = (flag.x - flag.startx) / 1000 / 24 / 3600;
+            annotation.count++;
+            series.data.push(flag);
+            var reportsDisplay = [];
+            var reports = _.map(filterInfo.reports, function (val, idx) {
+                delete val.aggrindi; //hard code for old annotation restore
+                reportsDisplay.push(_.values(_.omit(val, 'dateRange')).join(','));
+                var filters = _.mapValues(val, function (valIn) {
+                    return {
+                        value: valIn
+                    };
+                });
+                filters.dateRange = {
+                    value: daterange
+                };
+                return {
+                    reportId: '2', //scope.status.Yasix.left.id,
+                    index: idx + 1,
+                    show: true,
+                    filters: {}, //$.extend(true,{},scope.filters,filters),
+                    config: {}, //$.extend(true,{},scope.status.Yasix.left),
+                    showDownButton: true,
+                    showUpButton: false
+                }
+            });
+
+            //TODO right yAxis
+            //var rightYaxis = filterInfo.rightYaxis;//TODO
+
+            flag.reportsDisplay = reportsDisplay;
+            //flag.status = $.extend({},scope.status);
+            //flag.status.enableYOY = filterInfo.enableYOY;
+            //flag.status.reports = reports;
+            flag.onDate = ann.startx;
+            return flag;
+
+
+        }
+
+
+        annotation.startAdd = function () {
+
+            annotation.context.status = 'add';
+        };
+
+        annotation.saveAdd = function () {
+            if (!annotation.context.date && !moment(annotation.context.date, 'YYYY-MM-DD').isValid()) {
+                annotation.context.dateHasError = true;
+                return;
+            }
+            if (!annotation.context.text) {
+                annotation.context.textHasError = true;
+                return;
+            }
+            var newAnn = {
+                "content": annotation.context.text,
+                "filterInfo": annotation.filterInfo,
+                "targetId": annotation.serviceName + '.' + annotation.appName + '.' + annotation.reportId,
+                "userId": annotation.author,
+                "startx": moment(annotation.context.date).format('YYYY-MM-DD')
+            };
+            $http.post(annotationOptions.service_base + '/new', newAnn)
+                .success(function (data) {
+                    newAnn.id = data.id;
+                    var selectedAnn = _.find(annotation.series.data, {
+                        selected: true
+                    });
+                    if (!!selectedAnn) {
+                        selectedAnn.selected = false;
+                        selectedAnn.shape = 'url(img/icon-annotation.png)';
+                    }
+                    var flag = addAnnToFlags(newAnn, annotation, true);
+                    flag.selected = true;
+                    flag.shape = 'url(img/icon-annotation-selected.png)';
+                    annotation.context = {
+                        status: 'view',
+                        ann: flag
+                    }
+
+                });
+
+        };
+        annotation.cancelAdd = function () {
+            annotation.context.status = 'view';
+        };
+        annotation.findSelectedAnn = function () {
+            var selectedAnns = [];
+            var selectedAnn = _.find(annotation.series.data, {
+                selected: true
+            });
+            if (selectedAnn) selectedAnns.push(selectedAnn);
+            _.forOwn(annotation.seriesMap, function (series) {
+                selectedAnn = _.find(series.data, {
+                    selected: true
+                });
+                if (selectedAnn) {
+                    selectedAnns.push(selectedAnn);
+                }
+            });
+
+            return selectedAnns;
+        };
+        annotation.unselectAll = function (exceptId) {
+            _.each(annotation.findSelectedAnn(), function (flag) {
+                if (flag.aid == exceptId) return;
+                flag.selected = false;
+                flag.shape = 'url(img/icon-annotation.png)';
+            });
+        };
+
+
+        annotation.savePopoverAdd = function () {
+
+            if (!annotation.popoverAdd.text) {
+                annotation.popoverAdd.textHasError = true;
+                return;
+            }
+
+            var newAnn = {
+                "content": annotation.popoverAdd.text,
+                "filterInfo": annotation.popoverAdd.filterInfo,
+                "targetId": annotation.serviceName + '.' + annotation.appName + '.' + annotation.reportId,
+                "userId": annotation.author,
+                "startx": annotation.popoverAdd.date
+            };
+            $http.post(annotationOptions.service_base + '/new', newAnn)
+                .success(function (data) {
+                    newAnn.id = data.id;
+                    annotation.unselectAll();
+                    var flag = addAnnToFlags(newAnn, annotation, true, annotation.popoverAdd.isYOY);
+                    flag.selected = true;
+                    flag.shape = 'url(img/icon-annotation-selected.png)';
+                    annotation.context = {
+                        status: 'view',
+                        ann: flag
+                    };
+                    $('#addAnnotationDiv').fadeOut();
+
+
+                }).error(function (data) {
+                    scope.annotation.saveButtonClicked = false;
+
+                });
+            scope.annotation.saveButtonClicked = true;
+
+        };
+
+        annotation.cancelPopoverAdd = function () {
+            $('#addAnnotationDiv').fadeOut();
+        };
+
+        annotation.startEdit = function (ann) {
+            annotation.context = {
+                status: 'edit',
+                date: ann.startx,
+                text: ann.text,
+                aid: ann.aid,
+                ann: ann
+            };
+
+        };
+        annotation.saveEdit = function () {
+            if (!annotation.context.text) {
+                annotation.context.textHasError = true;
+                return;
+            }
+            var update = {
+                content: annotation.context.text,
+                id: annotation.context.aid
+            };
+            $http.put(annotationOptions.service_base + '/update/content', update)
+                .success(function (data) {
+                    annotation.context.ann.text = annotation.context.text;
+                    annotation.context.status = 'view';
+                });
+        };
+        annotation.cancelEdit = function () {
+            annotation.context.status = 'view';
+        };
+
+        annotation.startDelete = function (ann) {
+            annotation.context.deleteAid = ann.aid;
+
+        };
+        annotation.confirmDelete = function (ann) {
+            $http.delete(annotationOptions.service_base + '/delete/id/' + ann.aid)
+                .success(function (data) {
+                    _.remove(annotation.series.data, {
+                        aid: ann.aid
+                    });
+                    _.forOwn(annotation.seriesMap, function (series) {
+                        _.remove(series.data, {
+                            aid: ann.aid
+                        });
+                    });
+                    annotation.context = {
+                        status: 'view'
+                    }
+                });
+        };
+        annotation.cancelDelete = function () {
+            delete annotation.context.deleteAid;
+        };
+
+        annotation.restoreScenario = function (ann) {
+            annotation.previousAnnId = ann.aid;
+            scope.status = ann.status;
+            _query();
+            scope.showResetButton = true;
+        };
+        annotation.shareAnnotation = function (ann) {
+
+            var link = annotation.shareLink + ann.aid;
+            var ll = "mailto:?subject=Sharing Annotation &body=" + encodeURIComponent(link) + "";
+            window.location = ll;
+        };
+        annotation.closeShareAnnotation = function () {
+            var shareAnnotationBox = $('#shareAnnotationBox');
+            shareAnnotationBox.hide();
+        }
+    }
 
 }]);

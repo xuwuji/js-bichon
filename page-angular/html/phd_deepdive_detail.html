@@ -6,7 +6,7 @@
             <form class="form-inline">
                 <div class="form-group">
                     Date Range
-                    <input date-range-picker type="text" ng-model="ddResult.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;border:0px" options="defaults.dateRangeConfig" />
+                    <input date-range-picker type="text" ng-model="modal.ddResult.dateSelection" style="padding-left: 20px; height: 30px; width: 220px; font-size: 15px;border:0px" options="defaults.dateRangeConfig" />
                 </div>
             </form>
 
@@ -14,19 +14,23 @@
 
         <div style=" margin-left: 15px" class="banner-element">
             compare year over year
-            <input type="checkbox" ng-model="ddResult.compareSelected">
+            <input type="checkbox" ng-model="modal.ddResult.compareSelected">
         </div>
 
         <div class="banner-element">
             <span>7DMA</span>
-            <input type="checkbox" ng-model="ddResult.dma">
+            <input type="checkbox" ng-model="modal.ddResult.dma">
         </div>
 
     </div>
 
-    <div class="mark_plus" ng-click="pushCompare()"><img src="http://nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-add.png"></div>
+
     <div class="row dd_filter" style="margin-top:10px;width:100%;margin-left:10px;margin-right:10px" ng-repeat="filter in modal.ddResult.filters track by $index">
-        <div style="margin-top:20px;margin-left:30px" ng-click="deleteCompare({index:$index})"><img src="//nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-delete.png"></div>
+
+        <div class="mark_button mark_close" ng-click="deleteCompare({index:$index})"><img src="//nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-delete.png"></div>
+        <div class="report_color">
+            <div ng-style="{'background-color':modal.ddResult.seriesColor[$index]}">&nbsp;</div>
+        </div>
         <div class="banner-element" ng-repeat="dim in filter">
             <form class="form-inline">
                 <div class="form-group">
@@ -38,8 +42,9 @@
                 </div>
             </form>
         </div>
-    </div>
 
+    </div>
+    <div class="mark_plus" ng-click="pushCompare()"><img src="http://nous.corp.ebay.com/uicommon/latest/img/deepdive/icon-add.png"></div>
 
 
     <div class="row" style="margin-top:10px;text-align:center">
@@ -61,5 +66,156 @@
     </div>
 
     <!--  annotation  -->
+    <div class="detail_annotation">
+        <!-- ng-if="!storyBoardModel" ng-show="!addCollectionModel" -->
+        <span ng-if="annotation.access.add.indexOf(annotation.author) != -1 && !annotation.singleMode">Tip: Annotate on the line by clicking a data point</span>
+        <div ng-show="annotation.isShownAnn" style="float:none">
+            <hr>
+            <div ng-show="annotation.context.status == 'add'">
+                <div class="annotation_add">
 
+                    <div class="profile_image">
+                        <img ng-src="//nous.corp.ebay.com/ldappic/{{annotation.author}}.jpg" onerror="this.src='//nous.corp.ebay.com/ldappic/avatar.png'" />
+
+                    </div>
+                    <div style="margin-left: 60px">
+                        <div style="float:left;margin-top: 5px;margin-right: 10px">Create an annotation for</div>
+
+                        <div ng-class="{'has-error': annotation.context.dateHasError}" style="position:relative;width: 350px;margin-right: 210px;margin-bottom: 5px">
+                            <p class="input-group">
+                                <input type="text" placeholder="e.g. 2014-12-12" class="form-control" datepicker-popup="{{annotation.format}}" ng-model="annotation.context.date" show-button-bar='false' is-open="annotation.opened" min-date="annotation.minDate" max-date="annotation.maxDate" datepicker-options="annotation.dateOptions" ng-required="true" close-text="Close" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="annotation.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                        <div ng-class="{'has-error': annotation.context.textHasError}">
+                            <textarea class="form-control" ng-model="annotation.context.text"></textarea>
+                        </div>
+                    </div>
+                    <div style="clear: both;margin-top: 10px">
+                        <button ng-click="annotation.saveAdd()" class="btn btn-primary btn-sm">Save</button>
+                        <button ng-click="annotation.cancelAdd()" class="btn btn-primary btn-sm">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="annotation.context.status == 'edit'">
+                <div class="annotation_edit">
+                    <div class="profile_image">
+                        <img ng-src="//nous.corp.ebay.com/ldappic/{{annotation.author}}.jpg" onerror="this.src='//nous.corp.ebay.com/ldappic/avatar.png'" />
+                    </div>
+                    <div style="margin-left: 60px">
+                        <div ng-class="{'has-error': annotation.context.dateHasError}" style="position:relative;width: 200px;margin-right: 10px;margin-bottom: 5px">
+                            Date: {{annotation.context.date | date:'yyyy-MM-dd'}}
+                        </div>
+                        <div ng-class="{'has-error': annotation.context.textHasError}">
+                            <textarea style="resize: none;" class="form-control" ng-model="annotation.context.text"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="clear: both;margin-top: 10px">
+                        <button ng-click="annotation.saveEdit()" class="btn btn-primary btn-sm">Save</button>
+                        <button ng-click="annotation.cancelEdit()" class="btn btn-primary btn-sm">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="annotation.context.status == 'view'">
+                <div class="annotation_view" ng-show="!!annotation.context.ann">
+                    <div class="profile_image">
+                        <a target="_blank" href="//go/who/{{annotation.context.ann.author}}"><img ng-src="//nous.corp.ebay.com/ldappic/{{annotation.context.ann.author}}.jpg" onerror="this.src='//nous.corp.ebay.com/ldappic/avatar.png'" />
+                        </a>
+                    </div>
+                    <div class="annotation_container">
+                        <div class="author">
+                            <a target="_blank" href="//go/who/{{annotation.context.ann.author}}">{{annotation.context.ann.author}}</a> created on {{annotation.context.ann.startx | date:'yyyy-MM-dd'}}
+                        </div>
+                        <div class="actions" ng-if="!annotation.singleMode">
+                            <a qtip ng-click="annotation.restoreScenario(annotation.context.ann)"><i class="fa fa-repeat"></i>
+                                <div style="display: none">
+                                    <b>Filter:</b> {{annotation.context.ann.filterDisplay}}<br>
+                                    <b>Date:</b> {{annotation.context.ann.onDate}}<br>
+                                    <b>Scenario:</b> <div ng-repeat="r in annotation.context.ann.reportsDisplay">{{r}}</div><div ng-if="annotation.context.ann.status.enableYOY">Compare Year over Year</div>
+
+                                </div>
+                            </a>
+                            <a qtip id="shareTagA" ng-click="annotation.shareAnnotation(annotation.context.ann)">
+                                <i class="icomoon icon-share"></i>
+                                <div style="display: none">
+                                    Share Annotation
+                                </div>
+                            </a>
+                        </div>
+                        <div class="actions" ng-if="annotation.context.ann.author == annotation.author">
+                            <a ng-click="annotation.startEdit(annotation.context.ann)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                            <a ng-click="annotation.startDelete(annotation.context.ann)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                            <a ng-if="annotation.context.deleteAid == annotation.context.ann.aid" ng-click="annotation.confirmDelete(annotation.context.ann,$index)">Confirm</a>
+                            <a ng-if="annotation.context.deleteAid == annotation.context.ann.aid" ng-click="annotation.cancelDelete()">Cancel</a>
+                        </div>
+                        <div class="text" style="word-wrap: break-word;">
+                            {{annotation.context.ann.text | limitTo: annotation.textLimit}} <a ng-if="annotation.context.ann.text.length > annotation.textLimit" ng-click="annotation.readMore(annotation.context.ann.text.length)">... read more</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="annotation_view_empty" ng-show="!annotation.context.ann">
+                    No annotation selected.
+                </div>
+            </div>
+            <div ng-show="annotation.context.status == 'list'" class="annotation_list_container">
+                <ul class="annotation_list">
+                    <li ng-repeat="ann in annotation.series.data" class="annotation_list_item" id="annotation_item_{{ann.aid}}">
+                        <div class="annotation_title">
+                            {{ann.title}}
+                        </div>
+                        <div class="profile_image">
+                            <a target="_blank" href="//go/who/{{ann.author}}"><img ng-src="//nous.corp.ebay.com/ldappic/{{ann.author}}.jpg" onerror="this.src='//nous.corp.ebay.com/ldappic/avatar.png'" />
+                            </a>
+                        </div>
+                        <div class="annotation_container">
+                            <div class="author">
+                                <a target="_blank" href="//go/who/{{ann.author}}">{{ann.author}}</a> created on {{ann.x | date:'yyyy-MM-dd'}}
+                            </div>
+                            <div class="actions" ng-if="ann.author == annotation.author">
+                                <a ng-click="annotation.startEdit(ann)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                <a ng-click="annotation.startDelete(ann)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                                <a ng-if="annotation.context.deleteAid == ann.aid" ng-click="annotation.confirmDelete(ann,$index)">Confirm</a>
+                                <a ng-if="annotation.context.deleteAid == ann.aid" ng-click="annotation.cancelDelete()">Cancel</a>
+                            </div>
+                            <div class="text">{{ann.text}}</div>
+                        </div>
+                        <hr>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div id="addAnnotationDiv" class="popover fade top in" style="top: 0px; left: 0px; display: none;">
+                <div class="arrow"></div>
+                <h3 class="popover-title">Enter annotation</h3>
+                <div class="popover-content">
+                    <div>
+                        <div class="editableform-loading" style="display: none;"></div>
+                        <form class="form-inline editableform" style="">
+                            <div class="control-group form-group">
+                                <div>
+                                    <div class="editable-input">
+                                        <div>Date: {{annotation.popoverAdd.date}} </div>
+                                        <textarea data-ng-model="annotation.popoverAdd.text" class="form-control input-large" style="resize: none" placeholder="Your comments here..." rows="7" cols="28"></textarea>
+                                    </div>
+                                    <div class="editable-buttons editable-buttons-bottom">
+                                        <button ng-disabled="annotation.saveButtonClicked" ng-click="annotation.savePopoverAdd()" type="submit" class="btn btn-primary btn-sm editable-submit">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </button>
+                                        <button ng-click="annotation.cancelPopoverAdd()" type="button" class="btn btn-default btn-sm editable-cancel">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="editable-error-block help-block" style="display: none;"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

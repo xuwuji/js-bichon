@@ -11,6 +11,8 @@ shipApp.directive('detail', ['$http', function ($http) {
             modal: '=',
             pushCompare: "&",
             deleteCompare: "&",
+            selectAnnId : "=",
+            annotation: "="
         },
         compile: function () {
             return {
